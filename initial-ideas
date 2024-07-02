@@ -1,0 +1,28 @@
+1. MealPrep and Food Nutrition Planner  
+    - Description
+        - This would be an app that allows you to create a plan for healthy eating. The application would rely on an API that provides common food nutrtional values and allows you to take the ingredient and add them to a specific meal. The nutritional values would compile for the in the format of days, weeks, etc. and allow a user to have a clear view into what they are consuming.
+    - API: nutritionix
+    - Functionalities
+       1.    Create custom recipes using ingredients returned by the nutritionix API.
+       2.    Allow recipes to be saved, favorited and reused for future dates.
+       3.    A user dashboard that has detailed information on nutitional consumption and user history.
+
+
+2. EventManager
+    - Description
+      - An application that would allow a user to find events.
+    - API: Eventbrite
+    - Functionalities
+       1.    Allows a user to search and save events that they are interested in.
+       2.    Allows a user to sign up for events through application.
+
+
+
+3.Workout Planner
+   - Description
+     - An application that would allow a user to create a custom workout schedule. This application would utilize the wger API, which provides a standardized set of exercises and moves.    
+   - API: wger
+    - Functionalities
+       1.    Create a custom workout by selecting options such as ( duration, intensity, target area, etc.)
+       2.    Random workout creation if desired.
+       3.    User dashboard keeping track of working history (no health data is to be recorded)
