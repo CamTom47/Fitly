@@ -1,0 +1,86 @@
+Description
+------------------------------------------------------
+This application is a workout application that provides quick/customizable workouts for users. The user would have access to a dashboard that shows their previous workout history, favorite workouts, etc. The workouts can be created manually, but also generated for a user based on minimal input.
+
+Tech Stack
+------------------------------------------------------
+1. React
+2. nodeJS
+3. JWT
+4. PostgreSQL
+
+Tech Focus
+------------------------------------------------------
+The focus of this applcation will be focus on the backend logic in providing good suggestions to users to ensure that they are receiving beneficial workouts.
+
+Type
+------------------------------------------------------
+For the purposes of this capstone. The applcation will be a web application, but future stretch goals will include developing this into a mobile application as it will be a more intuitive way to use the app.
+
+Goal
+------------------------------------------------------
+The goal of this application is to provide a way for users to quickly come up with a new workout. Many people who workout regularly experience plateaus and disinterest in their workout regiment due to mundane routines. If a user had a quick and easy solution to planning a new workout
+that didn't require much input on their end, this may disuade them from hitting that lull in their workout routine and keep them active.
+
+Users
+------------------------------------------------------
+This application is meant for people who workout regularly. This application is not meant to be instructional, so it is not recommended for people who do not already workout on a normal basis. This is also not meant to be instructional for rehabilitation purposes. Although it could be a resource to find exercises/movements that target areas for rehab. This is not a guide for rehabilitation. This applcation also has the potential to be sport specific. (i.e. a hangboard workout could be included for rock climbers). 
+
+Data
+------------------------------------------------------
+1. This app will use data from the wger fitness API. I suspect some of the issues I'll run into with using this APi will include:
+    -Converting a muscle groups scientific name into a commonly used name. (Will require research).
+    -Finding a way to get an instructional picture for the workout to indicate what it is (I may do some searching on the internet and find some photos to use and store them in a static folder)
+
+
+2. There will not currently be any sensitive information stored aside from a password. Personal health data is not currently planned to be stored and/or tracked.
+
+User Flow
+------------------------------------------------------
+- Register/Login to Application
+- Select from a choice of already created workouts from the user, create a new workout that can be selected, or choose a randomized workout.
+- Store and favorite created workouts for a user for quick access in future sessions.
+- Add/Remove/Update custom exercises and circuits based on workout preferences
+
+
+
+Functionalities
+------------------------------------------------------------------------------------------------------------------------------------------
+| Task Name                      | Description                                                                                           |
+------------------------------------------------------------------------------------------------------------------------------------------
+| Design Database Schema         | Determine the models and database schema required for the project                                     |
+| Source App Data                | Determine which API will be used to source app data                                                   |                     
+| User Flows                     | Determine user app flows                                                                              |                 
+| Set up backend                 | Configure the environmental variables on your framework of choice for development and set up database |                                   
+| Set up frontend                | Set up front end framework and link to the backend with simple API calls                              |                     
+| Set up authentication          | Create app authenification to ensure application security                                             |                         
+| Set up routes                  | Determine route logic and link to API calls                                                           |                 
+| Workout logic                  | Create logic to ensure that correct information is returned when a workout is created                 |                 
+| Circuit logic                  | Create logic to ensure that correct information is returned when a circuit is created                 |            
+| Exercise logic                 | Create logic to ensure that correct information is returned when a exercise is created                |                     
+| User Dashboard                 | Create logic to ensure that a users dashboard represents correct information                          |                     
+| Workout Favoriting             | Enabled favoriting of workouts to allow a user quick insight into previos workouts they liked         |  
+| Workout Calendar               | Allows a user to create a calendar that will show upcoming and past workouts                          |  
+
+
+Labeling
+----------------------------------------------------------------------------------------------------------------------
+|Label Type                      | Difficulty       |  Type                                   |  Stretch Goal        |
+----------------------------------------------------------------------------------------------------------------------
+| Database Schema                | Medium           | Documentation, Backend                  |  Must have           |
+| Source App Data                | Medium           | Documentation, Backend                  |  Must have           |
+| User Flows                     | Medium           | Documentation, Fullstack                |  Must have           |  
+| Set up backend                 | Hard             | Backend                                 |  Must have           |                    
+| Set up frontend                | Medium           | Frontend                                |  Must have           |      
+| Set up authentication          | Easy             | Fullstack                               |  Must have           |          
+| Set up routes                  | Medium           | Fullstack                               |  Must have           |  
+| Workout logic                  | Hard             | Backend                                 |  Must have           |  
+| Circuit logic                  | Hard             | Backend                                 |  Must have           |
+| Exercise logic                 | Hard             | Backend                                 |  Must have           |      
+| User Dashboard                 | Easy             | Backend                                 |  Must have           |      
+| Workout Favoriting             | Easy             | Backend                                 |  Must have           |      
+| Workout Calendar               | Hard             | Fullstack                               |  Stretch Goal        |
+
+
+
+
