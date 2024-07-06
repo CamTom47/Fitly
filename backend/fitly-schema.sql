@@ -25,7 +25,7 @@ CREATE TABLE exercises (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     muscle_group TEXT NOT NULL,
-    equipement_id REFERENCES equipments(id)
+    equipement_id REFERENCES equipments(id) ON DELETE CASCADE
 
 )
 
@@ -37,8 +37,9 @@ CREATE TABLE circuits_workouts (
 
 CREATE TABLE workouts (
     id SERIAL PRIMARY KEY,
+    user_id REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
-    category REFERENCES categories(id),
+    category REFERENCES categories(id) ON DELETE CASCADE,
     completed_count INTEGER,
     favorited BOOLEAN
 )

@@ -15,7 +15,17 @@ const { BCRYPT_WORK_FACTOR } = require('../config.js')
 /** Related functions for users */
 
 class User {
+
+    /** authenticate a user with username, password.
+     * 
+     * Returns { username, first_name, last_name, email, is_admin }
+     * 
+     * Throws UnauthorizedError if user is not found or password is wrong.
+     * 
+     */
+
     static async authenticate(username, password) {
+        // try to find the user first
 
         const results = await db.query(
             `SELECT username,
@@ -31,8 +41,11 @@ class User {
         )
 
         const user = results.rows[0];
+        
 
         if(user){
+
+            // compare the hashed passowrd to the new hash from password
             const isValid = bcrypt.compare(password, user.password);
             if (isValid === true){
                 delete user.password;
@@ -43,12 +56,30 @@ class User {
 
     }
 
+    /**
+     * Register a user 
+     * 
+     * @param {*} username 
+     * @param {*} password 
+     * @param {*} first_name 
+     * @param {*} last_name 
+     * @param {*} email 
+     * @param {*} is_admin 
+     * @returns {username, first_name, last_name, email, is_admin}
+     */
+
     static async register(username, password, first_name, last_name, email, is_admin = false) {
+
+
+        //Check to ensure that the new username is not already taken
 
         const duplicateCheck =  await db.query(`
             SELECT username
             FROM users
             WHERE username = $1`, [username])
+
+
+        //Throw error if username already exists
 
         if(duplicateCheck.rows[0]){
             throw new BadRequestError(`Duplicate username: ${username}`);
@@ -74,6 +105,24 @@ class User {
 
         return user;
     }
+
+
+    /**
+     * Update a users information with 'data'
+     * 
+     * @param {*} username 
+     * @param {*} data
+     * 
+     * This can be a partial update, so it is okay if not all fields are contained in information.
+     * 
+     * Data can include:
+     * { username, password, firstName, lastName, email, isAdmin }
+     * 
+     * 
+     * @returns { username, firstName, lastName, isAdmin, email }
+     * 
+     * Throws NotFoundError if the user's username is not found
+     */
 
     static async update(username, data){
 
@@ -113,6 +162,15 @@ class User {
 
 
     }
+
+    /**
+     * Delete a user from the database
+     * 
+     * @param {*} username 
+     * 
+     * Throw a NotFoundError if the username is not found.
+     */
+    
     static async remove(username) {
         let result = await db.query(`
             DELETE
