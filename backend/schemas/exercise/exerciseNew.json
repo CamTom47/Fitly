@@ -1,0 +1,43 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "name",
+        "muscle_group",
+        "equipment_id"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "default": "",
+            "title": "The name Schema",
+            "examples": [
+                "pushups"
+            ]
+        },
+        "muscle_group": {
+            "type": "string",
+            "default": "",
+            "title": "The muscle_group Schema",
+            "examples": [
+                "chest"
+            ]
+        },
+        "equipment_id": {
+            "type": "integer",
+            "default": 0,
+            "title": "The equipment_id Schema",
+            "examples": [
+                1
+            ]
+        }
+    },
+    "examples": [{
+        "name": "pushups",
+        "muscle_group": "chest",
+        "equipment_id": 1
+    }]
+}

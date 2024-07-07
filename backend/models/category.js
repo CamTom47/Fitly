@@ -12,7 +12,13 @@ const { BCRYPT_WORK_FACTOR } = require('../config.js')
 
 /** Related functions for category */
 
-class Catgory {
+class Category {
+
+    /**
+     * Find and return all categories 
+     * @returns { name, description }
+     */
+
     static async findAll() {
         const result = await db.query(`
             SELECT name,
@@ -25,6 +31,12 @@ class Catgory {
         return categories;
 
     }
+
+    /**
+     * Find and return a category by name
+     * @param {name} name 
+     * @returns { name, description}
+     */
 
     static async find(name) {
         const result = await db.query(`
@@ -40,62 +52,6 @@ class Catgory {
         return category;
     }
 
-    static async add(name, description) {
-        const duplicateCheck = await db.query(`
-            SELECT name
-            FROM categories
-            WHERE name = $1`, [name])
-
-            if(duplicateCheck.rows[0]){
-                throw new BadRequestError(`Duplicate category: ${name}`)
-            }
-
-            const result = await db.query(`
-                INSERT INTO categories
-                (name,
-                description)
-                VALUES ($1, $2)
-                RETURNING name, description`)
-
-            return result.rows[0];
-    }
-
-    static async update(name, data) {
-        const { setCols, values } = sqlForPartialUpdate(data, 
-            {
-                name: "name",
-                description: "description"
-            }
-        )
-
-        const categoryNameVarIdx = ("$" + (values.length + 1));
-
-        const querySql = `UPDATE users
-                            SET ${setCols}
-                            WHERE name = ${categoryNameVarIdx}
-                            RETURNING name, description`;
-
-
-        const result = await db.query(querySql, [...values, name])
-
-        const category = result.rows[0];
-
-        if (!category) throw new NotFoundError(`No category: ${name}`)
-            
-            return category;
-        }
-        
-        static async remove(name) {
-            
-            const result = await db.query(`
-                DELETE from categories
-                WHERE name = $1
-                RETURNING name`, [name])
-                
-            const category = result.rows[0];
-                
-            if (!category) throw new NotFoundError(`No category: ${name}`)
-                
-    }
-
 }
+
+module.exports = {Category};

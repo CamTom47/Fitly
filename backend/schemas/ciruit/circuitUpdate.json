@@ -1,0 +1,61 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "sets",
+        "reps",
+        "rest_period"
+    ],
+    "properties": {
+        "sets": {
+            "type": "integer",
+            "default": 0,
+            "title": "The sets Schema",
+            "examples": [
+                3
+            ]
+        },
+        "reps": {
+            "type": "integer",
+            "default": 0,
+            "title": "The reps Schema",
+            "examples": [
+                10
+            ]
+        },
+        "weight": {
+            "type": "integer",
+            "default": 0,
+            "title": "The weight Schema",
+            "examples": [
+                135
+            ]
+        },
+        "rest_period": {
+            "type": "integer",
+            "default": 0,
+            "title": "The rest_period Schema",
+            "examples": [
+                60
+            ]
+        },
+        "intensity": {
+            "type": "string",
+            "default": "",
+            "title": "The intensity Schema",
+            "examples": [
+                "medium"
+            ]
+        }
+    },
+    "examples": [{
+        "sets": 3,
+        "reps": 10,
+        "weight": 135,
+        "rest_period": 60,
+        "intensity": "medium"
+    }]
+}

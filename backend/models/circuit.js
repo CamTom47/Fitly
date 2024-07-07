@@ -9,7 +9,15 @@ const {
 
 const { BCRYPT_WORK_FACTOR } = require('../config.js');
 
+
+//Related functions for the Circuit class
 class Circuit { 
+
+    /**
+     * Get all circuits 
+     * @returns {sets, reps, weight, rest_period, intensity}
+     */
+
     static async findAll() {
         const result = await db.query(`
             SELECT sets,
@@ -29,6 +37,12 @@ class Circuit {
         return circuits;
 
     }
+
+
+      /**
+     * Get a circuit based on circuit_id
+     * @returns {sets, reps, weight, rest_period, intensity}
+     */
 
     static async find(circuit_id) {
         const result = await db.query(`
@@ -52,6 +66,16 @@ class Circuit {
         return circuit;
     }
 
+    /**
+     * Create a new circuit
+     * @param {*} sets 
+     * @param {*} reps 
+     * @param {*} weight 
+     * @param {*} rest_period 
+     * @param {*} intensity 
+     * @returns {sets, reps, weight, rest_period, intensity}
+     */
+
     static async add(sets, reps, weight, rest_period, intensity) {
         const result = await db.query(`
             INSERT INTO circuits
@@ -68,7 +92,17 @@ class Circuit {
             
     }
 
+    /**
+     * Update an existing circuit
+     * @param {*} id 
+     * @param {*} data 
+     * @returns {sets, reps, weight, rest_period, intensity}
+     * 
+     * Throw NotFoundError if ciruit_id is invalid.
+     */
+
     static async update(id, data) {
+
         const { setCols, values } = sqlForPartialUpdate(data, 
             {
                 sets: "sets",
@@ -87,14 +121,23 @@ class Circuit {
             RETURNING(sets, reps, weight, rest_period, intensity)`;
 
         const result = await db.query(querySql, [...values, id]);
-
         const circuit = result.rows[0];
+
+        if (!circuit) throw new NotFoundError(`Circuit not found: ${id}`)
 
         return circuit;
 
 
+
     }
 
+    /**
+     * Remove a ciruit based on circuit_id
+     * @param {*} circuit_id 
+     * 
+     * Throw NotFoundError if the circuit_id is invalid
+     */
+    
     static async remove(circuit_id) {
 
         const result = await db.query(`
@@ -108,4 +151,15 @@ class Circuit {
 
     }
 
+    static async addCircuitExercise(circuit_id, exercise_id){
+        const result = await db.query(`
+            INSERT INTO circuits_exercises
+            (circuit_id, exercise_id)
+            VALUES($1, $2)`,
+        [circuit_id, exercise_id])
+
+        return result.rows[0];
+    }
 }
+
+module.exports = {Circuit};

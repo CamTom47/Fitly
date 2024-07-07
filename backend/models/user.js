@@ -184,3 +184,5 @@ class User {
         if(!user) throw new NotFoundError(`No User: ${username}`)
     }
 }
+
+module.exports = {User};

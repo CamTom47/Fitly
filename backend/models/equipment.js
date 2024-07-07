@@ -9,7 +9,16 @@ const {
 
 const { BCRYPT_WORK_FACTOR } = require('../config.js');
 
+
+//Common functions for Eqipment clas
+
 class Equipment { 
+
+    /**
+     * Find all equipment 
+     * @returns {name}
+     */
+
     static async findAll() {
         const result = await db.query(`
             SELECT name
@@ -21,6 +30,12 @@ class Equipment {
         return equipments;
 
     }
+
+    /**
+     * Find a piece of equipment based on equipment_id
+     * @param {*} equipment_id 
+     * @returns name
+     */
 
     static async find(equipment_id) {
         const result = await db.query(`
@@ -35,6 +50,12 @@ class Equipment {
 
         return equipment;
     }
+
+    /**
+     * Add a piece of equipment
+     * @param {*} name 
+     * @returns {name}
+     */
 
     static async add(name) {
         const result = await db.query(`
@@ -52,6 +73,16 @@ class Equipment {
             
     }
 
+    /**
+     * Update a piece of equipment based on equipment_id
+     * @param {*} id 
+     * @param {*} data 
+     * @returns {name}
+     * 
+     * Throws a NotFoundError if the equipment_id is invalid
+     */
+    
+    
     static async update(id, data) {
         const { setCols, values } = sqlForPartialUpdate(data, 
             {
@@ -70,10 +101,20 @@ class Equipment {
 
         const equipment = result.rows[0];
 
+        if(!equipment) throw new NotFoundError(`Equipment not found: ${equipment_id}`)
+
         return equipment;
 
 
     }
+
+    /**
+     * Remove a piece of equipment based on equipment_id
+     * @param {*} equipment_id 
+     * @returns {name}
+     * 
+     * Throws a NotFoundError if the equipment_id is invalid
+     */
 
     static async remove(equipment_id) {
 
@@ -84,8 +125,10 @@ class Equipment {
 
         const equipment = result.rows[0];
 
-        if(!equipment) throw new NotFoundError(`equipment not found: ${equipment_id}`)
+        if(!equipment) throw new NotFoundError(`Equipment not found: ${equipment_id}`)
 
     }
 
 }
+
+module.exports = {Equipment};

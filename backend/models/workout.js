@@ -9,18 +9,26 @@ const {
 
 const { BCRYPT_WORK_FACTOR } = require('../config.js');
 
+// Common functions for Workout class
 class Workout { 
-    static async findAll() {
+
+    /**
+     * Find all workouts
+     * @returns {name, category, completed_count, favorited}
+     */
+
+    static async findAll(user_id) {
         const result = await db.query(`
             SELECT name,
                     category,
                     completed_count, 
                     favorited
             FROM workouts
+            WHERE user_id = $1
             RETURNINING (name,
                         category,
                         completed_count, 
-                        favorited)`)
+                        favorited)`, [user_id] )
 
         let workouts = result.rows;
 
@@ -28,7 +36,16 @@ class Workout {
 
     }
 
-    static async find(workout_id) {
+    /**
+     * Find a workout based on workout_id
+     * @param {*} workout_id 
+     * @returns {name, user_id, category, completed_count, favorited}
+     * 
+     * Throw NotFoundError if workout_id is invalid
+     */
+
+    static async find(workout_id, user_id) {
+        
         const result = await db.query(`
             SELECT name,
                     category,
@@ -48,6 +65,16 @@ class Workout {
         return workout;
     }
 
+
+    /**
+     * Create a new workout
+     * @param {*} name 
+     * @param {*} user_id 
+     * @param {*} category 
+     * @param {*} completed_count 
+     * @param {*} favorited 
+     * @returns {name, user_id, category, completed_count, favorited}
+     */
     static async add(name, user_id, category, completed_count = 0, favorited = false) {
         const result = await db.query(`
             INSERT INTO workouts
@@ -64,6 +91,14 @@ class Workout {
             
     }
 
+    /**
+     * Update an existing workout based on id
+     * @param {*} id 
+     * @param {*} data 
+     * @returns {name, user_id, category, completed_count, favorited}
+     * 
+     * Throw NotFoundError if workout_id is invalid
+     */
     static async update(id, data) {
         const { setCols, values } = sqlForPartialUpdate(data, 
             {
@@ -85,11 +120,19 @@ class Workout {
 
         const workout = result.rows[0];
 
+        if(!workout) throw new NotFoundError(`Workout not found: ${workout_id}`)
+
         return workout;
 
 
     }
 
+
+    /**
+     * Delete and existing workout based on workout_id
+     * @param {*} workout_id 
+     */
+    
     static async remove(workout_id) {
 
         const result = await db.query(`
@@ -103,4 +146,22 @@ class Workout {
 
     }
 
+    static async addCircuit(workout_id, circuit_id){
+        const result = await db.query(`
+            INSERT INTO circuits_workouts (circuit_id, workout_id)
+            VALUES($1, $2)
+            RETURNING circuit_id, workout_id`,
+        [circuit_id, workout_id])
+        
+        const workoutCircuit = result.rows[0];
+
+        if(!workoutCircuit) throw new NotFoundError(`Incorrect Workout/Circuit: Workout ${workout_id} Circuit ${circuit_id}`)
+            
+        return workoutCircuit;
+    }
+
+
+
 }
+
+module.exports = {Workout};
