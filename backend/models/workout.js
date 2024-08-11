@@ -7,8 +7,6 @@ const {
     UnauthorizedError
 } = require('../ExpressError');
 
-const { BCRYPT_WORK_FACTOR } = require('../config.js');
-
 // Common functions for Workout class
 class Workout { 
 
@@ -19,16 +17,14 @@ class Workout {
 
     static async findAll(user_id) {
         const result = await db.query(`
-            SELECT name,
+            SELECT id,
+                    name,
                     category,
                     completed_count, 
                     favorited
             FROM workouts
-            WHERE user_id = $1
-            RETURNINING (name,
-                        category,
-                        completed_count, 
-                        favorited)`, [user_id] )
+            WHERE user_id = $1`,
+             [user_id] )
 
         let workouts = result.rows;
 
@@ -47,16 +43,16 @@ class Workout {
     static async find(workout_id, user_id) {
         
         const result = await db.query(`
-            SELECT name,
+            SELECT workouts.id,
+                    name,
                     category,
                     completed_count, 
                     favorited
             FROM workouts
-            WHERE id = $1
-            RETURNINING (name,
-                        category,
-                        completed_count, 
-                        favorited)` [workout_id])
+            JOIN users_workouts 
+            ON workouts.id = users_workouts.workout_id
+            WHERE workouts.id = $1 AND users_workouts.user_id= $2`,
+             [workout_id, user_id])
 
         let workout = result.rows[0];
 
@@ -75,20 +71,33 @@ class Workout {
      * @param {*} favorited 
      * @returns {name, user_id, category, completed_count, favorited}
      */
-    static async add(name, user_id, category, completed_count = 0, favorited = false) {
+    static async add({name, category, completed_count = 0, favorited = false}, user_id) {
         const result = await db.query(`
             INSERT INTO workouts
             (name, user_id, category, completed_count, favorited)
             VALUES ($1, $2, $3, $4, $5)
-            RETURNING(name, user_id, category, completed_count, favorited)`, 
+            RETURNING id, name, user_id, category, completed_count, favorited`, 
             [name, user_id, category, completed_count, favorited]);
 
 
         const workout = result.rows[0];
 
+        this.addUserWorkout(user_id, workout.id)
+
         return workout
             
             
+    }
+
+    static async addUserWorkout(user_id, workout_id){
+
+        const result = await db.query(`
+            INSERT INTO users_workouts
+            (user_id, workout_id)
+            VALUES ($1, $2)`,
+        [user_id, workout_id])
+
+        return result.rows[0]
     }
 
     /**
@@ -114,7 +123,7 @@ class Workout {
         const querySql = `UPDATE workouts
             SET ${ setCols }
             WHERE id = ${workoutIdVarIdx}
-            RETURNING(name, category, completed_count, favorited)`;
+            RETURNING name, category, completed_count, favorited`;
 
         const result = await db.query(querySql, [...values, id]);
 
@@ -137,9 +146,9 @@ class Workout {
 
         const result = await db.query(`
             DELETE FROM workouts
-            WHERE id = $1`,
+            WHERE id = $1
+            RETURNING id`,
         [workout_id])
-
         const workout = result.rows[0];
 
         if(!workout) throw new NotFoundError(`Workout not found: ${workout_id}`)

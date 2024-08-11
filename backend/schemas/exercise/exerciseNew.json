@@ -19,17 +19,9 @@
             ]
         },
         "muscle_group": {
-            "type": "string",
+            "type": "integer",
             "default": "",
             "title": "The muscle_group Schema",
-            "examples": [
-                "chest"
-            ]
-        },
-        "equipment_id": {
-            "type": "integer",
-            "default": 0,
-            "title": "The equipment_id Schema",
             "examples": [
                 1
             ]
@@ -37,7 +29,6 @@
     },
     "examples": [{
         "name": "pushups",
-        "muscle_group": "chest",
-        "equipment_id": 1
+        "muscle_group": "chest"
     }]
 }

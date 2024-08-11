@@ -28,13 +28,13 @@ class User {
         // try to find the user first
 
         const results = await db.query(
-            `SELECT username,
-                    password, 
-                    first_name AS firstName,
-                    last_name AS lastName,
+            `SELECT id,
+                    username,
+                    password,
+                    first_name AS "firstName",
+                    last_name AS "lastName",
                     email,
-                    is_admin AS isAdmin
-
+                    is_admin AS "isAdmin"
             FROM users
             WHERE username = $1
             `, [username]
@@ -42,11 +42,9 @@ class User {
 
         const user = results.rows[0];
         
-
         if(user){
-
             // compare the hashed passowrd to the new hash from password
-            const isValid = bcrypt.compare(password, user.password);
+            const isValid = await bcrypt.compare(password, user.password);
             if (isValid === true){
                 delete user.password;
                 return user;
@@ -65,16 +63,16 @@ class User {
      * @param {*} last_name 
      * @param {*} email 
      * @param {*} is_admin 
-     * @returns {username, first_name, last_name, email, is_admin}
+     * @returns {username, is_admin}
      */
 
-    static async register(username, password, first_name, last_name, email, is_admin = false) {
+    static async register({username, password, isAdmin = false}) {
 
 
         //Check to ensure that the new username is not already taken
 
         const duplicateCheck =  await db.query(`
-            SELECT username
+            SELECT id,username
             FROM users
             WHERE username = $1`, [username])
 
@@ -85,26 +83,52 @@ class User {
             throw new BadRequestError(`Duplicate username: ${username}`);
         }
 
-        const hashedPassword = bcrypt.hash(password, BCRYPT_WORK_FACTOR);
+        const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
 
         const results = await db.query(
             `INSERT INTO users
             (username, 
             password,
-            first_name,
-            last_name,
-            email,
             is_admin)
             
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING (username, first_name AS "firstName, last_name AS "lastName", email, is_admin AS "isAdmin")`,
-            [username, hashedPassword,first_name,last_name,email,is_admin]
+            VALUES ($1, $2, $3)
+            RETURNING id, username, is_admin`,
+            [username, hashedPassword, isAdmin]
         );
 
         const user = results.rows[0];
 
+        console.log(user)
         return user;
     }
+
+
+    /**
+     * Get a users information using username
+     * @param {*} username 
+     * @returns {user}
+     */
+
+    static async find(username){
+        const results = await db.query(`
+            SELECT id,
+                    username,
+                    password,
+                    first_name AS "firstName",
+                    last_name AS "lastName",
+                    email,
+                    is_admin AS "isAdmin"
+            FROM users
+            WHERE username = $1`, 
+        [username]);
+
+        const user = results.rows[0];
+
+        if(!user) throw new NotFoundError(`User with username of ${username} not found`)
+
+        return user;
+    }
+
 
 
     /**
@@ -132,7 +156,7 @@ class User {
 
         const { setCols, values } = sqlForPartialUpdate(data, 
             {
-                username: "username",
+                password: "password",
                 firstName: "first_name",
                 lastName: "last_name",
                 isAdmin: "is_admin",
@@ -145,8 +169,10 @@ class User {
         const querySql = `UPDATE users
                             SET ${setCols}
                             WHERE username = ${usernameVarIdx}
-                            RETURNINING username,
-                                        first_name AS "firstName,
+                            RETURNING id,
+                                        username,
+                                        password,
+                                        first_name AS "firstName",
                                         last_name AS "lastName",
                                         email,
                                         is_admin AS "isAdmin"`;

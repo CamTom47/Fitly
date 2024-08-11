@@ -17,6 +17,16 @@ const {BadRequestError} = require('../ExpressError');
  *     values: ['Aliya', 'Smith'] }
  */
 
+/**
+ * 
+ * keys = [firstName, lastName]
+ * 
+ * cols = {}
+ * 
+ * 
+ * 
+ */
+
 const sqlForPartialUpdate = ( dataToUpdate, jsToSql) => {
     let keys  = Object.keys(dataToUpdate);
 

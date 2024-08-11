@@ -8,7 +8,6 @@ const {
 } = require('../ExpressError');
 
 const { BCRYPT_WORK_FACTOR } = require('../config.js');
-const Equipment = require('./equipment.js');
 
 
 //Common functions for Exercise class
@@ -20,18 +19,20 @@ class Exercise {
      * @returns {name, muscle_group, equipment_id}
      */
 
-    static async findAll() {
+    static async findAll(user_id) {
         const result = await db.query(`
-            SELECT name,
-                    muscle_group,
-                    equipment_id
+            SELECT  exercises.id,
+                    exercises.name,
+                    exercises.muscle_group,
+                    exercises_equipments.equipment_id
             FROM exercises
-            RETURNINING (name,
-                        muscle_group,
-                        equipment_id)`)
+            JOIN users_exercises
+            ON exercises.id = users_exercises.exercise_id
+            JOIN exercises_equipments
+            ON exercises.id = exercises_equipments.exercise_id
+            WHERE users_exercises.user_id = $1`, [user_id])
 
         let exercises = result.rows;
-
         return exercises;
 
     }
@@ -44,16 +45,19 @@ class Exercise {
      * Throw NotFoundError if exercise_id is invalid.
      */
     
-    static async find(exercise_id) {
+    static async find(user_id, exercise_id) {
         const result = await db.query(`
-            SELECT name,
-                    muscle_group,
-                    equipment_id
+            SELECT  exercises.id,
+                    exercises.name,
+                    exercises.muscle_group,
+                    exercises_equipments.equipment_id
             FROM exercises
-            WHERE id = $1
-            RETURNINING (name,
-                        muscle_group,
-                        equipment_id)` [exercise_id])
+            JOIN users_exercises 
+            ON exercises.id = users_exercises.exercise_id
+            JOIN exercises_equipments
+            ON exercises.id = exercises_equipments.exercise_id
+            WHERE exercises.id = $1 AND users_exercises.user_id = $2`,
+            [exercise_id, user_id])
 
         let exercise = result.rows[0];
 
@@ -71,23 +75,29 @@ class Exercise {
      * @returns {name, muscle_group, equipment_id}
      */
 
-    static async add(name, muscle_group, equipment_id, user_id) {
+    static async add(name, muscle_group) {
         const result = await db.query(`
             INSERT INTO exercises
-            (name, muscle_group, equipment_id)
-            VALUES ($1, $2, $3)
-            RETURNING(name, muscle_group, equipment_id)`, 
-            [name, muscle_group, equipment_id]);
+            (name, muscle_group)
+            VALUES ($1, $2)
+            RETURNING id, name, muscle_group`, 
+            [name, muscle_group]);
 
-            
-            
             const exercise = result.rows[0];
             
-            this.addExercise(user_id, exercise.id)
-            
-        return exercise
-            
-            
+        return exercise  
+    }
+
+    static async addExerciseEquipment(exercise_id, equipment_id){
+
+        const result = await db.query(`
+            INSERT INTO exercises_equipments
+            (exercise_id, equipment_id)
+            VALUES($1, $2)
+            RETURNING exercise_id, equipment_id`, 
+        [exercise_id, equipment_id]);
+        
+        return result.rows[0];
     }
 
     /**
@@ -96,7 +106,8 @@ class Exercise {
      * @param {*} exercise_id 
      */
 
-    static async addExercise(user_id, exercise_id){
+    static async addUserExercise(user_id, exercise_id){
+        console.log(user_id)
         const result = await db.query(`
             INSERT INTO users_exercises
             (user_id, exercise_id)
@@ -116,12 +127,11 @@ class Exercise {
      * Throws NotFoundError if id is invalid
      */
     
-    static async update(id, data) {
+    static async update(id, data, equipment_id) {
         const { setCols, values } = sqlForPartialUpdate(data, 
             {
                 name: "name",
                 muscle_group : "muscle_group",
-                equipment_id : "equipment_id"
             }
         )
 
@@ -130,13 +140,20 @@ class Exercise {
         const querySql = `UPDATE exercises
             SET ${ setCols }
             WHERE id = ${exerciseIdVarIdx}
-            RETURNING(name, muscle_group, equipment_id)`;
+            RETURNING id, name, muscle_group`;
 
         const result = await db.query(querySql, [...values, id]);
 
         const exercise = result.rows[0];
 
         if(!exercise) throw new NotFoundError(`Exercise not found: ${exercise_id}`)
+
+        //Update Many-to-many table of equipment/exercise
+
+        await db.query(`
+            UPDATE exercises_equipments
+            SET equipment_id = $1
+            WHERE exercise_id = $2`, [equipment_id, id]);
 
         return exercise;
 
@@ -156,11 +173,6 @@ class Exercise {
             DELETE FROM exercises
             WHERE id = $1`,
         [exercise_id])
-
-        const exercise = result.rows[0];
-
-        if(!exercise) throw new NotFoundError(`Exercise not found: ${exercise_id}`)
-
     }
 
 }

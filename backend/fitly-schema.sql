@@ -3,46 +3,43 @@ CREATE TABLE users (
     username VARCHAR(20) UNIQUE NOT NULL,
     first_name TEXT,
     last_name TEXT,
-    password TEXT,
-    email = TEXT,
-    is_admin = BOOLEAN,
-    CHECK(LENGTH(password >= 6))
-)
+    password TEXT NOT NULL,
+    email TEXT,
+    is_admin BOOLEAN NOT NULL
+);
 
-CREATE TABLE users_workouts (
+CREATE TABLE equipments (
     id SERIAL PRIMARY KEY,
-    user_id REFERENCES users (id),
-    workout_id REFERENCES workouts (id)
-)
+    user_id INTEGER REFERENCES users(id),
+    name TEXT,
+    systemDefault BOOLEAN NOT NULL
+);
 
-CREATE TABLE users_exercises (
+CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    user_id REFERENCES users(id),
-    exercise_id REFERENCES exercises(id)
-)
+    user_id INTEGER REFERENCES users(id),
+    name TEXT NOT NULL,
+    systemDefault BOOLEAN NOT NULL
+);
+
+CREATE TABLE muscleGroups (
+    id SERIAL PRIMARY KEY,
+    name TEXT
+);
 
 CREATE TABLE exercises (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    muscle_group TEXT NOT NULL,
-    equipement_id REFERENCES equipments(id) ON DELETE CASCADE
-
-)
-
-CREATE TABLE circuits_workouts (
-    id SERIAL PRIMARY KEY,
-    circuit_id REFERENCES circuits(id),
-    workout_id REFERENCES workouts(id)
-)
+    muscle_group INTEGER REFERENCES muscleGroups(id)
+);
 
 CREATE TABLE workouts (
     id SERIAL PRIMARY KEY,
-    user_id REFERENCES users(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id),
     name TEXT NOT NULL,
-    category REFERENCES categories(id) ON DELETE CASCADE,
-    completed_count INTEGER,
+    category INTEGER REFERENCES categories(id),
     favorited BOOLEAN
-)
+);
 
 CREATE TABLE circuits (
     id  SERIAL PRIMARY KEY,
@@ -51,22 +48,34 @@ CREATE TABLE circuits (
     weight INTEGER,
     rest_period INTEGER,
     intensity TEXT
-    
-)
+);
+
+CREATE TABLE users_workouts (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    workout_id INTEGER REFERENCES workouts(id) ON DELETE CASCADE
+);
+
+CREATE TABLE users_exercises (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    exercise_id INTEGER REFERENCES exercises(id) ON DELETE CASCADE
+);
+
+CREATE TABLE circuits_workouts (
+    id SERIAL PRIMARY KEY,
+    circuit_id INTEGER REFERENCES circuits(id) ON DELETE CASCADE,
+    workout_id INTEGER REFERENCES workouts(id) ON DELETE CASCADE
+);
 
 CREATE TABLE circuits_exercises (
     id SERIAL PRIMARY KEY,
-    circuit_id REFERENCES circuits(id),
-    exercise_id REFERENCES exercises(id)
-)
+    circuit_id INTEGER REFERENCES circuits(id) ON DELETE CASCADE,
+    exercise_id INTEGER REFERENCES exercises(id) ON DELETE CASCADE
+);
 
-CREATE TABLE equipments (
+CREATE TABLE exercises_equipments (
     id SERIAL PRIMARY KEY,
-    name TEXT
-)
-
-CREATE TABLE categories (
-    id SERIAL PRIMARY KEY,
-    name TEXT,
-    description TEXT
-)
+    exercise_id INTEGER REFERENCES exercises(id) ON DELETE CASCADE,
+    equipment_id INTEGER REFERENCES equipments(id)
+);

@@ -1,0 +1,41 @@
+{
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "user_id",
+        "name",
+        "systemDefault"
+    ],
+    "properties": {
+        "user_id": {
+            "type": "integer",
+            "default": "",
+            "title": "The name Schema",
+            "examples": [
+                "TRX Bands"
+            ]
+        },
+        "name": {
+            "type": "string",
+            "default": "",
+            "title": "The name Schema",
+            "examples": [
+                "TRX Bands"
+            ]
+        },
+        "systemDefault": {
+            "type": "boolean",
+            "default": "false",
+            "title": "The systemDefault Schema",
+            "examples": [
+                "false"
+            ]
+        }
+    },
+    "examples": [{
+        "user_id": "20",
+        "name": "Power",
+        "systemDefault": "false"
+    }]
+}

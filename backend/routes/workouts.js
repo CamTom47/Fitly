@@ -16,11 +16,10 @@ const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require('../middleware/auth
  * Authorization reuquired: logged in 
  */
 
-router.get('/', ensureCorrectUserOrAdmin, async function( req, res, next) {
+router.get('/', ensureLoggedIn, async function( req, res, next) {
     try{ 
-        const workouts = await Workout.findAll(res.locals.user.user_id);
+        const workouts = await Workout.findAll(res.locals.user.id);
         return res.json({workouts})
-
     } catch(err){
         return next(err);
     }
@@ -32,10 +31,10 @@ router.get('/', ensureCorrectUserOrAdmin, async function( req, res, next) {
  * Authorization required: logged in 
  */
 
-router.get('/:workout_id', ensureCorrectUserOrAdmin, async function(req, res, next){
+router.get('/:workout_id', ensureLoggedIn, async function(req, res, next){
     try{ 
-        const workout_id = req.params;
-        const workout = await Workout.find(workout_id, res.locals.user.user_id);
+        const workout_id = req.params.workout_id;
+        const workout = await Workout.find(workout_id, res.locals.user.id);
 
         return res.json({workout})
 
@@ -57,8 +56,7 @@ router.post('/', ensureLoggedIn, async function(req, res, next){
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs);
         }
-
-        const newWorkout = await Workout.add(req.body);
+        const newWorkout = await Workout.add(req.body, res.locals.user.id);
         return res.status(201).json({newWorkout});
 
     } catch(err){
@@ -72,15 +70,15 @@ router.post('/', ensureLoggedIn, async function(req, res, next){
  * Authorization required: Correct User or Admin
  */
 
-router.patch('/:workout_id', ensureCorrectUserOrAdmin, async function(req, res, next) {
+router.patch('/:workout_id', ensureLoggedIn, async function(req, res, next) {
     try{
-        const validator = jsonschema(req.body, updatedWorkoutSchema);
+        const validator = jsonschema.validate(req.body, updatedWorkoutSchema);
         if(!validator.valid){
             const errs = validator.errors.map(e => e.stack)
             throw new BadRequestError(errs);
         }
 
-        const id = req.params;
+        const id = req.params.workout_id;
         const updatedWorkout = await Workout.update(id, req.body);
 
         return res.json({updatedWorkout});
@@ -98,11 +96,10 @@ module.exports = router;
  * Authorization required: Correct user or admin
  */
 
-router.delete('/:workout_id', ensureCorrectUserOrAdmin, async function(req, res, next) {
+router.delete('/:workout_id', ensureLoggedIn, async function(req, res, next) {
     try{ 
-
-        const id = req.params;
-        await Workout.delete(id);
+        const id = req.params.workout_id;
+        await Workout.remove(id);
 
         return res.json({message: "delete"})
 
@@ -115,12 +112,12 @@ router.delete('/:workout_id', ensureCorrectUserOrAdmin, async function(req, res,
 /**
  * POST /workouts/workout_id/circuits/:circuits_id
  */
-router.post('/:workout_id/circuits/:circuit_id', ensureCorrectUserOrAdmin, async function(req, res, next){
+router.post('/:workout_id/circuits/:circuit_id', ensureLoggedIn, async function(req, res, next){
     try{
         const workout_id = req.params.workout_id;
         const circuit_id = req.params.circuit_id;
 
-        const workoutCircuit = Workout.addCircuit(workout_id, circuit_id);
+        const workoutCircuit = await Workout.addCircuit(workout_id, circuit_id);
 
         return res.json({workoutCircuit});
 

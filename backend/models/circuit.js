@@ -15,22 +15,28 @@ class Circuit {
 
     /**
      * Get all circuits 
+     * 
+     * Params: user_id 
+     * 
      * @returns {sets, reps, weight, rest_period, intensity}
      */
 
-    static async findAll() {
+    static async findAll(user_id) {
         const result = await db.query(`
-            SELECT sets,
+            SELECT c.id,
+                    sets,
                     reps,
                     weight
                     rest_period,
-                    intensity
-            FROM circuits
-            RETURNINING (sets,
-                        reps,
-                        weight,
-                        rest_period,
-                        intensity)`)
+                    intensity,
+                    cw.workout_id AS workout_id
+                FROM circuits AS c
+                JOIN circuits_workouts AS cw
+                ON c.id= cw.circuit_id
+                    JOIN workouts AS w
+                    ON cw.workout_id = w.id
+            WHERE w.user_id = $1`,
+            [user_id])
 
         let circuits = result.rows;
 
@@ -41,23 +47,30 @@ class Circuit {
 
       /**
      * Get a circuit based on circuit_id
+     * 
+     * PARAMS: user_id, circuit_id
+     * 
      * @returns {sets, reps, weight, rest_period, intensity}
      */
 
-    static async find(circuit_id) {
+    static async find(user_id, circuit_id) {
         const result = await db.query(`
-            SELECT sets,
-                    reps,
-                    weight
-                    rest_period,
-                    intensity
+            SELECT  circuits.id,
+                    circuits.sets,
+                    circuits.reps,
+                    circuits.weight,
+                    circuits.rest_period,
+                    circuits.intensity,
+                    exercises.id AS exercise_id
             FROM circuits
-            WHERE id = $1
-            RETURNINING (sets,
-                        reps,
-                        weight,
-                        rest_period,
-                        intensity)` [circuit_id])
+            RIGHT JOIN circuits_exercises 
+            ON circuits.id = circuits_exercises.circuit_id
+            RIGHT JOIN exercises 
+            ON circuits_exercises.exercise_id = exercises.id
+            RIGHT JOIN users_exercises 
+            ON exercises.id = users_exercises.exercise_id
+            WHERE users_exercises.user_id = $1 AND circuits.id = $2`,
+            [user_id,circuit_id])
 
         let circuit = result.rows[0];
 
@@ -76,14 +89,13 @@ class Circuit {
      * @returns {sets, reps, weight, rest_period, intensity}
      */
 
-    static async add(sets, reps, weight, rest_period, intensity) {
+    static async add({sets, reps, weight, rest_period, intensity}) {
         const result = await db.query(`
             INSERT INTO circuits
             (sets, reps, weight, rest_period, intensity)
             VALUES ($1, $2, $3, $4, $5)
-            RETURNING(sets, reps, weight, rest_period, intensity)`, 
+            RETURNING id, sets, reps, weight, rest_period, intensity`, 
             [sets, reps, weight, rest_period, intensity]);
-
 
         const circuit = result.rows[0];
 
@@ -118,7 +130,7 @@ class Circuit {
         const querySql = `UPDATE circuits
             SET ${ setCols }
             WHERE id = ${circuitIdVarIdx}
-            RETURNING(sets, reps, weight, rest_period, intensity)`;
+            RETURNING id, sets, reps, weight, rest_period, intensity`;
 
         const result = await db.query(querySql, [...values, id]);
         const circuit = result.rows[0];
@@ -126,10 +138,7 @@ class Circuit {
         if (!circuit) throw new NotFoundError(`Circuit not found: ${id}`)
 
         return circuit;
-
-
-
-    }
+    };
 
     /**
      * Remove a ciruit based on circuit_id
@@ -144,19 +153,26 @@ class Circuit {
             DELETE FROM circuits
             WHERE id = $1`,
         [circuit_id])
-
-        const circuit = result.rows[0];
-
-        if(!circuit) throw new NotFoundError(`Circuit not found: ${circuit_id}`)
-
     }
 
     static async addCircuitExercise(circuit_id, exercise_id){
+        console.log(circuit_id)
+        console.log(exercise_id)
         const result = await db.query(`
             INSERT INTO circuits_exercises
             (circuit_id, exercise_id)
             VALUES($1, $2)`,
-        [circuit_id, exercise_id])
+        [circuit_id, exercise_id]);
+
+        return result.rows[0];
+    }
+    
+    static async updateCircuitExercise(circuit_id, exercise_id){
+        const result = await db.query(`
+            UPDATE circuits_exercises
+            SET exercise_id = $1
+            WHERE circuit_id = $2`,
+        [exercise_id,circuit_id]);
 
         return result.rows[0];
     }

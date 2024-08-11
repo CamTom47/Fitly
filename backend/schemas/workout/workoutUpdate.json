@@ -4,11 +4,6 @@
     "type": "object",
     "default": {},
     "title": "Root Schema",
-    "required": [
-        "name",
-        "user_id",
-        "category"
-    ],
     "properties": {
         "name": {
             "type": "string",

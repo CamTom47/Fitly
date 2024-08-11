@@ -1,7 +1,12 @@
 const express = require('express');
+const router = express.Router();
 const { Category } = require('../models/category');
+const jsonschema  = require('jsonschema')
 
-const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require('../middleware/auth');
+const categoryNewSchema = require('../schemas/categories/categoryNew.json')
+const categoryUpdateSchema = require('../schemas/categories/categoryUpdate.json')
+
+const { ensureLoggedIn } = require('../middleware/auth');
 const { BadRequestError } = require('../ExpressError');
 
 /**
@@ -14,7 +19,10 @@ const { BadRequestError } = require('../ExpressError');
 
 router.get('/', ensureLoggedIn,  async function(req, res, next) {
     try{
-        const categories = await Category.findAll();
+
+        
+
+        const categories = await Category.findAll(res.locals.user.id);
 
         return res.json({categories});
 
@@ -32,16 +40,82 @@ router.get('/', ensureLoggedIn,  async function(req, res, next) {
  * Authorization required: logged in
  */
 
-router.get('/:category', ensureLoggedIn, async function(req, res, next){
+router.get('/:category_id', ensureLoggedIn, async function(req, res, next){
 try{
-    const name = req.params;
-    const category = Category.find(name);
+
+    let category_id = req.params.category_id;
+    const category = await Category.find(category_id);
 
     return res.json({category});
 
 } catch(err){
     return next(err)
 }
+})
+
+/**
+ * Create a new workout category
+ * 
+ * POST /categories => {category}
+ * 
+ * Authorization required: logged in
+ */
+
+router.post('/', ensureLoggedIn, async function(req, res, next) {
+    try{
+
+        const validator = jsonschema.validate({...req.body, systemDefault: false}, categoryNewSchema);
+        if(!validator.valid){
+            const errs = validator.errors.map( err => err.stack);
+            throw new BadRequestError(errs);
+        }
+
+        const { user_id, name } = req.body;
+
+        let category = await Category.add(user_id, name);
+
+        return res.status(201).json({category});
+
+    } catch(err){
+        return next(err);
+    }
+})
+
+/**
+ * Update and existing category
+ * 
+ * PATCH /categories/:category_id  => {category}
+ * 
+ * Authorization required: correct user or admin
+ */
+
+router.patch('/:category_id', ensureLoggedIn, async function(req, res, next) { 
+    try{
+        const validator = jsonschema.validate(req.body, categoryUpdateSchema);
+        if(!validator.valid){
+            const errs = validator.errors.map(err => err.stack);
+            throw new BadRequestError(errs);
+        }
+
+
+        const category = await Category.update(req.params.category_id, req.body);
+        return res.json({category});
+
+    } catch(err){
+        return next(err);
+    }
+})
+
+router.delete('/:category_id', ensureLoggedIn, async function(req,res,next){
+    try{
+        const id = req.params.category_id;
+        Category.delete(id);
+
+        return res.json({message: "deleted"})
+
+    } catch(err){
+        return next(err)
+    }
 })
 
 module.exports = router;

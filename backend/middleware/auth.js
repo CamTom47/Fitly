@@ -1,6 +1,7 @@
-const jwt = require('jsonwebtoken');
+"use strict"
 
-const { SECRET_KEY } = require('../confing');
+const jwt = require('jsonwebtoken');
+const { SECRET_KEY } = require('../config');
 const { UnauthorizedError } = require('../ExpressError');
 
 
@@ -12,20 +13,18 @@ const { UnauthorizedError } = require('../ExpressError');
  * It's not an error if no token was provided or if the token is not valid.
  */
 
-const authenticateJWT = ((req, res, next) => {
+const authenticateJWT = (req, res, next) => {
     try{
         const authHeader = req.headers && req.headers.authorization;
-
         if(authHeader){
             const token = authHeader.replace(/^[Bb]earer /, "").trim();
-            res.locals.user = jwt.verify(token, {SECRET_KEY});
+            res.locals.user = jwt.verify(token, SECRET_KEY);
         }
         return next();
-
     } catch(err){
         return next(err);
     }
-})
+}
 
 /** Middleware to use when they must be logged in.
  *
@@ -63,9 +62,11 @@ const ensureAdmin = (req, res, next) => {
 
 const ensureCorrectUserOrAdmin = ( req, res, next) => {
     try{
-        if(!(user && (user.isAdmin || user.username === req.user.useraname))) {
+        const user = res.locals.user;
+        if(!(user && (user.isAdmin || user.username === req.params.username))) {
             throw new UnauthorizedError();
         }
+        return next()
     } catch(err) {
         return next(err);
     }
