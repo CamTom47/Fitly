@@ -4,7 +4,6 @@ import FitlyApi from "../../Api/FitlyApi"
 import UserContext from "../../context/UserContext";
 import "./WgerExercise.css"
 
-import { equipmentCheckForExerciseUpdate } from "../../helpers/helpers"
 
 /**
  * Exercise component

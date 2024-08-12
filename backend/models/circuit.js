@@ -26,7 +26,7 @@ class Circuit {
             SELECT c.id,
                     sets,
                     reps,
-                    weight
+                    weight,
                     rest_period,
                     intensity,
                     cw.workout_id AS workout_id
@@ -156,8 +156,6 @@ class Circuit {
     }
 
     static async addCircuitExercise(circuit_id, exercise_id){
-        console.log(circuit_id)
-        console.log(exercise_id)
         const result = await db.query(`
             INSERT INTO circuits_exercises
             (circuit_id, exercise_id)

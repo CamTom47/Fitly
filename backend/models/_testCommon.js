@@ -73,12 +73,14 @@ async function commonBeforeAll(){
         
         const resultWorkout = await db.query(`
             INSERT INTO workouts(user_id, name, category, favorited)
-            VALUES($1, 'Test Workout 1', $2, false)`, [testUserId[0], testCategoryId[0]]);
+            VALUES($1, 'Test Workout 1', $2, false)
+            RETURNING id`, [testUserId[0], testCategoryId[0]]);
             testWorkoutId.splice(0,0, ...resultWorkout.rows.map(w => w.id))
         
         const resultCircuit = await db.query(`
             INSERT INTO circuits(sets, reps, weight, rest_period, intensity)
-            VALUES(5, 10, 100, 60, 'medium')`);
+            VALUES(5, 10, 100, 60, 'medium')
+            RETURNING id`);
             testCircuitId.splice(0,0, ...resultCircuit.rows.map(c=> c.id))
 
             await db.query(`

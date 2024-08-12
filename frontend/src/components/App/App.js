@@ -31,6 +31,10 @@ function App() {
 
     const navigate = useNavigate();
 
+    if(currentUser === null){
+      navigate('/');
+    }
+
   //Find current user using local storage "token"
   useEffect( () => {
     const getCurrentUser = async () => {

@@ -45,7 +45,6 @@ const NavBar = () => {
         <div>
             <Navbar>
                 <NavbarToggler onClick={toggleNavbar} className="me-2"/>
-             
                 {
                     (currentUser) ? 
                     <div>
