@@ -26,10 +26,6 @@ describe(' GET / ', function(){
             
         let resp = await request(app)
         .get("/circuits")
-        .
-        .set("locals", {user: {
-            id: testUserId[0]
-        }})
         .set("authorization", `Bearer ${u1token}`)
 
         console.log(resp)
