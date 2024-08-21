@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WgerExercise Functionality matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="d-flex flex-column align-items-center pb-3 card"
+  >
+    <div
+      class="card-title"
+    >
+      Name: test exercise 2
+    </div>
+    <div
+      class="row"
+    />
+    <div
+      class="card-body"
+    >
+      <p
+        class="d-flex justify-content-center card-text"
+      >
+        Type: test category name
+      </p>
+      <p
+        class="card-text"
+      >
+        Equipment: 
+      </p>
+    </div>
+    <button
+      class="btn btn-success"
+    >
+      Add To Saved Exercises
+    </button>
+  </div>
+</DocumentFragment>
+`;

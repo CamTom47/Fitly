@@ -60,7 +60,7 @@ router.post('/', ensureLoggedIn, async function(req, res, next){
             throw new BadRequestError(errs);
         };
 
-        const exercise = await Exercise.add(req.body.name, req.body.muscle_group);
+        const exercise = await Exercise.add(req.body);
         await Exercise.addUserExercise(res.locals.user.id, exercise.id)
         await Exercise.addExerciseEquipment(exercise.id, req.body.equipment_id);
         return res.status(201).json({exercise});

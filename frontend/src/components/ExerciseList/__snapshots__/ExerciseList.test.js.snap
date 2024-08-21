@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExerciseList Functionality matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="position-absolute start-50 top-50 translate-middle d-flex justify-content-center align-items-bottom column-gap-2"
+  >
+    <div
+      class="spinner-border"
+      role="status"
+    >
+      <span
+        class="visually-hidden"
+      >
+        Loading...
+      </span>
+    </div>
+    <p>
+      Page Is Loading...
+    </p>
+  </div>
+</DocumentFragment>
+`;

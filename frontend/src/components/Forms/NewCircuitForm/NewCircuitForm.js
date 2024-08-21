@@ -3,6 +3,7 @@ import { Formik, Field, ErrorMessage, Form} from "formik";
 import FitlyApi from "../../../Api/FitlyApi";
 import UserContext from "../../../context/UserContext";
 import { useNavigate } from "react-router";
+import LoadingComponent from "../../LoadingComponent/LoadingComponent";
 
 const NewCircuitForm = ({workout, toggleShowNewCircuitForm, createCircuit}) => {
 
@@ -32,10 +33,9 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm, createCircuit}) => {
     ))
 
     return (isLoading)
-    ? <p> Is Loading... </p>
+    ? <LoadingComponent/>
     : (
-        <div>
-            <button onClick={toggleShowNewCircuitForm}>Cancel</button>
+        <div className="pt-3">
             <Formik
                 initialValues={{
                     sets: 1,
@@ -72,39 +72,74 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm, createCircuit}) => {
                 }}
                 >
                     {({isSubmitting}) => (
-                        <Form>
-                            <label htmlFor="sets">Sets:</label>
-                            <Field type='number' name='sets'/>
-                            <ErrorMessage name='sets' component='div'/>
+                        <Form className="d-flex justify-content-center">
+                            <div className="d-flex flex-column align-items-center">
+                                <div className="d-flex flex-column row-gap-3" >
+
+                                
+                                <div className="d-flex justify-content-between column-gap-3">
+                                    <label htmlFor="sets">Sets:</label>
+                                    <Field type='number' name='sets'/>
+                                </div>
+                                <div style={{color: "red"}}>
+                                    <ErrorMessage name='sets' component='div'/>
+                                </div>
+
                             
-                            <label htmlFor="reps">Reps:</label>
-                            <Field type='number' name='reps'/>
-                            <ErrorMessage name='reps' component='div'/>
+                                <div className="d-flex justify-content-between column-gap-3">
+                                    <label htmlFor="reps">Reps:</label>
+                                    <Field type='number' name='reps'/>
+                                </div>
+                                <div style={{color: "red"}}>
+                                    <ErrorMessage name='reps' component='div'/>
+                                </div>
                             
-                            <label htmlFor="weight">Weight(lbs):</label>
-                            <Field type='number' name='weight'/>
-                            <ErrorMessage name='weight' component='div'/>
+                                <div className="d-flex justify-content-between column-gap-3">
+                                    <label htmlFor="weight">Weight(lbs):</label>
+                                    <Field type='number' name='weight'/>
+                                </div>
+                                <div style={{color: "red"}}>
+                                    <ErrorMessage name='weight' component='div'/>
+                                </div>
                             
-                            <label htmlFor="rest_period">Rest(Seconds):</label>
-                            <Field type='number' name='rest_period'/>
-                            <ErrorMessage name='rest_period' component='div'/>
+                                <div className="d-flex justify-content-between column-gap-3">
+                                    <label htmlFor="rest_period">Rest(Seconds):</label>
+                                    <Field type='number' name='rest_period'/>
+                                </div>
+                                <div style={{color: "red"}}>
+                                    <ErrorMessage name='rest_period' component='div'/>
+                                </div>
                                                        
-                            <label htmlFor="intensity">Intensity:</label>
-                            <Field as='select' name='intensity'>
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                            </Field>
-                            <ErrorMessage name='intensity' component='div'/>
+                                <div className="d-flex justify-content-between column-gap-3">
+                                    <label htmlFor="intensity">Intensity:</label>
+                                    <Field as='select' name='intensity'>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </Field>
+                                </div>
+                                <div style={{color: "red"}}>
+                                    <ErrorMessage name='intensity' component='div'/>
+                                </div>
                             
-                            <label htmlFor="exercise">Exercise:</label>
-                            <Field as='select' name='exercise'>
-                                <option value=""> - </option>
-                                {exerciseOptionComponents}
-                            </Field>
-                            <ErrorMessage name='exercise' component='div'/>
+                            <div className="d-flex justify-content-between column-gap-3">
+                                <label htmlFor="exercise">Exercise:</label>
+                                <Field as='select' name='exercise'>
+                                    <option value=""> - </option>
+                                    {exerciseOptionComponents}
+                                </Field>
+                                </div>
+                                <div style={{color: "red"}}>
+                                    <ErrorMessage name='exercise' component='div'/>
+                                </div>
+                            </div>
                             
-                            <button type='submit' disabled={isSubmitting}>Add Ciruit</button>
+                            <div className="d-flex column-gap-5 pt-3">
+                                <button className="btn btn-danger" onClick={toggleShowNewCircuitForm}>Cancel</button>
+                                <button className="btn btn-success" type='submit' disabled={isSubmitting}>Add Ciruit</button>
+                            </div>
+                        </div>
+
                         </Form>
                     )}
 

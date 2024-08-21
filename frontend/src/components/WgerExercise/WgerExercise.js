@@ -126,20 +126,20 @@ const WgerExercise = ({addExercise, exercise}) => {
     ))
 
     return (
-        <Card className="my-2">
-            <CardTitle>{englishExercise.name}</CardTitle>
+        <Card className="d-flex flex-column align-items-center pb-3">
+            <CardTitle>Name: {englishExercise.name}</CardTitle>
             <Row>
                 {imageComponents}
             </Row>
 
             <CardBody>
-                <CardText>
+                <CardText className="d-flex justify-content-center">
                     Type: {exercise.category.name}
                 </CardText>
                 
                 {equipmentComponents}
             </CardBody>
-            <button onClick={handleClick}>Add To Personal Exercises</button>
+            <button className="btn btn-success" onClick={handleClick}>Add To Saved Exercises</button>
         </Card>
     )
 }

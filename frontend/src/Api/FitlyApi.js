@@ -70,7 +70,7 @@ class FitlyApi {
          * @returns {token}
          */
 
-        static async login(data){
+        static async login(data){   
             let res = await this.request('auth/token', data, 'post')
             return res.token;
         }
@@ -402,4 +402,4 @@ class FitlyApi {
 
     FitlyApi.token = ""
 
-export default FitlyApi
+export default FitlyApi;

@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExerciseDetails Functionality matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="my-2 d-flex flex-column align-items-center pb-3 card"
+  >
+    <div
+      class="d-flex flex-column align-items-center"
+    >
+      <div
+        class="fs-3 d-flex card-title"
+      >
+        test exercise
+      </div>
+      <div
+        class="d-flex flex-column align-content-center card-body"
+      >
+        <p
+          class="d-flex justify content-center card-text"
+        >
+          Muscle Group: 
+        </p>
+        <p
+          class="d-flex justify content-center card-text"
+        >
+          Equipment Needed: 
+        </p>
+      </div>
+      <div
+        class="d-flex flex-row column-gap-5"
+      >
+        <button
+          class="btn btn-danger btn btn-secondary"
+          type="button"
+        >
+          Delete Exercise
+        </button>
+        <button
+          class="btn btn-secondary btn btn-secondary"
+          type="button"
+        >
+          Edit Exercise
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -24,8 +24,8 @@ const UpdateExerciseForm = ({toggle, updateExercise, exercise, equipment}) => {
 
 
     return (
-        <div>
-            <h1>Update Exercise Form</h1>
+        <div className="d-flex flex-column align-items-center">
+            <h3>Exercise Information</h3>
             <Formik
                 initialValues={{name: exercise.name, 
                     muscle_group: exercise.muscle_group,
@@ -56,24 +56,33 @@ const UpdateExerciseForm = ({toggle, updateExercise, exercise, equipment}) => {
                 }}
                 >
                     {({isSubmitting}) => (
-                        <div>
-                            <Form>
-                                <label htmlFor="name">Exercise Name:</label>
-                                <Field type='name' name='name'/>
-                                <ErrorMessage name='name' component='div'/>
-                                <label htmlFor="muscle_group">Muscle Group:</label>
-                                <Field as='select' name='muscle_group'>
-                                    {muscleGroupComponents}
-                                </Field>
-                                <ErrorMessage name='muscle_group' component='div'/>
-                                <label htmlFor="equipment">Equipment:</label>
-                                <Field type='equipment' name='equipment'/>
-                                <ErrorMessage name='equipment' component='div'/>
-                                <button type='submit' disabled={isSubmitting}>Register</button>
+                            <Form className="d-flex flex-column align-items-center">
+                                <div className="d-flex flex-column align-items-center">
+                                    <div className="d-flex flex-column justify-content-center p-3 row-gap-4">
+                                        <div className="d-flex justify-content-between column-gap-3">
+                                            <label htmlFor="name">Exercise Name:</label>
+                                            <Field type='name' name='name'/>
+                                            <ErrorMessage name='name' component='div'/>
+                                        </div>
+                                        <div className="d-flex justify-content-between">
+                                            <label htmlFor="muscle_group">Muscle Group:</label>
+                                            <Field as='select' name='muscle_group'>
+                                                {muscleGroupComponents}
+                                            </Field>
+                                            <ErrorMessage name='muscle_group' component='div'/>
+                                        </div>
+                                        <div className="d-flex justify-content-between">
+                                            <label htmlFor="equipment">Equipment:</label>
+                                            <Field type='equipment' name='equipment'/>
+                                            <ErrorMessage name='equipment' component='div'/>
+                                        </div>
+                                    </div>
+                                    <div className="d-flex column-gap-5">
+                                        <button className="btn btn-danger" onClick={toggle}>Cancel</button>
+                                        <button className="btn btn-success" type='submit' disabled={isSubmitting}>Register</button>
+                                    </div>
+                                </div>
                             </Form>
-                                <button onClick={toggle}>Cancel</button>
-
-                        </div>
                     )}
 
             </Formik>

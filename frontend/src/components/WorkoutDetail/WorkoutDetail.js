@@ -4,9 +4,10 @@ import { useNavigate, Link, useFetcher } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 
 //styling imports
-import { Card, CardBody, CardText, CardTitle, ListGroup, ListGroupItem, Button} from "reactstrap"
+import { Card, CardBody, CardText, CardTitle, ListGroup, ListGroupItem, Button, Container} from "reactstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faTrash, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 //component imports
 import NewCircuitForm from "../Forms/NewCircuitForm/NewCircuitForm";
@@ -21,12 +22,6 @@ const WorkoutDetail = () => {
 
     let navigate = useNavigate();
     let currentUser = useContext(UserContext).currentUser;
-
-    // useEffect(() => {
-    //     if(currentUser === null){
-    //         navigate('/');
-    //     }
-    // })
 
     const [workout, setWorkout] = useState({});
     const [circuits, setCircuits] = useState([]);
@@ -57,7 +52,7 @@ const WorkoutDetail = () => {
             } catch (err){
                 return err
             }
-    }, [showNewCircuitForm, showWorkoutUpdateForm]);
+    }, [showNewCircuitForm, showWorkoutUpdateForm, isLoading]);
     
     useEffect( () => {
         setIsLoading(true);
@@ -93,9 +88,11 @@ const WorkoutDetail = () => {
     // Add/remove workout from favorites to allow for filtering 
     const handleFavorite = async () => {
         try{
+            setIsLoading(true);
             (workout.favorited === false)
                 ? await FitlyApi.updateWorkout(workout.id, {favorited: true})
                 : await FitlyApi.updateWorkout(workout.id, {favorited: false})
+                setIsLoading(false);
         } catch(err){
             return err
         }
@@ -167,44 +164,61 @@ useEffect( () => {
 
 
     const circuitComponents = circuits.map( circuit => (
-        <Card>
+        <div>
             <Circuit circuitId={circuit.id} updateCircuit={updateCircuit} deleteCircuit={deleteCircuit}/>
-        </Card>
+            <hr></hr>
+        </div>
     ))
 
     return (isLoading)
-    ? <p>Page is Loading</p>
+    ? <LoadingComponent/>
     : ( 
     (showWorkoutUpdateForm) 
     ? <UpdateWorkoutForm workout={workout} updateWorkout={updateWorkout} handleToggle={toggleShowWorkoutUpdateForm}/>
     :(
+        <Container className="w-75 pt-3">
         <div>
-            <Button color='dark'>
-                <Link to={`/workouts`} style={{textDecoration: "none"}}>
-                    Back to Workouts
-                </Link>
-            </Button>
-            <Button onClick={toggleShowWorkoutUpdateForm}>
-                Edit Workout Information
-            </Button>
-        <Card className="my-2">
-        <CardTitle>{workout.name}</CardTitle>
-            <FontAwesomeIcon type="button" onClick={handleFavorite} icon={faStar}/>
-            <FontAwesomeIcon type="button" onClick={removeWorkout} icon={faTrash}/>
+            <div className="d-flex column-gap-3">
+                <Button color='danger'>
+                    <Link to={`/workouts`} style={{textDecoration: "none", color: "white"}}>
+                        Back to Workouts
+                    </Link>
+                </Button>
+                <Button onClick={toggleShowWorkoutUpdateForm}>
+                    Edit Workout Information
+                </Button>
+            </div>
+
+        <div>        
+        <Card className="my-2 p-2 w-25">
+            <div className="d-flex flex-row">
+                <button className="btn btn-danger" onClick={removeWorkout}>Delete Workout</button>
+                {
+                    (workout.favorited)
+                    ? <FontAwesomeIcon type="button" onClick={handleFavorite} icon={faStar} size="lg" style={{color: "#FFD43B"}}/>
+                    : <FontAwesomeIcon type="button" onClick={handleFavorite} icon={faStar} size="lg"/>
+                }
+            </div>   
+        <CardTitle className="fs-3" >{workout.name}</CardTitle>  
         <CardBody>
             <CardText>
                 Type of Workout:{category.name}
             </CardText>          
         </CardBody>
     </Card>
+    </div>
     <Card>
-        <CardBody>
+        <CardBody className="d-flex flex-grow-1 flex-column align-item-center row-gap-3">
 
-            <CardText>
+            <CardText className="d-flex flex-column align-items-center fs-4">
                     Circuits
+                    <hr className="w-100 mt-0"></hr>
             </CardText>
             {circuitComponents}
-            <FontAwesomeIcon type="button" icon={faSquarePlus} onClick={toggleShowNewCircuitForm}></FontAwesomeIcon>
+            <div className="d-flex flex-row justify-content-center align-items-center column-gap-3">
+                <span>Add A Circuit</span>
+                <FontAwesomeIcon type="button" icon={faSquarePlus} onClick={toggleShowNewCircuitForm}></FontAwesomeIcon>
+            </div>
             { 
                 (showNewCircuitForm)
                 ? <NewCircuitForm workout={workout} createCircuit={createCircuit} toggleShowNewCircuitForm={toggleShowNewCircuitForm}/>
@@ -214,6 +228,7 @@ useEffect( () => {
         </CardBody>
     </Card>
         </div>
+    </Container>
     )
 )
 

@@ -1,18 +1,18 @@
 import React, { useEffect, useState, useContext, useCallback, useMemo} from "react";
 
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
 import FitlyApi from "../../Api/FitlyApi";
 import WgerApi from "../../Api/WgerApi"
 import ExerciseDetails from "../ExerciseDetails/ExerciseDetails";
 import WgerExercise from "../WgerExercise/WgerExercise";
 import UserContext from "../../context/UserContext";
 import NewExerciseForm from "../Forms/NewExerciseForm/NewExerciseForm";
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import { v4 as uuid } from "uuid";
-
 
 const ExerciseList = () => {
     const [userExercises, setUserExercises] = useState([]);
@@ -37,6 +37,7 @@ const ExerciseList = () => {
             setIsLoading(true);
             const newExercise = await FitlyApi.createExercise(data);
             setUserExercises([...userExercises, newExercise])
+            getExercises()
             setIsLoading(false);
         } catch(err){
             return err
@@ -48,7 +49,7 @@ const ExerciseList = () => {
         try{
             setIsLoading(true)
             let updatedExercise = await FitlyApi.updateExercise(exerciseId, data);
-            setUserExercises([...userExercises, updatedExercise])
+            getExercises();
             setIsLoading(false)
         } catch(err){
             return err
@@ -59,6 +60,7 @@ const ExerciseList = () => {
     try{
         setIsLoading(true);
         await FitlyApi.deleteExercise(exercise_id);
+        getExercises();
         setIsLoading(false);
     } catch(err){
         return err
@@ -105,9 +107,9 @@ const ExerciseList = () => {
 
     // cache the getExercsies function so that it is the same reference when used in the useEffect hook.
     // Upon component mounting, get userExercises state from FitlyApi and display on page.
-            useEffect(() => { 
-                getExercises();
-            }, [showUserExercises, showWgerExercises]);
+    useEffect(() => { 
+        getExercises();
+    }, [showUserExercises, showWgerExercises, currentUser]);
 
     let getMuscleGroups = useCallback(async () => { 
         try{
@@ -116,11 +118,11 @@ const ExerciseList = () => {
         } catch (err) {
             return err
         }
-    }, [])
+    }, [currentUser])
 
     useEffect(() => {
         getMuscleGroups();
-    }, [])   
+    }, [currentUser])   
 
     //Map through userExercises state and create an exercise component from each item
     const userExerciseComponents = userExercises.map(e => (
@@ -183,20 +185,29 @@ const ExerciseList = () => {
 
     return (
         (isLoading) 
-    ? <p>Page is Loading...</p>
+    ? <LoadingComponent/>
     :
-        <Container>
-            <Row className='mb-3'>
-                <Col><button onClick={toggleUserExercises}>
-                    Personal Exercises
-                    </button>
-                    </Col>
-                <Col>
-                <button onClick={toggleWgerExercises}>Find An Exercise</button>
-                </Col>
-            </Row>
-            <Row>
-                <button onClick={toggleExerciseFormVisibility}>
+        <Container className="d-flex flex-column">
+            <Nav>
+                <div className="d-flex flex-row justify-content-between align-items-end flex-grow-1">
+                    <h1 className="flex-shrink-1">Exercises</h1>
+                    <NavItem>
+                        <NavLink className="flex-shrink-1" onClick={toggleUserExercises}>
+                            Saved Exercises
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className="flex-shrink-sm-0" onClick={toggleWgerExercises}>
+                            Find An Exercise
+                        </NavLink>
+                    </NavItem>
+        
+                </div>
+            </Nav>
+
+            <hr className="mt-0"></hr>
+            <Row className="d-flex flex-shrink-1 justify-content-center">
+                <button className="w-25 btn btn-secondary mx-0" onClick={toggleExerciseFormVisibility}>
                      Create Custom Exercise
                     </button>
             </Row>
@@ -211,10 +222,11 @@ const ExerciseList = () => {
 
                       {wgerExerciseComponents}
                  </Row>
-                <FontAwesomeIcon type="button" icon={faArrowLeft} onClick={getPreviousExercises}/>
-                <FontAwesomeIcon type="button" icon={faArrowRight} onClick={getNextExercises}/>
+                 <div className="d-flex justify-content-center column-gap-5">
+                    <FontAwesomeIcon type="button" icon={faArrowLeft} onClick={getPreviousExercises}/>
+                    <FontAwesomeIcon type="button" icon={faArrowRight} onClick={getNextExercises}/>
+                 </div>
             </div> 
-                 
             }
         </Container>)
 }

@@ -105,7 +105,7 @@ describe("delete", function(){
         
         await Circuit.remove(testCircuitId[0]);
 
-        let circuits = Circuit.findAll(testUserId[0]);
-        expect(circuits.length).toEqual(undefined)
+        let circuits = await Circuit.findAll(testUserId[0]);
+        expect(circuits.length).toEqual(0)
     })
 })

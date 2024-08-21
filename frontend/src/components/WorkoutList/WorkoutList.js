@@ -44,14 +44,18 @@ const WorkoutList = () => {
     return (showCreateWorkoutForm)
     ? <NewWorkoutForm toggleCreateForm={toggleCreateForm}/>
     : ( 
-        <>
-            <button onClick={toggleCreateForm}>Create New Workout</button>
-            
-            {workouts.map(workout => (
-                <WorkoutSummary key={uuid()} workout={workout}/>)
-            )}
-
-        </>
+        <div className="d-flex justify-content-center">
+            <div className="d-flex align-items-center flex-column w-75">
+                <h3>Workouts</h3>
+                <hr className="w-100"></hr>
+                <button className="btn btn-secondary" onClick={toggleCreateForm}>Create New Workout</button>
+                <div className="d-flex flex-row justify-content-left flex-wrap column-gap-5 row-gap-5 pt-4">
+                    {workouts.map(workout => (
+                        <WorkoutSummary key={uuid()} workout={workout}/>)
+                    )}
+                </div>
+            </div>
+        </div>
         )
 }
 

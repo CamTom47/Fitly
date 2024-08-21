@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WorkoutList Functionality matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="d-flex justify-content-center"
+  >
+    <div
+      class="d-flex align-items-center flex-column w-75"
+    >
+      <h3>
+        Workouts
+      </h3>
+      <hr
+        class="w-100"
+      />
+      <button
+        class="btn btn-secondary"
+      >
+        Create New Workout
+      </button>
+      <div
+        class="d-flex flex-row justify-content-left flex-wrap column-gap-5 row-gap-5 pt-4"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

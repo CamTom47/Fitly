@@ -3,6 +3,7 @@ import { Formik, Field, ErrorMessage, Form} from "formik";
 import FitlyApi from "../../../Api/FitlyApi";
 import UserContext from "../../../context/UserContext";
 import { useNavigate } from "react-router";
+import LoadingComponent from "../../LoadingComponent/LoadingComponent";
 
 const UpdateCircuitForm = ({workout, toggleShowUpdateCircuitForm, circuit, updateCircuit, exercise}) => {
 
@@ -32,10 +33,10 @@ const UpdateCircuitForm = ({workout, toggleShowUpdateCircuitForm, circuit, updat
     ))
 
     return (isLoading)
-    ? <p> Is Loading... </p>
+    ? <LoadingComponent/>
     : (
-        <div>
-            <button onClick={toggleShowUpdateCircuitForm}>Cancel</button>
+        <div className=" d-flex flex-column align-items-center">
+            <h5 className="pb-4">Circuit Information</h5>
             <Formik
                 initialValues={{
                     sets: circuit.sets,
@@ -80,38 +81,69 @@ const UpdateCircuitForm = ({workout, toggleShowUpdateCircuitForm, circuit, updat
                 }}
                 >
                     {({isSubmitting}) => (
-                        <Form>
-                            <label htmlFor="sets">Sets:</label>
-                            <Field type='number' name='sets'/>
-                            <ErrorMessage name='sets' component='div'/>
-                            
-                            <label htmlFor="reps">Reps:</label>
-                            <Field type='number' name='reps'/>
-                            <ErrorMessage name='reps' component='div'/>
-                            
-                            <label htmlFor="weight">Weight(lbs):</label>
-                            <Field type='number' name='weight'/>
-                            <ErrorMessage name='weight' component='div'/>
-                            
-                            <label htmlFor="rest_period">Rest(Seconds):</label>
-                            <Field type='number' name='rest_period'/>
-                            <ErrorMessage name='rest_period' component='div'/>
-                                                       
-                            <label htmlFor="intensity">Intensity:</label>
-                            <Field as='select' name='intensity'>
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                            </Field>
-                            <ErrorMessage name='intensity' component='div'/>
-                            
-                            <label htmlFor="exercise">Exercise:</label>
-                            <Field as='select' name='exercise'>
-                                {exerciseOptionComponents}
-                            </Field>
-                            <ErrorMessage name='exercise' component='div'/>
-                            
-                            <button type='submit' disabled={isSubmitting}>Update Ciruit</button>
+                        <Form className="d-flex justify-content-center">
+                            <div className="d-flex flex-column align-items-center">
+                                <div className="d-flex flex-column row-gap-3">                            
+                                    <div className="d-flex justify-content-between column-gap-3">
+                                        <label htmlFor="sets">Sets:</label>
+                                        <Field type='number' name='sets'/>
+                                    </div>
+                                    <div style={{color: "red"}}>
+                                        <ErrorMessage name='sets' component='div'/>
+                                    </div>
+                                    <div className="d-flex justify-content-between column-gap-3">
+                                        <label htmlFor="reps">Reps:</label>
+                                        <Field type='number' name='reps'/>
+                                    </div>
+                                    <div style={{color: "red"}}>
+                                        <ErrorMessage name='reps' component='div'/>
+                                    </div>
+                                    
+                                    <div className="d-flex justify-content-between column-gap-3">
+                                        <label htmlFor="weight">Weight(lbs):</label>
+                                        <Field type='number' name='weight'/>
+                                    </div>
+                                    <div style={{color: "red"}}>
+                                        <ErrorMessage name='weight' component='div'/>
+                                    </div>
+                                    
+                                    <div className="d-flex justify-content-between column-gap-3">
+                                        <label htmlFor="rest_period">Rest(Seconds):</label>
+                                        <Field type='number' name='rest_period'/>
+                                    </div>
+                                    <div style={{color: "red"}}>
+                                        <ErrorMessage name='rest_period' component='div'/>
+                                    </div>
+                                                            
+                                    <div className="d-flex justify-content-between column-gap-3">
+                                        <label htmlFor="intensity">Intensity:</label>
+                                        <Field as='select' name='intensity'>
+                                            <option value="low">Low</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="high">High</option>
+                                        </Field>
+                                    </div>
+                                    <div style={{color: "red"}}>
+                                        <ErrorMessage name='intensity' component='div'/>
+                                    </div>
+                                    
+                                    <div className="d-flex justify-content-between column-gap-3">
+                                        <label htmlFor="exercise">Exercise:</label>
+                                        <Field as='select' name='exercise'>
+                                            {exerciseOptionComponents}
+                                        </Field>
+                                    </div>
+                                    <div style={{color: "red"}}>
+                                        <ErrorMessage name='exercise' component='div'/>
+                                    </div>
+                                    
+                                    <div className="d-flex column-gap-5 pt-3 justify-content-center">
+                                        <button className="btn btn-danger" onClick={toggleShowUpdateCircuitForm}>Cancel</button>
+                                        <button className="btn btn-success" type='submit' disabled={isSubmitting}>Update Ciruit</button>
+                                    </div>
+                                </div>
+                            </div>
+
                         </Form>
                     )}
 

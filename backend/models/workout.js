@@ -20,7 +20,6 @@ class Workout {
             SELECT id,
                     name,
                     category,
-                    completed_count, 
                     favorited
             FROM workouts
             WHERE user_id = $1`,
@@ -46,7 +45,6 @@ class Workout {
             SELECT workouts.id,
                     name,
                     category,
-                    completed_count, 
                     favorited
             FROM workouts
             JOIN users_workouts 
@@ -71,13 +69,13 @@ class Workout {
      * @param {*} favorited 
      * @returns {name, user_id, category, completed_count, favorited}
      */
-    static async add({name, category, completed_count = 0, favorited = false}, user_id) {
+    static async add({name, category, favorited = false}, user_id) {
         const result = await db.query(`
             INSERT INTO workouts
-            (name, user_id, category, completed_count, favorited)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING id, name, user_id, category, completed_count, favorited`, 
-            [name, user_id, category, completed_count, favorited]);
+            (name, user_id, category, favorited)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id, name, user_id, category, favorited`, 
+            [name, user_id, category, favorited]);
 
 
         const workout = result.rows[0];
@@ -112,8 +110,7 @@ class Workout {
         const { setCols, values } = sqlForPartialUpdate(data, 
             {
                 name: "name",
-                category : "category",
-                completed_count: "completed_count", 
+                category : "category", 
                 favorited: "favorited"
             }
         )
@@ -123,7 +120,7 @@ class Workout {
         const querySql = `UPDATE workouts
             SET ${ setCols }
             WHERE id = ${workoutIdVarIdx}
-            RETURNING name, category, completed_count, favorited`;
+            RETURNING name, category, favorited`;
 
         const result = await db.query(querySql, [...values, id]);
 

@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unauthorized Functionality matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="d-flex flex-column align-items-center"
+  >
+    <h1
+      class="pb-3"
+    >
+      Unauthorized
+    </h1>
+    <p>
+      Please login or sign up.
+    </p>
+  </div>
+</DocumentFragment>
+`;

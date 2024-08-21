@@ -75,7 +75,7 @@ class Exercise {
      * @returns {name, muscle_group, equipment_id}
      */
 
-    static async add(name, muscle_group) {
+    static async add({name, muscle_group}) {
         const result = await db.query(`
             INSERT INTO exercises
             (name, muscle_group)
@@ -107,7 +107,6 @@ class Exercise {
      */
 
     static async addUserExercise(user_id, exercise_id){
-        console.log(user_id)
         const result = await db.query(`
             INSERT INTO users_exercises
             (user_id, exercise_id)

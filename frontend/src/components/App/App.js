@@ -7,6 +7,7 @@ import ExerciseList from "../ExerciseList/ExerciseList"
 import Homepage from "../Homepage/Homepage";
 import SignupForm from "../Forms/SignupForm/SignupForm";
 import NewExerciseForm from "../Forms/NewExerciseForm/NewExerciseForm";
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 import UserContext from "../../context/UserContext";
 import FitlyApi from "../../Api/FitlyApi"
@@ -14,6 +15,11 @@ import { decodeToken } from 'react-jwt'
 import Account from "../Account/Account";
 import NewWorkoutForm from "../Forms/NewWorkoutForm/NewWorkoutForm";
 import WorkoutDetail from "../WorkoutDetail/WorkoutDetail";
+import Unauthorized from "../Unauthorized/Unauthorized";
+import NotFound from "../NotFound/NotFound";
+import "./App.css"
+import bcrypt from "bcryptjs-react";
+
 
 
 
@@ -30,10 +36,6 @@ function App() {
     )
 
     const navigate = useNavigate();
-
-    if(currentUser === null){
-      navigate('/');
-    }
 
   //Find current user using local storage "token"
   useEffect( () => {
@@ -57,44 +59,79 @@ function App() {
 
 
   const login = async (formData) => {
-    let token = await FitlyApi.login(formData)
-    setToken(token)
-    FitlyApi.token = token
-    localStorage.setItem('token', token);
-    return {success: true}
+    try{
+        let token = await FitlyApi.login(formData)
+        setToken(token)
+        FitlyApi.token = token
+        localStorage.setItem('token', token);
+        return {success: true}
+    } catch(err){
+        return err
+    }
   }
   
   const signup = async (formData) => {
-    let token = await FitlyApi.signup(formData) ;
-    localStorage.setItem('token', token);
-    setToken(token);
-    FitlyApi.token = token;
-    return {success: true};
+    try{
+      let token = await FitlyApi.signup(formData) ;
+      localStorage.setItem('token', token);
+      setToken(token);
+      FitlyApi.token = token;
+      return {success: true};
+    } catch(err){
+      return err
+    }
   }
 
   const signout = () => {
-    localStorage.removeItem('token');
-    setToken("");
-    setCurrentUser(null);
-    FitlyApi.token = "";
-    return {message: "signed out"}
+    try{
+        localStorage.removeItem('token');
+        setToken("");
+        setCurrentUser(null);
+        FitlyApi.token = "";
+        return {message: "signed out"}
+    } catch(err){
+        return err
+    }
   }
 
   const updateUser = async (formData) => {
     if(formData.password){
-      let updatedUser = await FitlyApi.updateUser(currentUser.username, formData);
-      setCurrentUser(updatedUser);
+      try{
+        let updatedUser = await FitlyApi.updateUser(currentUser.username, formData);
+        setCurrentUser(updatedUser);
+      } catch(err){
+        return err
+      }
     } else {
-      let updatedUser = await FitlyApi.updateUser(currentUser.username, formData);
-      setCurrentUser(updatedUser);
+      try{
+        let updatedUser = await FitlyApi.updateUser(currentUser.username, formData);
+        setCurrentUser(updatedUser);
+      } catch(err){
+        return err
+      }
     }
   }
   
-  return (isLoading 
-  ? 
-  <p>Page is loading...</p>
-  : (
-    <div className="App">
+  if(token === null){
+    return (
+      <div className="">
+        <UserContext.Provider value={{currentUser, login, signout, updateUser}}>
+          <NavBar></NavBar>
+          <Routes>
+            <Route exact path="/" element={<Homepage/>}/>
+            <Route exact path="/register" element={<SignupForm signup={signup}/>}/>
+            <Route path="*" element={<Unauthorized/>}/>
+          </Routes>
+        </UserContext.Provider>
+
+      </div>
+    )
+  } else{
+
+    return (isLoading )
+    ? <LoadingComponent/>
+    : (
+      <div className="App">
       <UserContext.Provider value={{currentUser, login, signout, updateUser}}>
         <NavBar></NavBar>
         <Routes>
@@ -106,10 +143,12 @@ function App() {
           <Route exact path="/exercises" element={<ExerciseList/>}/>
           <Route exact path="/exercises/add" element={<NewExerciseForm/>}/>
           <Route exact path="/account" element={<Account/>}/>
+          <Route exact path="*" element={<NotFound/>}/>
         </Routes>
       </UserContext.Provider>
     </div>
-  ));
+  );
+}
 }
 
 export default App;

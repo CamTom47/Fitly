@@ -57,7 +57,7 @@ class Category {
      * @param {*} name 
      * @returns { category: {user_id, name}}
      */
-    static async add(user_id, name){
+    static async add({user_id, name}){
                 
         const result = await db.query(`
             INSERT INTO categories

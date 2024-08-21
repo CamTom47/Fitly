@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { ensureLoggedIn, ensureAdmin, ensureCorrectUserOrAdmin} = require('../middleware/auth');
 const jsonschema = require('json-schema')
-const userUpdate = require('../schemas/user/userUpdate.json')
+const userUpdateSchema = require('../schemas/user/userUpdate.json')
 const { NotFoundError, BadRequestError } = require('../ExpressError');
 
 /**
@@ -38,19 +38,20 @@ router.get('/:username', ensureCorrectUserOrAdmin, async function(req, res, next
 router.patch('/:username', ensureCorrectUserOrAdmin, async function(req, res, next) {
     try{
         const username = req.params.username;
-        const data = req.body;
+        console.log(username)
+        console.log(req.body)
 
-        const validator = jsonschema.validate(data, userUpdate);
+        const validator = jsonschema.validate(req.body, userUpdateSchema);
 
         if(!validator.valid){
             const errs = validator.errors.map( e => e.stack)
             throw new BadRequestError(errs)
         }
+    
 
-            
-        const user = await User.update(username, data);
+        const user = await User.update(username, req.body);
 
-        if(!user) throw new NotFoundError(`User ${username} not found `)
+        if(!user) throw new NotFoundError(`User ${username} not found`)
 
         return res.json({user})
 

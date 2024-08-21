@@ -1,17 +1,8 @@
 process.env.NODE_ENV === 'test'
 
 
-const bcrypt = require('bcrypt')
 const db = require('../db')
-
-const User = require('../models/user')
-const Circuit = require('../models/circuit')
-const Exercise = require('../models/exercise')
-const Workout = require('../models/workout')
-const Category = require('../models/category')
-const Equipment = require('../models/equipment')
-
-const { BCRYP_WORK_FACTOR } = require('../config')
+process.env.NODE_ENV = "test"
 
 let testUserId = [];
 let testEquipmentId = [];
@@ -28,6 +19,7 @@ async function commonBeforeAll(){
     await db.query("DELETE FROM workouts")
     await db.query("DELETE FROM categories")
     await db.query("DELETE FROM equipments")
+    await db.query("DELETE FROM muscleGroups")
     await db.query("DELETE FROM users_workouts")
     await db.query("DELETE FROM users_exercises")
     await db.query("DELETE FROM circuits_workouts")
@@ -66,7 +58,7 @@ async function commonBeforeAll(){
         
     const resultExercise = await db.query(`
             INSERT INTO exercises(name, muscle_group)
-            VALUES('Kettle Bell Squats', 1)
+            VALUES('Kettle Bell Squats', ${testMuscleGroupsId[0]})
             RETURNING id`);
 
         testExerciseId.splice(0,0, ...resultExercise.rows.map(e => e.id))
@@ -128,5 +120,6 @@ module.exports = {
     testEquipmentId,
     testExerciseId,
     testWorkoutId,
-    testCircuitId
+    testCircuitId,
+    testMuscleGroupsId
 }

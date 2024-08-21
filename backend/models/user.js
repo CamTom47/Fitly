@@ -98,7 +98,6 @@ class User {
 
         const user = results.rows[0];
 
-        console.log(user)
         return user;
     }
 
@@ -149,6 +148,8 @@ class User {
      */
 
     static async update(username, data){
+        // console.log(username)
+        // console.log(data)
 
         if(data.password){
             data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR)
@@ -160,7 +161,7 @@ class User {
                 firstName: "first_name",
                 lastName: "last_name",
                 isAdmin: "is_admin",
-                email: "email",
+                email: "email"
             }
         )
 

@@ -20,8 +20,6 @@ const { BadRequestError } = require('../ExpressError');
 router.get('/', ensureLoggedIn,  async function(req, res, next) {
     try{
 
-        
-
         const categories = await Category.findAll(res.locals.user.id);
 
         return res.json({categories});
@@ -70,9 +68,7 @@ router.post('/', ensureLoggedIn, async function(req, res, next) {
             throw new BadRequestError(errs);
         }
 
-        const { user_id, name } = req.body;
-
-        let category = await Category.add(user_id, name);
+        let category = await Category.add(req.body);
 
         return res.status(201).json({category});
 
@@ -109,7 +105,7 @@ router.patch('/:category_id', ensureLoggedIn, async function(req, res, next) {
 router.delete('/:category_id', ensureLoggedIn, async function(req,res,next){
     try{
         const id = req.params.category_id;
-        Category.delete(id);
+        Category.remove(id);
 
         return res.json({message: "deleted"})
 

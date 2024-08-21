@@ -8,6 +8,7 @@ import { Collapse,
     Navbar,
     NavbarToggler,
     NavbarBrand,
+    NavItem,
 } from "reactstrap";
 
 import { Nav } from "react-bootstrap";
@@ -22,61 +23,73 @@ const NavBar = () => {
 
     const {currentUser, signout} = useContext(UserContext)
 
-    const collapseComponents = (
-        <div>
-                <Nav.Link as={Link} to="/account">Account</Nav.Link>
-                <Nav.Link as={Link} to="/exercises">Exercises</Nav.Link>
+    const loggedInNavComponents = (
+        <div className="d-flex flex-column align-items-center">
+            <NavItem>
+                <Nav.Link as={Link} to="/account" onClick={toggleNavbar}>Account</Nav.Link>
+            </NavItem>
+            <NavItem>
+                <Nav.Link as={Link} to="/exercises" onClick={toggleNavbar}>Exercises</Nav.Link>
+            </NavItem>
 
-                <Nav.Link as={Link} to="/workouts">Workouts</Nav.Link>
+            <NavItem>
+                <Nav.Link as={Link} to="/workouts" onClick={toggleNavbar}>Workouts</Nav.Link>
+            </NavItem>
+            <NavItem>
                 <Nav.Link onClick={signout} as={Link} to="/">Sign Out</Nav.Link>
+            </NavItem>
         </div> 
     )
 
-    const nonCollapseComponents = (
-        <div>
-            <Nav.Link as={Link} to="/">Login</Nav.Link>
-            <Nav.Link as={Link} to="register">Signup</Nav.Link>
+    const nonloggedInNavComponents = (
+        <div className="d-flex flex-column align-items-center">
+            <NavItem>
+                <Nav.Link as={Link} to="/" onClick={toggleNavbar}>Login</Nav.Link>
+            </NavItem>
+            <NavItem>
+                <Nav.Link as={Link} to="/register" onClick={toggleNavbar}>Signup</Nav.Link>
+            </NavItem>
         </div>
 
     )
 
 
-    return(
-        <div>
-            <Navbar>
-                <NavbarToggler onClick={toggleNavbar} className="me-2"/>
-                {
-                    (currentUser) ? 
-                    <div>
-                    <div>
-                    <Collapse isOpen={!collapsed} navbar>
-                        <Nav navbar>
-                        {collapseComponents} 
-                        </Nav>
-                        
-                    </Collapse>
-                    <NavbarBrand href="/" className="me-auto">
-                Fitly
-            </NavbarBrand>
+    return  (currentUser !== null )
+    ?   <div>
+            <Navbar color="light" >
+                <div className="d-flex justify-content-between flex-grow-1">
+                    <NavbarBrand tag="a" href="/" className="fs-2 me-5">
+                        Fitly
+                    </NavbarBrand>
+                    <div >
+                        <NavbarToggler type="button" onClick={toggleNavbar} className="me-5 d-flex flex-column flex-grow-1"/>
+                        <Collapse isOpen={!collapsed} navbar>
+                            <Nav>
+                                {loggedInNavComponents} 
+                            </Nav>  
+                        </Collapse>
                     </div>
-                    <div>
-                    </div>
-                   </div>
-                : 
-                
-                    <Nav navbar>
-                        <NavbarBrand href="/" className="me-auto">
-                Fitly
-            </NavbarBrand>
-                        {nonCollapseComponents}
-                    </Nav>
-                }
-                
-            
-
+                </div>
             </Navbar>
         </div>
-    )
+
+    : <div>
+            <Navbar color="light" >
+                <div className="d-flex justify-content-between flex-grow-1">
+                    <NavbarBrand tag="a" href="/" className="fs-2 me-5">
+                        Fitly
+                    </NavbarBrand>
+                    <div className="d-flex flex-column align-items-center">
+                        <NavbarToggler type="button" onClick={toggleNavbar} className="me-5 d-flex flex-column flex-grow-1"/>
+                        <Collapse isOpen={!collapsed} navbar>
+                            <Nav>
+                                {nonloggedInNavComponents}
+                            </Nav>
+                        </Collapse>
+                    </div>
+                </div>
+            </Navbar>
+        </div>
 
 }
 

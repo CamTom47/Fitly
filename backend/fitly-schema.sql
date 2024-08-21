@@ -10,14 +10,14 @@ CREATE TABLE users (
 
 CREATE TABLE equipments (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     name TEXT,
     systemDefault BOOLEAN NOT NULL
 );
 
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     systemDefault BOOLEAN NOT NULL
 );
@@ -35,9 +35,9 @@ CREATE TABLE exercises (
 
 CREATE TABLE workouts (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
-    category INTEGER REFERENCES categories(id),
+    category INTEGER REFERENCES categories(id) ON DELETE CASCADE,
     favorited BOOLEAN
 );
 
@@ -77,5 +77,5 @@ CREATE TABLE circuits_exercises (
 CREATE TABLE exercises_equipments (
     id SERIAL PRIMARY KEY,
     exercise_id INTEGER REFERENCES exercises(id) ON DELETE CASCADE,
-    equipment_id INTEGER REFERENCES equipments(id)
+    equipment_id INTEGER REFERENCES equipments(id) ON DELETE CASCADE
 );

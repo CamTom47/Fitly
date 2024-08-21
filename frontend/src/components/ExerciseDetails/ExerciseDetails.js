@@ -54,23 +54,26 @@ const ExerciseDetails = ({exercise, updateExercise, deleteExercise}) => {
 
 
     return (
-        <Card className="my-2">
+        <Card className="my-2 d-flex flex-column align-items-center pb-3">
             {(toggleExerciseUpdateForm)
                 ?  <UpdateExerciseForm exercise={exercise} toggle={handleEditClick} equipment={equipment} updateExercise={updateExercise} />
-                : (<div>
-                    <CardTitle>{exercise.name}</CardTitle>
-                <CardBody>
-                    <CardText>
-                        Muscle Group: {muscleGroup.name}
-                    </CardText>
-                    <CardText>
-                        Equipment Needed: {equipment.name}
-                    </CardText>
-                </CardBody>
-                <Button onClick={handleEditClick}>Edit Exercise</Button>
-                <Button onClick={handleDeleteClick}>Delete Exercise</Button>
-                    </div>)
-
+                : (
+                    <div className="d-flex flex-column align-items-center">
+                        <CardTitle className="fs-3 d-flex">{exercise.name}</CardTitle>
+                        <CardBody className="d-flex flex-column align-content-center">
+                            <CardText className="d-flex justify content-center">
+                                Muscle Group: {muscleGroup.name}
+                            </CardText >
+                            <CardText className="d-flex justify content-center">
+                                Equipment Needed: {equipment.name}
+                            </CardText>
+                        </CardBody>
+                        <div className="d-flex flex-row column-gap-5">
+                            <Button className="btn btn-danger" onClick={handleDeleteClick}>Delete Exercise</Button>
+                            <Button className="btn btn-secondary" onClick={handleEditClick}>Edit Exercise</Button>
+                        </div>
+                    </div>
+                    )
             }
         </Card>
         )

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Formik, Field, ErrorMessage, Form} from "formik";
 import UserContext from "../../../context/UserContext";
 import { equipmentCheckForExerciseUpdate } from "../../../helpers/helpers"
+import { Card } from "reactstrap";
 
 const NewExerciseForm = ({toggle, addExercise, muscleGroups}) => {
 
@@ -12,55 +13,75 @@ const NewExerciseForm = ({toggle, addExercise, muscleGroups}) => {
     ))
     
     return (
-        <div>
-            <h1>New Exercise Form</h1>
-            <Formik
-                initialValues={{name: "", 
-                    muscle_group: 1,
-                    equipment: "N/A"
+        <div className="d-flex flex-column align-items-center pt-5">
+            <Card className="d-flex flex-column align-items-center py-3">
+                <h3>New Exercise Form</h3>
+                <Formik
+                    initialValues={{name: "", 
+                        muscle_group: 1,
+                        equipment: "N/A"
+                        }}
+                    validate={values => {
+                        const errors = {};
+                        if (!values.name){ errors.name = 'Name Required'}
+                        if (!values.muscle_group){ errors.muscle_group = 'Muscle Group Required'}
+                        if (!values.equipment){ errors.equipment = 'Equipment Required'}
+                        return errors
                     }}
-                validate={values => {
-                    const errors = {};
-                    if (!values.name){ errors.name = 'Name Required'}
-                    if (!values.muscle_group){ errors.muscle_group = 'Muscle Group Required'}
-                    if (!values.equipment){ errors.equipment = 'Equipment Required'}
-                    return errors
-                }}
 
-                onSubmit={(values, { setSubmitting }) => {
-                    setTimeout( async () => {
-                        setSubmitting(false);
+                    onSubmit={(values, { setSubmitting }) => {
+                        setTimeout( async () => {
+                            setSubmitting(false);
 
-                        let equipmentId = await equipmentCheckForExerciseUpdate(values.equipment, currentUser.id);
+                            let equipmentId = await equipmentCheckForExerciseUpdate(values.equipment, currentUser.id);
 
-                        addExercise({
-                            name: values.name,
-                            muscle_group: parseInt(values.muscle_group),
-                            equipment_id: equipmentId
-                        })
-                        
-                        toggle();
-                    }, 400)}}
-                >
-                    {({isSubmitting}) => (
-                        <Form>
-                            <label htmlFor="name">Exercise Name:</label>
-                            <Field type='name' name='name'/>
-                            <ErrorMessage name='name' component='div'/>
-                            <label htmlFor="muscle_group">Muscle Group:</label>
-                            <Field as='select' name='muscle_group'>
-                                {muscleGroupComponents}
-                            </Field>
-                            <ErrorMessage name='muscle_group' component='div'/>
-                            <label htmlFor="equipment">Equipment:</label>
-                            <Field type='equipment' name='equipment'/>
-                            <ErrorMessage name='equipment' component='div'/>
-                            <button onClick={toggle}>Cancel</button>
-                            <button type='submit' disabled={isSubmitting}>Create Exercise</button>
-                        </Form>
-                    )}
+                            addExercise({
+                                name: values.name,
+                                muscle_group: parseInt(values.muscle_group),
+                                equipment_id: equipmentId
+                            })
+                            
+                            toggle();
+                        }, 400)}}
+                    >
+                        {({isSubmitting}) => (
+                            <Form className="d-flex flex-column align-items-center">
+                                <div className="d-flex flex-column align-items-center">
+                                    <div className="d-flex flex-column justify-content-center p-3 row-gap-4">
+                                        <div className="d-flex justify-content-between column-gap-3">
+                                            <label htmlFor="name">Exercise Name:</label>
+                                            <Field type='name' name='name'/>
+                                        </div>
+                                        <div style={{color: "red"}}>
+                                            <ErrorMessage name='name' component='div'/>
+                                </div>
+                                        <div className="d-flex justify-content-between column-gap-3">
+                                            <label htmlFor="muscle_group">Muscle Group:</label>
+                                            <Field as='select' name='muscle_group'>
+                                                {muscleGroupComponents}
+                                            </Field>
+                                        </div>
+                                        <div style={{color: "red"}}>
+                                            <ErrorMessage name='muscle_group' component='div'/>
+                                </div>
+                                        <div className="d-flex justify-content-between column-gap-3">
+                                            <label htmlFor="equipment">Equipment:</label>
+                                            <Field type='equipment' name='equipment'/>
+                                        </div>
+                                        <div style={{color: "red"}}>
+                                            <ErrorMessage name='equipment' component='div'/>
+                                </div>
+                                        <div className="d-flex justify-content-center column-gap-3">
+                                            <button className="btn btn-danger" onClick={toggle}>Cancel</button>
+                                            <button className="btn btn-success" type='submit' disabled={isSubmitting}>Create Exercise</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Form>
+                        )}
 
-            </Formik>
+                </Formik>
+            </Card>
         </div>
     )
 }

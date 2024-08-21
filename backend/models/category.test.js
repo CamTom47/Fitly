@@ -47,3 +47,44 @@ describe("find", function(){
         )
     })
 })
+
+describe("add", function(){
+    test("works", async function() {
+        let newCat = await Category.add({
+            user_id: testUserId[0],
+            name: 'testCat'
+        });
+
+        expect(newCat).toEqual(
+            {
+                user_id: expect.any(Number),
+                name:"testCat"
+            }
+        )
+    })
+})
+
+describe("update", function(){
+    test("works", async function() {
+        let updatedCategory = await Category.update(testCategoryId[0], {
+            name: 'testCat'
+        });
+
+        expect(updatedCategory).toEqual(
+            {
+                name:"testCat"
+            }
+        )
+    })
+})
+
+describe("remove", function(){
+    test("works", async function() {
+
+        await Category.remove(testCategoryId[0]);
+
+        let category = await Category.findAll();
+
+        expect(category.length).toEqual(1)
+    })
+})

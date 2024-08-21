@@ -10,8 +10,6 @@ import { Link } from "react-router-dom"
 
 
 const WorkoutSummary = ({workout}) => {
-
-
     // Add/remove workout from favorites to allow for filtering 
     const handleFavorite = async () => {
         (workout.favorited === false)
@@ -20,28 +18,20 @@ const WorkoutSummary = ({workout}) => {
     }
 
     return (
-        <Card className="my-2">
-        <CardTitle>{workout.name}</CardTitle>
-        <CardBody>
-            <CardText>
-                Type of Workout:{workout.category}
-            </CardText>
-            <CardText>
-                Number of Times Completed: {workout.completed_count}
-            </CardText>
-            <CardText>
-                Number of Circuits: 
-            </CardText>
-            <Button color='dark'>
-                <Link to={{ pathname: `/workouts/${workout.id}`}} style={{textDecoration: "none"}}>
-                    Workout Details
-                </Link>
-
-                {/* <Link to={{ pathname: '/other', state: dataToPass }}>Go to Other Component</Link> */}
-
-            </Button>
-        </CardBody>
-    </Card>
+        <Card className="d-flex pt-3 flex-column align-items-center">
+            <CardTitle className="fs-5">{workout.name}</CardTitle>
+            <CardBody className="d-flex pt-3 flex-column align-items-center">
+                <CardText>
+                    Type of Workout:{workout.category}
+                </CardText>
+                <CardText>
+                    Number of Circuits: 
+                </CardText>
+                    <Link  className="btn btn-secondary" to={{ pathname: `/workouts/${workout.id}`}} style={{textDecoration: "none"}}>
+                        Workout Details
+                    </Link>
+            </CardBody>
+        </Card>
     )
 
 }

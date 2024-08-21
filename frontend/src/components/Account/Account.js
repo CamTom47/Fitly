@@ -5,6 +5,8 @@ import UserPasswordForm from "../Forms/UserAccountForm/UserPasswordForm";
 import FitlyApi from "../../Api/FitlyApi";
 
 import { hash, compare, getSalt } from "bcryptjs-react"
+import { Card, InputGroup, InputGroupText, Input } from "reactstrap";
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 const Account = () => {
 
@@ -21,53 +23,58 @@ const Account = () => {
   
 
     const { currentUser } = useContext(UserContext);
-    
-    return (
-        <div>
-            
 
-            {(!editUserToggle) 
-            
+    return (currentUser === null )
+    ? <LoadingComponent/> 
+    : (
+        <Card className="d-flex flex-column align-items-center py-4">
+            {(!editUserToggle)  
             ? 
-            <div>
-                <h5>Username</h5>
-                <p>{currentUser.username}</p>
-                <h5>Email</h5>
-                {
-                    (currentUser.email !== null) 
-                    ? <p>{currentUser.email}</p>
-                    : <p> ---- </p>
-                }
-                <h5>First Name</h5>
-                {
-                    (currentUser.firstName !== null) 
-                    ? <p>{currentUser.firstName}</p>
-                    : <p> ---- </p>
-                }
-                <h5>Last Name</h5>
-                {
-                (currentUser.lastName !== null) 
-                ? <p>{currentUser.lastName}</p>
-                : <p> ---- </p>
-                }
+            <div className="d-flex flex-column align-items-center py-4">
+                <h3 className="pb-3">User Account Information</h3>
+               <InputGroup className="d-inline-flex pb-4">
+                    <InputGroupText>Username</InputGroupText>
+                    <Input disabled placeholder={currentUser.username}/>
+                </InputGroup>
+                <InputGroup className="d-inline-flex pb-4">
+                    <InputGroupText>Email</InputGroupText>
+                    <Input disabled placeholder={currentUser.email || "----"}/>
+                </InputGroup>
+                <InputGroup className="d-inline-flex pb-4">
+                    <InputGroupText>First Name</InputGroupText>
+                    <Input disabled placeholder= {currentUser.firstName || "----"}/>
+                </InputGroup>
+                <InputGroup className="d-inline-flex pb-4">
+                    <InputGroupText>Last Name</InputGroupText>
+                    <Input disabled placeholder={currentUser.lastName || "----"}/>
+                </InputGroup>
 
-                <button onClick={handleUserInfoToggle}>Edit Account Information</button>
+                <button className="btn btn-secondary" onClick={handleUserInfoToggle}>Edit Account Information</button>
             </div>
             : 
             <UserAccountForm handleUserInfoToggle={handleUserInfoToggle}/>}
 
-            <h5>Password</h5>
             {
                 (!editPasswordToggle)
                 ?
-                <div>
-                    <p>-</p>
-                <button onClick={handleUserPasswordToggle}>Change Password</button>
+                <div className="d-flex flex-column align-items-center">
+                    <div >
+
+                        <InputGroup className="d-inline-flex pb-4">
+                            <InputGroupText>
+                            Password
+                            </InputGroupText>
+                            <Input disabled placeholder="----"/>
+                        </InputGroup>
+                    </div>
+                    <div>
+                        <button className="btn btn-secondary" onClick={handleUserPasswordToggle}>Change Password</button>
+                    </div>
                 </div>
                 : <UserPasswordForm handleUserPasswordToggle={handleUserPasswordToggle} />
             }
             
-        </div>
+        </Card>
     )
 
 }

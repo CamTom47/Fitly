@@ -34,7 +34,7 @@
         }
     },
     "examples": [{
-        "user_id": "20",
+        "user_id": 20,
         "name": "Power",
         "systemDefault": "false"
     }]

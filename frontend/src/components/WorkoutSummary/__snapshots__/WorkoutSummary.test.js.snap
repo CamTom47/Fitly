@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WorkoutSummary Functionality matches snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="d-flex pt-3 flex-column align-items-center card"
+  >
+    <div
+      class="fs-5 card-title"
+    >
+      test workout
+    </div>
+    <div
+      class="d-flex pt-3 flex-column align-items-center card-body"
+    >
+      <p
+        class="card-text"
+      >
+        Type of Workout:1
+      </p>
+      <p
+        class="card-text"
+      >
+        Number of Circuits:
+      </p>
+      <a
+        class="btn btn-secondary"
+        href="/workouts/1"
+        style="text-decoration: none;"
+      >
+        Workout Details
+      </a>
+    </div>
+  </div>
+</DocumentFragment>
+`;

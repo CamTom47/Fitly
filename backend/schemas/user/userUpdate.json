@@ -37,22 +37,12 @@
             "examples": [
                 "test@test.com"
             ]
-        },
-        "is_admin": {
-            "type": "boolean",
-            "default": false,
-            "title": "The is_admin Schema",
-            "examples": [
-                false
-            ]
-        }
+        }   
     },
     "examples": [{
-        "username": "testUser",
         "password": "testtest",
         "first_name": "testF",
         "last_name": "testL",
-        "email": "test@test.com",
-        "is_admin": false
+        "email": "test@test.com"
     }]
 }
