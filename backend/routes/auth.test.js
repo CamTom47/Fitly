@@ -83,5 +83,4 @@ describe('POST /auth/register', () => {
 
         expect(resp.statusCode).toEqual(400);
     })
-
 });
