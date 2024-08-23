@@ -16,12 +16,12 @@ Fitly is a Fitness (Web) Application with a focus on physical workouts. The appl
 - User dashboard to quickly view workout history and data
 
 ## User Flow
-- A user signs up with basic information
-- (Optional) A user can create personal items to add to their packs.
-- A user creates a new pack and adds items to the it, completing their pack.
-- A user creates a new trip and assigns a pack to the trip.
-- A user checks their pack against the trip it is assigned to and adjusts their pack based if desired
-- Now that the pack is complete, a user can user the pack as a checklist when preparing for their upcoming trip
+- A user signs up with a username/password
+- ![image](https://github.com/user-attachments/assets/0253f7db-55a8-451c-8ae4-beab1f784b44)
+
+- A user creates/adds exercises to their saved list of exercises
+- A user creates a new workout and adds circuits/exercises to the workout.
+- A user can update their account information
 
 ## APIs Used
 1. Wger API
