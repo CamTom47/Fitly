@@ -51,4 +51,5 @@ Fitly is a Fitness (Web) Application with a focus on physical workouts. The appl
 ![Capstone 2 Project Architecture](https://github.com/user-attachments/assets/b71cbed9-219b-491e-8489-aeb2dfd4578b)
 
 ## Entity Relationship Diagram
+![capstone2 erd drawio](https://github.com/user-attachments/assets/50034fad-1f14-4531-867f-a7c8364f2d2b)
 
