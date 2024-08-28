@@ -33,7 +33,6 @@ const SignupForm = ({signup}) => {
                             signup(values); 
                             setSubmitting(false);
                             navigate("/exercises")
-
                         }, 400)
                         
                     }}

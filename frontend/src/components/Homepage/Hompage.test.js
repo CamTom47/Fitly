@@ -26,15 +26,12 @@ describe('Homepage Functionality', () => {
         <Homepage/>
     );
     
-
-
   it('it renders without crashing', async () => {
 
     render(
         <UserProvider children={children}/>
       );
     }); 
-    
     
     it('matches snapshot', async () => {
         const {asFragment} = render(

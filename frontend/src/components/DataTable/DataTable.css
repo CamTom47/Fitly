@@ -1,0 +1,35 @@
+#name-column{
+    width: 20rem;
+}
+
+#musclegroup-column{
+    width: 20rem;
+}
+
+#equipment-column{
+    width: 20rem;
+}
+
+.table{
+    margin: 0 auto;
+    border-collapse: collapse;
+    table-layout: auto ;
+}
+
+.table-head{
+    height: 2rem;
+    padding-left: 1rem;
+    margin-left: 10px;
+}
+
+.table-head:nth-child(2n + 1){
+    background-color: hsl(0, 0%, 80%);
+}
+
+.table-head:nth-child(2n + 2){
+    background-color: hsl(0, 0%, 60%);
+}
+
+.table-row{
+    height: 2rem;
+}

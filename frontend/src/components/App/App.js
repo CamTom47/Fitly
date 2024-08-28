@@ -18,10 +18,6 @@ import WorkoutDetail from "../WorkoutDetail/WorkoutDetail";
 import Unauthorized from "../Unauthorized/Unauthorized";
 import NotFound from "../NotFound/NotFound";
 import "./App.css"
-import bcrypt from "bcryptjs-react";
-
-
-
 
 function App() {
   
