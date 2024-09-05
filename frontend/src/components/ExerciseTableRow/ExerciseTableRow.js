@@ -7,6 +7,9 @@ import {equipmentMatch} from "../../helpers/helpers";
 import UserContext from "../../context/UserContext";
 import "./ExerciseTableRow.css"
 
+//Custom Hooks
+import useToggle from "../../hooks/useToggle/useToggle";
+
 /**
  * Exercise component
  * 
@@ -17,7 +20,7 @@ import "./ExerciseTableRow.css"
 
 const ExerciseTableRow = ({exercise, updateExercise, deleteExercise}) => {
     let {currentUser} = useContext(UserContext);
-    const [toggleExerciseUpdateForm, setToggleExerciseUpdateForm] = useState(false);
+    const [toggleExerciseUpdateForm, setToggleExerciseUpdateForm] = useToggle(false);
     const [equipment, setEquipment] = useState({});
     const [muscleGroup, setMuscleGroup] = useState({});
 

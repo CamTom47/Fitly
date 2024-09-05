@@ -6,6 +6,9 @@ import {equipmentMatch} from "../../helpers/helpers";
 
 import UserContext from "../../context/UserContext";
 
+//Custom Hooks
+import useToggle from "../../hooks/useToggle/useToggle";
+
 /**
  * Exercise component
  * 
@@ -16,9 +19,9 @@ import UserContext from "../../context/UserContext";
 
 const ExerciseDetails = ({exercise, updateExercise, deleteExercise}) => {
     let {currentUser} = useContext(UserContext);
-    const [toggleExerciseUpdateForm, setToggleExerciseUpdateForm] = useState(false);
     const [equipment, setEquipment] = useState({});
     const [muscleGroup, setMuscleGroup] = useState({});
+    const [toggleExerciseUpdateForm, setToggleExerciseUpdateForm] = useToggle();
 
     
     //use the exercise equipment id to match a the name of a the respective equipment from the database.

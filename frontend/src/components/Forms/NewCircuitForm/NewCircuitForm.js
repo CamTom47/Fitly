@@ -5,11 +5,14 @@ import UserContext from "../../../context/UserContext";
 import { useNavigate } from "react-router";
 import LoadingComponent from "../../LoadingComponent/LoadingComponent";
 
+//custom hooks
+import useToggle from "../../../hooks/useToggle/useToggle";
+
 const NewCircuitForm = ({workout, toggleShowNewCircuitForm, createCircuit}) => {
 
     const {currentUser} = useContext(UserContext);
     const [exercises, setExercises] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useToggle(true);
 
     const navigate = useNavigate();
 

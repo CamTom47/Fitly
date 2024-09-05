@@ -7,8 +7,6 @@ import FitlyApi from "../../Api/FitlyApi";
 import { Link } from "react-router-dom"
 
 
-
-
 const WorkoutSummary = ({workout}) => {
     // Add/remove workout from favorites to allow for filtering 
     const handleFavorite = async () => {

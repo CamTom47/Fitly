@@ -8,6 +8,9 @@ import { hash, compare, getSalt } from "bcryptjs-react"
 import { Card, InputGroup, InputGroupText, Input } from "reactstrap";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
+//Custom Hooks
+import useToggle from "../../hooks/useToggle/useToggle";
+
 
 /**
  * Account Component
@@ -20,8 +23,9 @@ import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
 const Account = () => {
 
-    const [editUserToggle, setEditUserToggle] = useState(false);
-    const [editPasswordToggle, setEditPasswordToggle] = useState(false);
+
+    const [editUserToggle, setEditUserToggle] = useToggle();
+    const [editPasswordToggle, setEditPasswordToggle] = useToggle();
 
     const handleUserInfoToggle = () => {
         setEditUserToggle(!editUserToggle);

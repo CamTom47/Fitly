@@ -15,9 +15,20 @@ import { Nav } from "react-bootstrap";
 
 import UserContext from "../../context/UserContext";
 
+//custom hooks
+import useToggle from "../../hooks/useToggle/useToggle";
+
+/**
+ * NavBar Component
+ * 
+ * state: collapse
+ * 
+ * props: none
+ */
+
 const NavBar = () => {
 
-    const [collapsed, setCollapsed] = useState(true);
+    const [collapsed, setCollapsed] = useToggle(true);
 
     const toggleNavbar = () => setCollapsed(!collapsed);
 

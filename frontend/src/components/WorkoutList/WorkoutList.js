@@ -3,9 +3,19 @@ import FitlyApi from "../../Api/FitlyApi"
 import WorkoutSummary  from "../WorkoutSummary/WorkoutSummary"
 import { v4 as uuid } from "uuid";
 import { useNavigate } from "react-router-dom";
-import useToggle from "../../hooks/useToggle/useToggle";
 import NewWorkoutForm from "../Forms/NewWorkoutForm/NewWorkoutForm";
 import UserContext from "../../context/UserContext";
+
+//custom hooks
+import useToggle from "../../hooks/useToggle/useToggle";
+
+/**
+ * WorkoutList Component => returns a user's list of workouts
+ * 
+ * state: workouts => array of workouts
+ * 
+ * props: none
+ */
 
 const WorkoutList = () => {
 

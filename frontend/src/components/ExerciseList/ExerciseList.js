@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useContext, useCallback, useMemo} from "react";
 import { Container, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
+import { v4 as uuid } from "uuid";
 
+//Components
 import FitlyApi from "../../Api/FitlyApi";
 import WgerApi from "../../Api/WgerApi"
 import ExerciseDetails from "../ExerciseDetails/ExerciseDetails";
@@ -16,25 +18,34 @@ import DataTable from "../DataTable/DataTable";
 import UserContext from "../../context/UserContext";
 import ExerciseContext from "../../context/ExerciseContext";
 
+//Custom Hooks
+import useToggle from "../../hooks/useToggle/useToggle";
+
+//styling
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-
-import { v4 as uuid } from "uuid";
-
 import "./ExerciseList.css"
+
+/**
+ * Exercise List Component
+ * 
+ * state: userExercises, wgerExercises, muscleGroups, equipments, nextWgerCall, previousWgerCall, currentWgerCall
+ * 
+ * props: none
+ */
 
 const ExerciseList = () => {
     const [userExercises, setUserExercises] = useState([]);
     const [wgerExercises, setWgerExercises] = useState([]);
-    const [showUserExercises, setShowUserExercises] = useState(true);
-    const [showWgerExercises, setShowWgerExercises] = useState(false);
-    const [exerciseFormToggle, setExerciseFormToggle] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [muscleGroups, setMuscleGroups] = useState([]);
     const [equipments, setEquipments] = useState([]);
     const [nextWgerCall, setNextWgerCall] = useState(null);
     const [previousWgerCall, setPreviousWgerCall] = useState(null);
     const [currentWgerCall, setCurrentWgerCall] = useState();
+    const [showUserExercises, setShowUserExercises] = useToggle(true);
+    const [showWgerExercises, setShowWgerExercises] = useToggle();
+    const [exerciseFormToggle, setExerciseFormToggle] = useToggle(false);
+    const [isLoading, setIsLoading] = useToggle(false);
 
     const currentUser = useContext(UserContext);
 

@@ -15,8 +15,13 @@ import UpdateWorkoutForm from "../Forms/UpdateWorkoutForm/UpdateWorkoutForm"
 import Circuit from "../../components/Circuit/Circuit";
 import FitlyApi from "../../Api/FitlyApi";
 
+//custom hooks
+import useToggle from "../../hooks/useToggle/useToggle";
 
 
+/**
+ * WorkoutDetail Component => returns details about a specific workout
+ */
 
 const WorkoutDetail = () => {
 
@@ -25,11 +30,11 @@ const WorkoutDetail = () => {
 
     const [workout, setWorkout] = useState({});
     const [circuits, setCircuits] = useState([]);
-    const [showNewCircuitForm, setShowNewCircuitForm] = useState(false);
-    const [showWorkoutUpdateForm, setShowWorkoutUpdateForm] = useState(false);
     const [category, setCategory] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
-
+    const [showNewCircuitForm, setShowNewCircuitForm] = useToggle(false);
+    const [showWorkoutUpdateForm, setShowWorkoutUpdateForm] = useToggle(false);
+    const [isLoading, setIsLoading] = useToggle(true);
+    
     //parse the url to get the workout parameter that will be used to find the workout using the Fitly API
     //...workouts/2 => 2
 

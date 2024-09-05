@@ -3,6 +3,9 @@ import { Form, FormGroup, Label, Input } from 'reactstrap';
 import FitlyApi from "../../Api/FitlyApi";
 import ExerciseContext from "../../context/ExerciseContext";
 
+//custom hooks
+import useToggle from "../../hooks/useToggle/useToggle";
+
 /**
  * FilterButton component
  * 
@@ -14,7 +17,7 @@ import ExerciseContext from "../../context/ExerciseContext";
 
 const FilterButton = ({filter}) => { 
 
-    const [checked, setChecked] = useState(false);
+    const [checked, setChecked] = useToggle(false);
     // const [filterValues, setFilterValues] = []
 
     let getExercises = useContext(ExerciseContext).getExercises;
