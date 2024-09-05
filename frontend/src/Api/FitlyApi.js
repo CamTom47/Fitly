@@ -159,6 +159,12 @@ class FitlyApi {
             return res.workout;
         }
 
+        /**
+         * Add a circuit to a workout
+         * @param {*} data 
+         * @returns {workoutCiruit}
+         */
+
         static async addWorkoutCircuit(data){
             let res = await this.request(`workouts//${data.workout_id}/circuits/${data.circuit_id}`, data, 'post');
             return res.workoutCircuit;
@@ -350,48 +356,104 @@ class FitlyApi {
         //Circuit Methods
 
 
+        /**
+         * Find all circuits tied to a specific workout
+         * @param {*} data 
+         * @returns {circuits}
+         */
+
         static async findAllCircuits(data){
             let res = await this.request(`circuits/`, data, 'get');
             return res.circuits;
         }
+
+        /**
+         * Find a circuit based on circuit id
+         * @param {*} data 
+         * @returns {circuit}
+         */
 
         static async findCircuit(data){
             console.log(data)
             let res = await this.request(`circuits/${data.circuit_id}`, data, 'get');
             return res.circuit;
         }
+        
+        /**
+         * Create a new circuit and add it to the data base
+         * @param {*} data 
+         * @returns {circuit}
+         */
 
         static async addCircuit(data){
             console.log(data)
             let res = await this.request(`circuits/`, data, 'post');
             return res.circuit;
         }
+
+        /**
+         *  Update an existing circuit
+         * @param {*} circuit_id 
+         * @param {*} data 
+         * @returns {updatedCircuit}
+         */
         
         static async updateCircuit(circuit_id,data){
             let res = await this.request(`circuits/${circuit_id}`, data, 'patch');
             return res.updatedCircuit;
         }
 
+        /**
+         * Delete an existing circuit
+         * @param {*} data 
+         * @returns 
+         */
+
         static async deleteCircuit(data){
             let res = await this.request(`circuits/${data.circuit_id}`, data, 'delete');
             return res.message;
         }
 
+        /**
+         * Create a link between a circuit and an exercise
+         * @param {*} data 
+         * @returns {circuitExercise}
+         */
+        
         static async addExerciseCircuit(data){
             let res = await this.request(`circuits/${data.circuit_id}/exercises/${data.exercise_id}`, data, 'post');
             return res.circuitExercise;
         }
+
+        /**
+         * Update information of current circuit exercise based on a circuit_id
+         * @param {*} circuit_id 
+         * @param {*} data 
+         * @returns {circuitExercise}
+         */
         
         static async updateExerciseCircuit(circuit_id, data){
             let res = await this.request(`circuits/${circuit_id}/exercises/${data.exercise_id}`, data, 'patch');
             return res.circuitExercise;
         }
 
+        /**
+         * Find all muscle groups currently in the database.
+         * @param {*} data 
+         * @returns {muscleGroups}
+         */
+
         static async findAllMuscleGroups(data){
             let res = await this.request(`muscleGroups/`, data, 'get');
 
             return res.muscleGroups
         }
+
+        /**
+         * Find muscle group based on mustGroupId
+         * @param {*} data 
+         * @returns {muscleGroup}
+         */
         
         static async findMuscleGroup(data){
             let res = await this.request(`muscleGroups/${data.muscleGroupId}`, data, 'get');

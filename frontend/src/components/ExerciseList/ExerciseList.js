@@ -5,13 +5,16 @@ import FitlyApi from "../../Api/FitlyApi";
 import WgerApi from "../../Api/WgerApi"
 import ExerciseDetails from "../ExerciseDetails/ExerciseDetails";
 import WgerExercise from "../WgerExercise/WgerExercise";
-import UserContext from "../../context/UserContext";
 import NewExerciseForm from "../Forms/NewExerciseForm/NewExerciseForm";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import Filter from "../Filter/Filter";
 import SearchBar from "../SearchBar/SearchBar"
 import ExerciseTableRow from "../ExerciseTableRow/ExerciseTableRow";
 import DataTable from "../DataTable/DataTable";
+
+//Contexts
+import UserContext from "../../context/UserContext";
+import ExerciseContext from "../../context/ExerciseContext";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-icons'
@@ -33,9 +36,7 @@ const ExerciseList = () => {
     const [previousWgerCall, setPreviousWgerCall] = useState(null);
     const [currentWgerCall, setCurrentWgerCall] = useState();
 
-
     const currentUser = useContext(UserContext);
-
 
     //Create a new exercise and add it to data base sing FitlyApi
     const createNewExercise = async (data) => {
@@ -73,11 +74,11 @@ const ExerciseList = () => {
     }
  }
 
-    const getExercises = useCallback(async () => {
+    const getExercises = useCallback(async (filters) => {
         setIsLoading(true);
             if(showUserExercises === true){
                 try{
-                    const exercises = await FitlyApi.findAllExercises()
+                    const exercises = await FitlyApi.findAllExercises(filters)
                     setUserExercises(exercises);
                     setWgerExercises([]);
                 } catch(err){
@@ -151,7 +152,7 @@ const ExerciseList = () => {
     // ))
 
     const userExerciseComponents = userExercises.map(e => (
-        <ExerciseTableRow exercise={e} key={uuid()} updateExercise={updateExercise} setEquipments={setEquipments} deleteExercise={deleteExercise}></ExerciseTableRow>
+            <ExerciseTableRow exercise={e} key={uuid()} updateExercise={updateExercise} setEquipments={setEquipments} deleteExercise={deleteExercise}></ExerciseTableRow>
     ))
 
     //Map through the wgerExercise state and creat an exercise component from each item
@@ -284,7 +285,9 @@ const ExerciseList = () => {
                             <h5>Muscle Group</h5>
                         </div>
                         <div className="ExerciseList-filtergroup-item">
+                        <ExerciseContext.Provider value={{getExercises}}>
                             <Filter filters={muscleGroups}/>   
+                        </ExerciseContext.Provider>
                         </div>
                     </div>
                     <div className="ExerciseList-filtergroup">
@@ -292,7 +295,9 @@ const ExerciseList = () => {
                             <h5>Equipment</h5>
                         </div>
                         <div className="ExerciseList-filtergroup-item">
+                        <ExerciseContext.Provider value={{getExercises}}>
                             <Filter filters={equipments}/>
+                        </ExerciseContext.Provider>
                         </div>
                     </div>
                 </div>

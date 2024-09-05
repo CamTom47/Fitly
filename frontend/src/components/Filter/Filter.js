@@ -10,10 +10,11 @@ import FilterButton from "../FilterButton/FilterButton";
  * 
  * props: filter => array 
  */
+
 const Filter = ({filters}) => { 
 
     let filterComponents = filters.map( f => (
-        <FilterButton filter={f.name}/>
+        <FilterButton value={f} filter={f.name}/>
     ))
     return (
         <Form>

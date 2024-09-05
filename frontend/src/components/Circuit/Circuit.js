@@ -4,6 +4,15 @@ import useToggle from "../../hooks/useToggle/useToggle";
 import FitlyApi from "../../Api/FitlyApi";
 import { Col, Row } from "reactstrap";
 
+
+/**
+ * Circuit Component
+ * 
+ * state: showUpdateCircuitForm, circuit, exercise
+ * 
+ * props: circuitId, updateCircuit, deleteCircuit
+ */
+
 const Circuit = ({circuitId, updateCircuit, deleteCircuit}) => {
 
     const [showUpdateCircuitForm, setShowUpdateCircuitForm ] = useToggle();

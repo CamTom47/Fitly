@@ -8,6 +8,16 @@ import { hash, compare, getSalt } from "bcryptjs-react"
 import { Card, InputGroup, InputGroupText, Input } from "reactstrap";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 
+
+/**
+ * Account Component
+ * 
+ * state: editUserToggle, setEditUserToggle
+ * 
+ * props: none
+ * 
+ */
+
 const Account = () => {
 
     const [editUserToggle, setEditUserToggle] = useState(false);
