@@ -20,7 +20,6 @@ const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require('../middleware/auth
 router.get('/', ensureLoggedIn, async function( req, res, next) {
     try{ 
         const exercises = await Exercise.findAll(res.locals.user.id);
-        console.log(exercises)
         return res.json({exercises})
 
     } catch(err){

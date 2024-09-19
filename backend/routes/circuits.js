@@ -59,7 +59,7 @@ router.post('/', ensureLoggedIn, async function(req, res, next){
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs);
         }
-
+        
         const circuit = await Circuit.add(req.body);
         return res.status(201).json({circuit});
 
@@ -102,7 +102,6 @@ module.exports = router;
 
 router.delete('/:circuit_id', ensureLoggedIn, async function(req, res, next) {
     try{ 
-
         const id = req.params.circuit_id;
         await Circuit.remove(id);
 

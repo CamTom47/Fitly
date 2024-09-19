@@ -40,7 +40,6 @@ class Workout {
      */
 
     static async find(workout_id, user_id) {
-        
         const result = await db.query(`
             SELECT workouts.id,
                     name,
@@ -69,7 +68,7 @@ class Workout {
      * @param {*} favorited 
      * @returns {name, user_id, category, completed_count, favorited}
      */
-    static async add({name, category, favorited = false}, user_id) {
+    static async add({name, category, favorited = false, user_id}) {
         const result = await db.query(`
             INSERT INTO workouts
             (name, user_id, category, favorited)

@@ -51,12 +51,14 @@ router.get('/:workout_id', ensureLoggedIn, async function(req, res, next){
 
 router.post('/', ensureLoggedIn, async function(req, res, next){
     try{
+        req.body.user_id = res.locals.user.id
         const validator = jsonschema.validate(req.body, newWorkoutSchema);
         if(!validator.valid){
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs);
         }
-        const newWorkout = await Workout.add(req.body, res.locals.user.id);
+
+        const newWorkout = await Workout.add(req.body);
         return res.status(201).json({newWorkout});
 
     } catch(err){

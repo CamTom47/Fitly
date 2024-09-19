@@ -38,8 +38,6 @@ router.get('/:username', ensureCorrectUserOrAdmin, async function(req, res, next
 router.patch('/:username', ensureCorrectUserOrAdmin, async function(req, res, next) {
     try{
         const username = req.params.username;
-        console.log(username)
-        console.log(req.body)
 
         const validator = jsonschema.validate(req.body, userUpdateSchema);
 

@@ -91,6 +91,8 @@ class FitlyApi {
         }
 
         static async updateUser(username, data){
+            console.log(username)
+            console.log("data:", data)
             let res = await this.request(`users/${username}`, data, 'patch');
             return res.user;
         }
@@ -119,7 +121,8 @@ class FitlyApi {
          */
 
         static async findWorkout(data){
-            let res = await this.request(`workouts/${data.workout_id}`);
+            console.log(data)
+            let res = await this.request(`workouts/${data.workoutId}`);
             return res.workout;
         }
         
@@ -131,8 +134,10 @@ class FitlyApi {
          */
 
         static async createWorkout(data){
+            console.log("oihfdsaio", data)
             let res = await this.request(`workouts/`, data, 'post');
-            return res.workout;
+            console.log(res.newWorkout)
+            return res.newWorkout;
         }
 
         /**
@@ -154,13 +159,13 @@ class FitlyApi {
          * @returns {message}
          */
 
-        static async deleteWorkout(workout_id){
-            let res = await this.request(`workouts/${workout_id}`, {}, 'delete');
+        static async deleteWorkout(workoutId){
+            let res = await this.request(`workouts/${workoutId}`, {}, 'delete');
             return res.workout;
         }
 
         static async addWorkoutCircuit(data){
-            let res = await this.request(`workouts//${data.workout_id}/circuits/${data.circuit_id}`, data, 'post');
+            let res = await this.request(`workouts//${data.workoutId}/circuits/${data.circuitId}`, data, 'post');
             return res.workoutCircuit;
         }
 
@@ -307,7 +312,6 @@ class FitlyApi {
          * @returns {equipment}
          */
         static async findEquipment(data){
-            console.log(data)
             let res = await this.request(`equipments/${data.equipment_id}`, data, 'get');
             return res.equipment;
         }
@@ -356,34 +360,32 @@ class FitlyApi {
         }
 
         static async findCircuit(data){
-            console.log(data)
             let res = await this.request(`circuits/${data.circuit_id}`, data, 'get');
             return res.circuit;
         }
 
         static async addCircuit(data){
-            console.log(data)
             let res = await this.request(`circuits/`, data, 'post');
             return res.circuit;
         }
         
-        static async updateCircuit(circuit_id,data){
-            let res = await this.request(`circuits/${circuit_id}`, data, 'patch');
+        static async updateCircuit(circuitId,data){
+            let res = await this.request(`circuits/${circuitId}`, data, 'patch');
             return res.updatedCircuit;
         }
 
-        static async deleteCircuit(data){
-            let res = await this.request(`circuits/${data.circuit_id}`, data, 'delete');
+        static async deleteCircuit(circuitId){
+            let res = await this.request(`circuits/${circuitId}`, {} , 'delete');
             return res.message;
         }
 
         static async addExerciseCircuit(data){
-            let res = await this.request(`circuits/${data.circuit_id}/exercises/${data.exercise_id}`, data, 'post');
+            let res = await this.request(`circuits/${data.circuitId}/exercises/${data.exerciseId}`, data, 'post');
             return res.circuitExercise;
         }
         
-        static async updateExerciseCircuit(circuit_id, data){
-            let res = await this.request(`circuits/${circuit_id}/exercises/${data.exercise_id}`, data, 'patch');
+        static async updateExerciseCircuit(data){
+            let res = await this.request(`circuits/${data.circuitId}/exercises/${data.exerciseId}`, data, 'patch');
             return res.circuitExercise;
         }
 
