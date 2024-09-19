@@ -1,7 +1,8 @@
 //functionality imports
 import React, { useCallback, useEffect, useState, useContext } from "react";
-import { useNavigate, Link, useFetcher } from "react-router-dom";
-import UserContext from "../../context/UserContext";
+import { useNavigate, Link, useParams } from "react-router-dom";
+import { createSelector } from 'reselect';
+import { v4 as uuid } from 'uuid'
 
 //styling imports
 import { Card, CardBody, CardText, CardTitle, ListGroup, ListGroupItem, Button, Container} from "reactstrap"
@@ -15,75 +16,56 @@ import UpdateWorkoutForm from "../Forms/UpdateWorkoutForm/UpdateWorkoutForm"
 import Circuit from "../../components/Circuit/Circuit";
 import FitlyApi from "../../Api/FitlyApi";
 
+import { useDispatch,useSelector } from "react-redux";
 
+import { 
+    deleteWorkout,
+    selectWorkouts,
+    selectWorkout,
+    findWorkoutById
+} from '../../slices/workoutsSlice';
+import {
+    selectCurrentUser
+} from '../../slices/usersSlice';
+import {
+    selectCircuits,
+    findAllCircuits
 
+} from '../../slices/circuitsSlice';
+import {
+    selectCategories,
+    findAllCategories
+} from '../../slices/categoriesSlice';
 
 const WorkoutDetail = () => {
-
+    const dispatch = useDispatch();
     let navigate = useNavigate();
-    let currentUser = useContext(UserContext).currentUser;
-
-    const [workout, setWorkout] = useState({});
-    const [circuits, setCircuits] = useState([]);
+    const workoutId = useParams().workout_id;
+    const workouts = useSelector(selectWorkouts);
+    const workout = workouts.filter( workout => workout.id === +workoutId)[0];
+    const circuits = useSelector(selectCircuits);
+    const categories = useSelector(selectCategories);
+    const category = categories.filter( category => category.id === workout.category)[0];
+    
     const [showNewCircuitForm, setShowNewCircuitForm] = useState(false);
     const [showWorkoutUpdateForm, setShowWorkoutUpdateForm] = useState(false);
-    const [category, setCategory] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
-    //parse the url to get the workout parameter that will be used to find the workout using the Fitly API
-    //...workouts/2 => 2
 
-    let urlArray = (((window.location.pathname).split('/')));
-    let workoutId = parseInt(urlArray[urlArray.length-1])
+    const getCircuits = useCallback(() => {
+        dispatch(findAllCircuits())
+    } , [])
 
-    const getWorkoutAndCircuits = useCallback( async () => { 
-        try{
-            let workout = await FitlyApi.findWorkout({
-                workout_id: workoutId
-            });
-            setWorkout(workout);
+    useEffect(() => {
+        getCircuits()
+    } , [getCircuits])
 
-            let circuits = await FitlyApi.findAllCircuits({
-                workout_id: workout.id});
-                let filteredCircuits = circuits.filter( circuit => circuit.workout_id === workout.id)
-                setCircuits(filteredCircuits)
-
-                
-            } catch (err){
-                return err
-            }
-    }, [showNewCircuitForm, showWorkoutUpdateForm, isLoading]);
-    
-    useEffect( () => {
-        setIsLoading(true);
-        getWorkoutAndCircuits();
-        findCategory();
-        setIsLoading(false);
-    }, [getWorkoutAndCircuits]);
-    
-    
-        
-    
-    //function that updates the workouts in the data base. formData is passed as a arugment from the newCircuitForm.
-    const updateWorkout = async (formData) => {
-        try{
-            await FitlyApi.updateWorkout(workout.id, formData)
-            getWorkoutAndCircuits();
-        } catch (err) {
-            return err
-        }
-    }
 
    //remove a workout for the fitly database
-   const removeWorkout = async () => {
-        try{
-            await FitlyApi.deleteWorkout(workout.id);
-            navigate('/workouts')
-        } catch(err){
-            return err
-        }
+   const removeWorkout = () => {
+        dispatch(deleteWorkout(workoutId))    
+        navigate('/workouts')
     }
-
 
     // Add/remove workout from favorites to allow for filtering 
     const handleFavorite = async () => {
@@ -106,67 +88,9 @@ const WorkoutDetail = () => {
         setShowNewCircuitForm(showNewCircuitForm => !showNewCircuitForm);
     }
 
-    //Circuit Methods
-
-    const createCircuit = async (formData, exerciseId) => {
-
-        //create new circuit
-        const circuit = await FitlyApi.addCircuit(formData);
-         
-         // add exercise to new circuit
-         await FitlyApi.addExerciseCircuit({
-             circuit_id: circuit.id, 
-             exercise_id: exerciseId
-         });
-
-         // //add circuit to workout
-         await FitlyApi.addWorkoutCircuit({
-             workout_id: workout.id,
-             circuit_id: circuit.id
-         });
-
-         getWorkoutAndCircuits();
-     }
-
-    const updateCircuit = 
-        async (formData) => {
-            try{
-                await FitlyApi.updateCircuit(formData);
-                getWorkoutAndCircuits();
-            } catch (err){
-                return err
-            }
-        }
-
-    const deleteCircuit = async (formData) => {
-        try{
-            await FitlyApi.deleteCircuit(formData);
-            getWorkoutAndCircuits();
-        } catch (err) {
-            return err
-        }
-    }
-
-    const findCategory = useCallback(async () => {
-        try{
-            let category = await FitlyApi.findCategory({category_id: workout.category});
-            setCategory(category)
-        } catch(err){
-            return err
-        }
-}, [workout])
-
-useEffect( () => {
-    setIsLoading(true);
-    findCategory();
-    setIsLoading(false);
-}, [findCategory]);
-
-
     const circuitComponents = circuits.map( circuit => (
         <div>
-            <Circuit circuitId={circuit.id} updateCircuit={updateCircuit} deleteCircuit={deleteCircuit}/>
-            <hr></hr>
+            <Circuit key={uuid()} circuitId={circuit.id}/>
         </div>
     ))
 
@@ -174,7 +98,7 @@ useEffect( () => {
     ? <LoadingComponent/>
     : ( 
     (showWorkoutUpdateForm) 
-    ? <UpdateWorkoutForm workout={workout} updateWorkout={updateWorkout} handleToggle={toggleShowWorkoutUpdateForm}/>
+    ? <UpdateWorkoutForm key={uuid()} workout={workout} handleToggle={toggleShowWorkoutUpdateForm}/>
     :(
         <Container className="w-75 pt-3">
         <div>
@@ -192,7 +116,7 @@ useEffect( () => {
         <div>        
         <Card className="my-2 p-2 w-25">
             <div className="d-flex flex-row">
-                <button className="btn btn-danger" onClick={removeWorkout}>Delete Workout</button>
+                <button className="btn btn-danger" onClick={(removeWorkout)}>Delete Workout</button>
                 {
                     (workout.favorited)
                     ? <FontAwesomeIcon type="button" onClick={handleFavorite} icon={faStar} size="lg" style={{color: "#FFD43B"}}/>
@@ -212,7 +136,6 @@ useEffect( () => {
 
             <CardText className="d-flex flex-column align-items-center fs-4">
                     Circuits
-                    <hr className="w-100 mt-0"></hr>
             </CardText>
             {circuitComponents}
             <div className="d-flex flex-row justify-content-center align-items-center column-gap-3">
@@ -221,7 +144,7 @@ useEffect( () => {
             </div>
             { 
                 (showNewCircuitForm)
-                ? <NewCircuitForm workout={workout} createCircuit={createCircuit} toggleShowNewCircuitForm={toggleShowNewCircuitForm}/>
+                ? <NewCircuitForm workout={workout} toggleShowNewCircuitForm={toggleShowNewCircuitForm}/>
                 : null
                 }
             

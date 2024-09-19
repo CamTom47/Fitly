@@ -1,29 +1,35 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Formik, Field, ErrorMessage, Form} from "formik";
 import FitlyApi from "../../../Api/FitlyApi";
-import UserContext from "../../../context/UserContext";
 import { useNavigate } from "react-router";
 import { Card } from "reactstrap";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    selectCurrentUser
+} from '../../../slices/usersSlice';
+import {
+    updateWorkout
+} from '../../../slices/workoutsSlice';
+import {
+    selectCategories,
+    findAllCategories
+} from '../../../slices/categoriesSlice';
 
-const UpdateWorkoutForm = ({workout, handleToggle, updateWorkout}) => {
-
-    const [categories, setCategories] = useState([]);
-
-    const {currentUser} = useContext(UserContext);
-
-    useEffect( () => {
-        const callCategories = async () => {
-            let categories = await FitlyApi.findAllCategories();
-            setCategories(categories);
-        }
-        callCategories();
-    }, []);
-
-    const navigate = useNavigate();
-
+const UpdateWorkoutForm = ({workout, handleToggle}) => {
+    const dispatch = useDispatch();
+    const categories = useSelector(selectCategories);
+    
     const categoryComponents = categories.map( cat => (
         <option value={cat.id}>{cat.name}</option>
     ))
+    
+    useEffect(() => {
+        const getCategories = () => {
+            dispatch(findAllCategories());
+        }
+        getCategories();
+    }, [])
+    console.log(workout, 'oifhdsa;oifasd')
 
     return (
         <div className="d-flex justify-content-center py-4">
@@ -42,10 +48,12 @@ const UpdateWorkoutForm = ({workout, handleToggle, updateWorkout}) => {
 
                     onSubmit={(values, { setSubmitting }) => {
                         setTimeout( async () => {
-                            updateWorkout({
+                            dispatch(updateWorkout({
+                                workoutId: workout.id,
+                                data: {
                                 name: values.name,
-                                category: values.category
-                            })
+                                category: values.category}
+                            }))
                             setSubmitting(false);
                             handleToggle();
                         }, 400)

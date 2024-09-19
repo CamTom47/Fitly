@@ -1,16 +1,19 @@
 import React, { useContext} from "react";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import { useNavigate } from "react-router-dom";
-import UserContext from "../../../context/UserContext";
 import { Card } from "reactstrap";
+import { useSelector } from "react-redux";
+import {
+    selectCurrentUser
+} from '../../../slices/usersSlice'
 
 const SignupForm = ({signup}) => { 
-
+    
     const navigate = useNavigate();
+    
+    const currentUser = useSelector(selectCurrentUser);
 
-    const user = useContext(UserContext).currentUser;
-
-   if (user !== null) return  navigate('/')
+   if (currentUser !== null) return  navigate('/')
 
     return (
         <div className="d-flex justify-content-center">
@@ -32,6 +35,7 @@ const SignupForm = ({signup}) => {
                         setTimeout(() => { 
                             signup(values); 
                             setSubmitting(false);
+                            localStorage.setItem('isAuthenticated', true);
                             navigate("/exercises")
 
                         }, 400)

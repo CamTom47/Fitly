@@ -1,23 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Formik, Field, ErrorMessage, Form} from "formik";
 import FitlyApi from "../../../Api/FitlyApi";
-import UserContext from "../../../context/UserContext";
 import {equipmentCheckForExerciseUpdate}  from "../../../helpers/helpers";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    selectCurrentUser
+} from '../../../slices/usersSlice';
 
-const UpdateExerciseForm = ({toggle, updateExercise, exercise, equipment}) => {
+import {
+    updateExercise
+} from '../../../slices/exercisesSlice';
 
-    const {currentUser} = useContext(UserContext);
-    const [muscleGroups, setMuscleGroups] = useState([]);
+import {
+    selectMuscleGroups
+} from '../../../slices/muscleGroupsSlice';
 
-    useEffect( () => { 
-        const gatherMuscleGroups = async () => {
-            let muscleGroups = await FitlyApi.findAllMuscleGroups();
-            setMuscleGroups(muscleGroups);
-        }
-        gatherMuscleGroups();
-    }, []);
+const UpdateExerciseForm = ({toggle, exercise, equipment}) => {
+    const dispatch = useDispatch();
+    const currentUser = useSelector(selectCurrentUser);
+    const muscleGroups = useSelector(selectMuscleGroups);
 
-    const muscleGroupComponents = muscleGroups.map( muscleGroup => (
+    const muscleGroupSelections = muscleGroups.map( muscleGroup => (
         <option value={muscleGroup.id}>{muscleGroup.name}</option>
     ))
 
@@ -44,13 +47,13 @@ const UpdateExerciseForm = ({toggle, updateExercise, exercise, equipment}) => {
                         setSubmitting(false);
                                     
                         let equipmentId = await equipmentCheckForExerciseUpdate(values.equipment, currentUser.id);
-                                updateExercise( 
-                                    exercise.id, 
+                                dispatch(updateExercise( 
                                     {
+                                    exerciseId: exercise.id, 
                                     name: values.name,
                                     muscle_group: parseInt(values.muscle_group),
                                     equipment_id: equipmentId
-                                })
+                                }))
                         toggle();
                     }, 400)
                 }}
@@ -67,7 +70,7 @@ const UpdateExerciseForm = ({toggle, updateExercise, exercise, equipment}) => {
                                         <div className="d-flex justify-content-between">
                                             <label htmlFor="muscle_group">Muscle Group:</label>
                                             <Field as='select' name='muscle_group'>
-                                                {muscleGroupComponents}
+                                                {muscleGroupSelections}
                                             </Field>
                                             <ErrorMessage name='muscle_group' component='div'/>
                                         </div>

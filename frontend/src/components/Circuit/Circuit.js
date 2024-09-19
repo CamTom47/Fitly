@@ -1,35 +1,42 @@
 import React, {useCallback, useEffect, useState} from "react";
 import UpdateCircuitForm from "../Forms/UpdateCircuitForm/UpdateCircuitForm";
 import useToggle from "../../hooks/useToggle/useToggle";
-import FitlyApi from "../../Api/FitlyApi";
+import { v4 as uuid } from 'uuid';
 import { Col, Row } from "reactstrap";
+import { 
+    selectCircuit,
+    selectCircuits,
+    deleteCircuit,
+    findAllCircuits,
+    selectCircuitStatus
+} from '../../slices/circuitsSlice';
+import { 
+    selectExercise,
+    selectExercises,
+} from '../../slices/exercisesSlice';
 
-const Circuit = ({circuitId, updateCircuit, deleteCircuit}) => {
+import { useDispatch, useSelector } from "react-redux";
 
+const Circuit = ({circuitId}) => {
+    const dispatch = useDispatch();
+
+    const circuits = useSelector(selectCircuits);
+    const circuit = circuits.filter( circuit => circuit.id === circuitId)[0];
+    let status = useSelector(selectCircuitStatus)
+    const exercises = useSelector(selectExercises);
+    let exercise = exercises.filter( exercise => exercise.id === circuit.exercise_id)[0];
     const [showUpdateCircuitForm, setShowUpdateCircuitForm ] = useToggle();
-    const [circuit, setCircuit] = useState({});
-    const [exercise, setExercise] = useState({});
 
-    const getCircuitAndExercise = useCallback( async () => {
-        const circuit = await FitlyApi.findCircuit({
-            circuit_id: circuitId
-        })
-        setCircuit(circuit);
-        const exercise = await FitlyApi.findExercise({
-            exercise_id: circuit.exercise_id
-        })
-        setExercise(exercise);
-    }, [showUpdateCircuitForm])
+    const getCircuits = useCallback(() => {
+        dispatch(findAllCircuits())
+    } , [status])
 
     useEffect(() => {
-        getCircuitAndExercise();
-    }, [getCircuitAndExercise])
+        getCircuits()
+    } , [getCircuits])
 
     const handleDelete = () => {
-        deleteCircuit({
-            "circuit_id": circuit.id
-        })
-
+        dispatch(deleteCircuit(circuitId))
     }
 
     const toggleShowUpdateCircuitForm = () => {
@@ -37,8 +44,8 @@ const Circuit = ({circuitId, updateCircuit, deleteCircuit}) => {
     }
 
     return (showUpdateCircuitForm)
-    ? <UpdateCircuitForm circuit={circuit} updateCircuit={updateCircuit} exercise={exercise} toggleShowUpdateCircuitForm={toggleShowUpdateCircuitForm}/>
-    : (
+    ? <UpdateCircuitForm key={uuid()} circuit={circuit} exercise={exercise} toggleShowUpdateCircuitForm={toggleShowUpdateCircuitForm}/>
+    :   (
         <div className="d-flex flex-column align-items-between py-3">
             <div className="d-flex flex-column align-items-between">
             <Row xs="3">

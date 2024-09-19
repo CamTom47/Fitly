@@ -1,12 +1,16 @@
 import React, {useContext} from "react";
 import {Formik, Form, Field, ErrorMessage} from "formik";
-import UserContext from "../../../context/UserContext";
 import { Card } from "reactstrap";
-
+import { useSelector, useDispatch } from "react-redux";
+import {
+    selectCurrentUser,
+    updateUser
+} from '../../../slices/usersSlice'
 
 const UserPasswordForm = ({handleUserPasswordToggle}) => {
 
-    const {currentUser, updateUser} = useContext(UserContext);
+    const currentUser = useSelector(selectCurrentUser);
+    const dispatch = useDispatch();
 
 
     return (
@@ -27,7 +31,9 @@ const UserPasswordForm = ({handleUserPasswordToggle}) => {
 
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {  
-                        updateUser({password: values.confirmedPassword});                     
+                        dispatch(updateUser({username:currentUser.username, formData: values.confirmedPassword}));      
+                        dispatch(updateUser({username: currentUser.username, formData: values}));           
+               
                         setSubmitting(false);
                         handleUserPasswordToggle();
                     }, 400)

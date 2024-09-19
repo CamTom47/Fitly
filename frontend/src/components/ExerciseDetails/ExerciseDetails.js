@@ -4,22 +4,41 @@ import FitlyApi from "../../Api/FitlyApi"
 import UpdateExerciseForm from "../Forms/UpdateExerciseForm/UpdateExerciseForm";
 import {equipmentMatch} from "../../helpers/helpers";
 
-import UserContext from "../../context/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    selectCurrentUser
+} from '../../slices/usersSlice';
 
+import {
+    selectMuscleGroup,
+    selectMuscleGroups,
+    // findAMuscleGroup,
+    findAllMuscleGroups
+} from '../../slices/muscleGroupsSlice';
+
+import {
+    deleteExercise
+} from '../../slices/exercisesSlice';
+
+import {
+    findAEquipment
+} from '../../slices/equipmentsSlice';
 /**
  * Exercise component
  * 
  * State: toggleExerciseUpdateForm, equipment, muscleGroup
  * 
  * Props: updateExercise, exercise
- */
+*/
 
-const ExerciseDetails = ({exercise, updateExercise, deleteExercise}) => {
-    let {currentUser} = useContext(UserContext);
+const ExerciseDetails = ({exercise, updateExercise}) => {
+    const dispatch = useDispatch();
+    const muscleGroups = useSelector(selectMuscleGroups);
+    const muscleGroup = muscleGroups.find( muscleGroup => muscleGroup.id === exercise.muscle_group);
+    const currentUser = useSelector(selectCurrentUser);
+    
     const [toggleExerciseUpdateForm, setToggleExerciseUpdateForm] = useState(false);
     const [equipment, setEquipment] = useState({});
-    const [muscleGroup, setMuscleGroup] = useState({});
-
     
     //use the exercise equipment id to match a the name of a the respective equipment from the database.
     useEffect(() => {
@@ -32,23 +51,13 @@ const ExerciseDetails = ({exercise, updateExercise, deleteExercise}) => {
         }
         matchEquipment();
     }, []);
-    
-    
-    //use the exercise musclegroup id to match a the name of a the respective musclegroup from the database.
-    useEffect(() => { 
-        const getMuscleGroup = async () => {
-            let muscle = await FitlyApi.findMuscleGroup({"muscleGroupId": exercise.muscle_group});
-            setMuscleGroup(muscle);
-        }
-        getMuscleGroup();
-    }, []);
 
     const handleEditClick = () => {
         setToggleExerciseUpdateForm ( toggleExerciseUpdateForm => !toggleExerciseUpdateForm)
     }
 
     const handleDeleteClick = () => {
-        deleteExercise({"exercise_id": exercise.id})
+        dispatch(deleteExercise({"exercise_id": exercise.id}))
     }
 
 

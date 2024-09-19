@@ -5,74 +5,58 @@ import FitlyApi from "../../Api/FitlyApi";
 import WgerApi from "../../Api/WgerApi"
 import ExerciseDetails from "../ExerciseDetails/ExerciseDetails";
 import WgerExercise from "../WgerExercise/WgerExercise";
-import UserContext from "../../context/UserContext";
 import NewExerciseForm from "../Forms/NewExerciseForm/NewExerciseForm";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    selectCurrentUser
+} from '../../slices/usersSlice'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import { v4 as uuid } from "uuid";
 
+import {
+    selectExercise,
+    selectExercises,
+    findAllExercises
+} from '../../slices/exercisesSlice'
+
+import {
+    selectMuscleGroups,
+    selectMuscleGroup,
+    findAllMuscleGroups,
+    findAMuscleGroup
+} from '../../slices/muscleGroupsSlice';
+
+import {
+    selectEquipments
+} from '../../slices/equipmentsSlice'
+
 const ExerciseList = () => {
-    const [userExercises, setUserExercises] = useState([]);
+    const userExercises = useSelector(selectExercises);
+    const dispatch = useDispatch();
+    dispatch(findAllMuscleGroups());
+
+    // const [userExercises, setUserExercises] = useState([]);
     const [wgerExercises, setWgerExercises] = useState([]);
     const [showUserExercises, setShowUserExercises] = useState(true);
     const [showWgerExercises, setShowWgerExercises] = useState(false);
     const [exerciseFormToggle, setExerciseFormToggle] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [muscleGroups, setMuscleGroups] = useState([]);
-    const [equipments, setEquipments] = useState({});
+    // const [muscleGroups, setMuscleGroups] = useState([]);
     const [nextWgerCall, setNextWgerCall] = useState(null);
     const [previousWgerCall, setPreviousWgerCall] = useState(null);
     const [currentWgerCall, setCurrentWgerCall] = useState();
-
-
-    const currentUser = useContext(UserContext);
-
-
-    //Create a new exercise and add it to data base sing FitlyApi
-    const createNewExercise = async (data) => {
-        try{
-            setIsLoading(true);
-            const newExercise = await FitlyApi.createExercise(data);
-            setUserExercises([...userExercises, newExercise])
-            getExercises()
-            setIsLoading(false);
-        } catch(err){
-            return err
-        }
-    };
-
- //Update an existing exercise. This method will be passed to all children Exercise components
- const updateExercise = async (exerciseId, data) => {
-        try{
-            setIsLoading(true)
-            let updatedExercise = await FitlyApi.updateExercise(exerciseId, data);
-            getExercises();
-            setIsLoading(false)
-        } catch(err){
-            return err
-        }
- };
-
- const deleteExercise = async (exercise_id) => {
-    try{
-        setIsLoading(true);
-        await FitlyApi.deleteExercise(exercise_id);
-        getExercises();
-        setIsLoading(false);
-    } catch(err){
-        return err
-    }
- }
+    
+    const currentUser = useSelector(selectCurrentUser);
 
     const getExercises = useCallback(async () => {
         setIsLoading(true);
             if(showUserExercises === true){
                 try{
-                    const exercises = await FitlyApi.findAllExercises()
-                    setUserExercises(exercises);
+                    dispatch(findAllExercises())
                     setWgerExercises([]);
                 } catch(err){
                     return err
@@ -95,13 +79,13 @@ const ExerciseList = () => {
                     setWgerExercises(exercises.data.results);
                     }
                     
-                    setUserExercises([]);
+                    // setUserExercises([]);
                 } catch(err){
                     return err
                 }
             }
             setIsLoading(false);
-        }, [createNewExercise, updateExercise, deleteExercise]);
+        }, []);
 
      
 
@@ -109,32 +93,19 @@ const ExerciseList = () => {
     // Upon component mounting, get userExercises state from FitlyApi and display on page.
     useEffect(() => { 
         getExercises();
-    }, [showUserExercises, showWgerExercises, currentUser]);
-
-    let getMuscleGroups = useCallback(async () => { 
-        try{
-            let muscleGroups = await FitlyApi.findAllMuscleGroups();
-            setMuscleGroups(muscleGroups);
-        } catch (err) {
-            return err
-        }
-    }, [currentUser])
-
-    useEffect(() => {
-        getMuscleGroups();
-    }, [currentUser])   
+    }, [showUserExercises, showWgerExercises]);
 
     //Map through userExercises state and create an exercise component from each item
     const userExerciseComponents = userExercises.map(e => (
         <Col xs="4" className="my-3">
-            <ExerciseDetails exercise={e} key={uuid()} updateExercise={updateExercise} setEquipments={setEquipments} deleteExercise={deleteExercise}/>
+            <ExerciseDetails exercise={e} key={uuid()}/>
         </Col>
     ))
 
     //Map through the wgerExercise state and creat an exercise component from each item
     const wgerExerciseComponents = wgerExercises.map( e => (
         <Col xs="4" className="my-3">
-            <WgerExercise addExercise={createNewExercise} exercise={e} key={uuid()}>
+            <WgerExercise exercise={e} key={uuid()}>
                 </WgerExercise></Col>
     ))
 
@@ -181,7 +152,7 @@ const ExerciseList = () => {
         }
     }
 
-    if(exerciseFormToggle) return <NewExerciseForm addExercise={createNewExercise} toggle={toggleExerciseFormVisibility} muscleGroups={muscleGroups}/>
+    if(exerciseFormToggle) return <NewExerciseForm toggle={toggleExerciseFormVisibility}/>
 
     return (
         (isLoading) 
