@@ -2,13 +2,18 @@ import React, { useContext} from "react";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../../context/UserContext";
-import "reactstrap"
+import "reactstrap";
+import { useDispatch, useSelector} from 'react-redux'
+import { 
+    userLogIn,
+    selectCurrentUser
+} from '../../../slices/usersSlice'
 
-const LoginForm = ({login}) => { 
+const LoginForm = () => { 
 
     const navigate = useNavigate();
-
-    const user = useContext(UserContext).currentUser;
+    const dispatch = useDispatch();
+    const user = useSelector(selectCurrentUser);
 
    if (user !== null) return  navigate('/')
 
@@ -30,7 +35,7 @@ const LoginForm = ({login}) => {
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {
                         setSubmitting(false);
-                        login(values)
+                        dispatch(userLogIn(values))
                         navigate("/exercises")
                     }, 400)
                 }}

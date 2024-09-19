@@ -1,13 +1,7 @@
 import React from "react";
 import { Card, CardBody, CardText, CardTitle, ListGroup, ListGroupItem, Button} from "reactstrap"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar, faTrash } from '@fortawesome/free-solid-svg-icons'
 import FitlyApi from "../../Api/FitlyApi";
-
 import { Link } from "react-router-dom"
-
-
-
 
 const WorkoutSummary = ({workout}) => {
     // Add/remove workout from favorites to allow for filtering 

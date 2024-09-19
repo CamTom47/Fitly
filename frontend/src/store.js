@@ -32,20 +32,4 @@ export const store = configureStore({
     reducer: persistedReducer
 })
 
-
 export const persistor = persistStore(store);
-
-
-
-// export const store = configureStore({
-//     reducer: {
-//         workouts: workoutsReducer,
-//         circuits: circuitsReducer,
-//         exercises: exercisesReducer,
-//         equipments: equipmentReducer,
-//         categories: categoriesReducer,
-//         users: usersReducer,
-//         muscleGroups: muscleGroupReducer
-
-//     }
-// })
