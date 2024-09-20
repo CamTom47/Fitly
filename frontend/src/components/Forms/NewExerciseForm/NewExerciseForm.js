@@ -1,12 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Formik, Field, ErrorMessage, Form} from "formik";
-import UserContext from "../../../context/UserContext";
 import { equipmentCheckForExerciseUpdate } from "../../../helpers/helpers"
 import { Card } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    selectCurrentUser,
+} from '../../../slices/usersSlice';
+import {
+    addExercise,
+} from '../../../slices/exercisesSlice';
+import { 
+    selectMuscleGroups
+} from '../../../slices/muscleGroupsSlice';
 
-const NewExerciseForm = ({toggle, addExercise, muscleGroups}) => {
-
-    const {currentUser} = useContext(UserContext);
+const NewExerciseForm = ({toggle}) => {
+    const dispatch = useDispatch();
+    const currentUser = useSelector(selectCurrentUser);
+    const muscleGroups = useSelector(selectMuscleGroups);
 
     const muscleGroupComponents = muscleGroups.map( muscleGroup => (
         <option value={muscleGroup.id}>{muscleGroup.name}</option>
@@ -35,11 +45,11 @@ const NewExerciseForm = ({toggle, addExercise, muscleGroups}) => {
 
                             let equipmentId = await equipmentCheckForExerciseUpdate(values.equipment, currentUser.id);
 
-                            addExercise({
+                            dispatch(addExercise({
                                 name: values.name,
                                 muscle_group: parseInt(values.muscle_group),
                                 equipment_id: equipmentId
-                            })
+                            }))
                             
                             toggle();
                         }, 400)}}

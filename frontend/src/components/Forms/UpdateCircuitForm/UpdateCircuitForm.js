@@ -1,40 +1,27 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Formik, Field, ErrorMessage, Form} from "formik";
-import FitlyApi from "../../../Api/FitlyApi";
-import UserContext from "../../../context/UserContext";
 import { useNavigate } from "react-router";
 import LoadingComponent from "../../LoadingComponent/LoadingComponent";
+import { useSelector, useDispatch } from "react-redux";
 
-const UpdateCircuitForm = ({workout, toggleShowUpdateCircuitForm, circuit, updateCircuit, exercise}) => {
+import {
+    updateCircuit
+} from '../../../slices/circuitsSlice';
 
-    const {currentUser} = useContext(UserContext);
-    const [exercises, setExercises] = useState([]);
+import {
+    selectExercises
+} from '../../../slices/exercisesSlice';
+
+const UpdateCircuitForm = ({workout, toggleShowUpdateCircuitForm, circuit, exercise}) => {
+    const dispatch = useDispatch();    
+    const exercises = useSelector(selectExercises)
     const [isLoading, setIsLoading] = useState(true);
-
-    const navigate = useNavigate();
-
-    useEffect( () => {
-        setIsLoading(true);
-            const getExercises = async () => {
-                try{
-                    const exercises = await FitlyApi.findAllExercises()
-                    setExercises(exercises);
-                }
-                catch(err){
-                    return err
-                }  
-            }
-        getExercises()
-        setIsLoading(false);
-    } , []);
 
     const exerciseOptionComponents = exercises.map(  exercise => (
         <option value={exercise.id}>{exercise.name}</option>
     ))
 
-    return (isLoading)
-    ? <LoadingComponent/>
-    : (
+    return(
         <div className=" d-flex flex-column align-items-center">
             <h5 className="pb-4">Circuit Information</h5>
             <Formik
@@ -58,23 +45,16 @@ const UpdateCircuitForm = ({workout, toggleShowUpdateCircuitForm, circuit, updat
 
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout( async () => {
-
-                        //update new circuit
-                        const updatedCircuit = await FitlyApi.updateCircuit(circuit.id,
-                            {
+                        dispatch(updateCircuit({
+                            circuitId: circuit.id,
                             sets: values.sets,
                             reps: values.reps,
                             weight: values.weight,
                             rest_period: values.rest_period,
-                            intensity: values.intensity
-                        })
-
-                        // update exercise and circuit relationship
-                        await FitlyApi.updateExerciseCircuit(circuit.id,
-                            {
-                            exercise_id: values.exercise
-                        });
-
+                            intensity: values.intensity,
+                            exerciseId: values.exercise
+                        }))
+                        
                         toggleShowUpdateCircuitForm();
                         setSubmitting(false);
                     }, 400)

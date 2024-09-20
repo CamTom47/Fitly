@@ -20,7 +20,7 @@ class Exercise {
      */
 
     static async findAll(user_id) {
-        const result = await db.query(`
+        let query = `
             SELECT  exercises.id,
                     exercises.name,
                     exercises.muscle_group,
@@ -29,8 +29,21 @@ class Exercise {
             JOIN users_exercises
             ON exercises.id = users_exercises.exercise_id
             JOIN exercises_equipments
-            ON exercises.id = exercises_equipments.exercise_id
-            WHERE users_exercises.user_id = $1`, [user_id])
+            ON exercises.id = exercises_equipments.exercise_id`
+
+        const whereExpressions = [];
+        const queryValues = [];
+
+        if(user_id !== undefined){
+            queryValues.push(user_id)
+            whereExpressions.push(`users_exercises.user_id = $${queryValues.length}`)
+        }
+
+        if(whereExpressions.length){
+            (whereExpressions.length === 1 ) ? query += "\n WHERE " + whereExpressions : query += " WHERE " + whereExpressions.join(" AND ");
+        };
+
+        let result = await db.query(query, queryValues)
 
         let exercises = result.rows;
         return exercises;

@@ -20,7 +20,6 @@ const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require('../middleware/auth
 router.get('/', ensureLoggedIn, async function( req, res, next) {
     try{ 
         const exercises = await Exercise.findAll(res.locals.user.id);
-        console.log(exercises)
         return res.json({exercises})
 
     } catch(err){
@@ -61,8 +60,9 @@ router.post('/', ensureLoggedIn, async function(req, res, next){
         };
 
         const exercise = await Exercise.add(req.body);
+        const exerciseEquipment = await Exercise.addExerciseEquipment(exercise.id, req.body.equipment_id);
+        exercise.equipment_id = exerciseEquipment.equipment_id
         await Exercise.addUserExercise(res.locals.user.id, exercise.id)
-        await Exercise.addExerciseEquipment(exercise.id, req.body.equipment_id);
         return res.status(201).json({exercise});
 
     } catch(err){

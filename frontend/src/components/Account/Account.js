@@ -1,14 +1,16 @@
 import React, { useState, useContext } from "react";
-import UserContext from "../../context/UserContext";
 import UserAccountForm from "../Forms/UserAccountForm/UserAccountForm";
 import UserPasswordForm from "../Forms/UserAccountForm/UserPasswordForm";
-import FitlyApi from "../../Api/FitlyApi";
-
-import { hash, compare, getSalt } from "bcryptjs-react"
 import { Card, InputGroup, InputGroupText, Input } from "reactstrap";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import { useSelector } from "react-redux";
+import {
+    selectCurrentUser
+} from '../../slices/usersSlice'
 
 const Account = () => {
+
+    const currentUser = useSelector(selectCurrentUser);
 
     const [editUserToggle, setEditUserToggle] = useState(false);
     const [editPasswordToggle, setEditPasswordToggle] = useState(false);
@@ -20,9 +22,6 @@ const Account = () => {
     const handleUserPasswordToggle = () => {
         setEditPasswordToggle(!editPasswordToggle);
     }
-  
-
-    const { currentUser } = useContext(UserContext);
 
     return (currentUser === null )
     ? <LoadingComponent/> 
@@ -38,15 +37,15 @@ const Account = () => {
                 </InputGroup>
                 <InputGroup className="d-inline-flex pb-4">
                     <InputGroupText>Email</InputGroupText>
-                    <Input disabled placeholder={currentUser.email || "----"}/>
+                    <Input disabled placeholder={currentUser.email || "-"}/>
                 </InputGroup>
                 <InputGroup className="d-inline-flex pb-4">
                     <InputGroupText>First Name</InputGroupText>
-                    <Input disabled placeholder= {currentUser.firstName || "----"}/>
+                    <Input disabled placeholder= {currentUser.firstName || "-"}/>
                 </InputGroup>
                 <InputGroup className="d-inline-flex pb-4">
                     <InputGroupText>Last Name</InputGroupText>
-                    <Input disabled placeholder={currentUser.lastName || "----"}/>
+                    <Input disabled placeholder={currentUser.lastName || "-"}/>
                 </InputGroup>
 
                 <button className="btn btn-secondary" onClick={handleUserInfoToggle}>Edit Account Information</button>
@@ -64,7 +63,7 @@ const Account = () => {
                             <InputGroupText>
                             Password
                             </InputGroupText>
-                            <Input disabled placeholder="----"/>
+                            <Input disabled placeholder="-"/>
                         </InputGroup>
                     </div>
                     <div>

@@ -1,13 +1,17 @@
 import React, {useContext} from "react";
 import {Formik, Form, Field, ErrorMessage} from "formik";
-import UserContext from "../../../context/UserContext";
 import { Card } from "reactstrap";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    selectCurrentUser,
+    updateUser
+} from '../../../slices/usersSlice'
 
 
 
 const UserAccountForm = ({handleUserInfoToggle}) => {
-
-    const {currentUser, updateUser} = useContext(UserContext);
+    const dispatch = useDispatch();
+    const currentUser = useSelector(selectCurrentUser);
 
     return (
         <div className="d-flex flex-column align-items-center pb-5">
@@ -30,7 +34,7 @@ const UserAccountForm = ({handleUserInfoToggle}) => {
 
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {     
-                        updateUser(values);                
+                        dispatch(updateUser({username: currentUser.username, formData: values}));           
                         setSubmitting(false);
                         handleUserInfoToggle()
                     }, 400)

@@ -1,25 +1,24 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Formik, Field, ErrorMessage, Form} from "formik";
 import FitlyApi from "../../../Api/FitlyApi";
-import UserContext from "../../../context/UserContext";
 import { useNavigate } from "react-router";
 import { Card } from "reactstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { 
+    addWorkout,
+    } from '../../../slices/workoutsSlice';
 
-const NewWorkoutForm = ({toggleCreateForm, createWorkout}) => {
+import {
+    selectCurrentUser
+} from '../../../slices/usersSlice';
+import {
+    selectCategories,
+    findAllCategories
+} from '../../../slices/categoriesSlice';
 
-    const [categories, setCategories] = useState([]);
-
-    const {currentUser} = useContext(UserContext);
-
-    useEffect( () => {
-        const callCategories = async () => {
-            let categories = await FitlyApi.findAllCategories();
-            setCategories(categories);
-        }
-        callCategories();
-    }, []);
-
-    const navigate = useNavigate();
+const NewWorkoutForm = ({toggleCreateForm}) => {
+    const dispatch = useDispatch();
+    const categories = useSelector(selectCategories);
 
     const categoryComponents = categories.map( cat => (
         <option value={cat.id}>{cat.name}</option>
@@ -41,11 +40,7 @@ const NewWorkoutForm = ({toggleCreateForm, createWorkout}) => {
 
                     onSubmit={(values, { setSubmitting }) => {
                         setTimeout( async () => {
-                            await FitlyApi.createWorkout({
-                                user_id: currentUser.id,
-                                name: values.name,
-                                category: values.category
-                            })
+                            dispatch(addWorkout(values))
                             setSubmitting(false);
                             toggleCreateForm();
                         }, 400)

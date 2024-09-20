@@ -1,5 +1,10 @@
 import React,{useContext, useState} from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    selectCurrentUser,
+    userLoggedOut
+} from '../../slices/usersSlice'
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -13,15 +18,19 @@ import { Collapse,
 
 import { Nav } from "react-bootstrap";
 
-import UserContext from "../../context/UserContext";
-
 const NavBar = () => {
-
+    const dispatch = useDispatch();
+    
     const [collapsed, setCollapsed] = useState(true);
-
+    
     const toggleNavbar = () => setCollapsed(!collapsed);
+    
+    const currentUser = useSelector(selectCurrentUser);
 
-    const {currentUser, signout} = useContext(UserContext)
+    const handleLogOut = () => {
+        localStorage.clear();
+        dispatch(userLoggedOut());
+    }
 
     const loggedInNavComponents = (
         <div className="d-flex flex-column align-items-center">
@@ -36,7 +45,7 @@ const NavBar = () => {
                 <Nav.Link as={Link} to="/workouts" onClick={toggleNavbar}>Workouts</Nav.Link>
             </NavItem>
             <NavItem>
-                <Nav.Link onClick={signout} as={Link} to="/">Sign Out</Nav.Link>
+                <Nav.Link onClick={handleLogOut} as={Link} to="/">Sign Out</Nav.Link>
             </NavItem>
         </div> 
     )

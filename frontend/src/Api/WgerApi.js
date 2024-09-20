@@ -26,9 +26,7 @@ const WGER_BASE_URL = "https://wger.de/api/v2"
                 endpoint = endpoint.split(`${WGER_BASE_URL}/`)[1]
             };
             
-            console.log(endpoint)
             let res = await this.request(`${endpoint}`)
-            console.log(res)
             return res
         }
 

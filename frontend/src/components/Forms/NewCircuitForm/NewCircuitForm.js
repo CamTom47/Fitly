@@ -1,13 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Formik, Field, ErrorMessage, Form} from "formik";
 import FitlyApi from "../../../Api/FitlyApi";
-import UserContext from "../../../context/UserContext";
 import { useNavigate } from "react-router";
 import LoadingComponent from "../../LoadingComponent/LoadingComponent";
+import { useSelector, useDispatch } from "react-redux";
+import {
+    selectCurrentUser
+} from '../../../slices/usersSlice';
+import {
+    addCircuit
+} from '../../../slices/circuitsSlice';
 
-const NewCircuitForm = ({workout, toggleShowNewCircuitForm, createCircuit}) => {
 
-    const {currentUser} = useContext(UserContext);
+const NewCircuitForm = ({workout, toggleShowNewCircuitForm}) => {
+    const dispatch = useDispatch();
+    
+    const currentUser = useSelector(selectCurrentUser);
     const [exercises, setExercises] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -58,13 +66,15 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm, createCircuit}) => {
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout( async () => {
 
-                        createCircuit({
+                        dispatch(addCircuit({
                             sets: values.sets,
                             reps: values.reps,
                             weight: values.weight,
                             rest_period: values.rest_period,
-                            intensity: values.intensity
-                        }, values.exercise)
+                            intensity: values.intensity,
+                            exerciseId : values.exercise,
+                            workoutId: workout.id
+                        }))
 
                         toggleShowNewCircuitForm();
                         setSubmitting(false);
@@ -136,7 +146,7 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm, createCircuit}) => {
                             
                             <div className="d-flex column-gap-5 pt-3">
                                 <button className="btn btn-danger" onClick={toggleShowNewCircuitForm}>Cancel</button>
-                                <button className="btn btn-success" type='submit' disabled={isSubmitting}>Add Ciruit</button>
+                                <button className="btn btn-success" type='submit' disabled={isSubmitting}>Add Circuit</button>
                             </div>
                         </div>
 

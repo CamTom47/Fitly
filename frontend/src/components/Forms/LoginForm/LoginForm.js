@@ -2,13 +2,20 @@ import React, { useContext} from "react";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../../../context/UserContext";
-import "reactstrap"
+import "reactstrap";
+import { useDispatch, useSelector} from 'react-redux'
+import { 
+    userLogIn,
+    selectCurrentUser,
+    selectErrorMessage
+} from '../../../slices/usersSlice'
 
-const LoginForm = ({login}) => { 
+const LoginForm = () => { 
 
+    const dispatch = useDispatch();
+    const errorMessage = useSelector(selectErrorMessage)
     const navigate = useNavigate();
-
-    const user = useContext(UserContext).currentUser;
+    const user = useSelector(selectCurrentUser);
 
    if (user !== null) return  navigate('/')
 
@@ -30,7 +37,7 @@ const LoginForm = ({login}) => {
                 onSubmit={(values, { setSubmitting }) => {
                     setTimeout(() => {
                         setSubmitting(false);
-                        login(values)
+                        dispatch(userLogIn(values))
                         navigate("/exercises")
                     }, 400)
                 }}
@@ -52,6 +59,7 @@ const LoginForm = ({login}) => {
                                 <div style={{color: "red"}}>
                                     <ErrorMessage name='password' component='div'/> 
                                 </div>
+                                <p>{errorMessage}</p>
                             </div>
                                 <button className="my-4" id="loginFormSubmitButton" type='submit' disabled={isSubmitting}>Login</button>
                         </Form>

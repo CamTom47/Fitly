@@ -1,15 +1,17 @@
 import React from "react";
 import { Card, CardBody, CardText, CardTitle, ListGroup, ListGroupItem, Button} from "reactstrap"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar, faTrash } from '@fortawesome/free-solid-svg-icons'
 import FitlyApi from "../../Api/FitlyApi";
+import { Link } from "react-router-dom";
+import {useSelector} from 'react-redux'
 
-import { Link } from "react-router-dom"
-
-
-
+import {
+    selectCategories
+} from '../../slices/categoriesSlice'
 
 const WorkoutSummary = ({workout}) => {
+
+    const categories = useSelector(selectCategories);
+    const category = categories.filter( category => category.id === workout.category)[0];
     // Add/remove workout from favorites to allow for filtering 
     const handleFavorite = async () => {
         (workout.favorited === false)
@@ -22,10 +24,7 @@ const WorkoutSummary = ({workout}) => {
             <CardTitle className="fs-5">{workout.name}</CardTitle>
             <CardBody className="d-flex pt-3 flex-column align-items-center">
                 <CardText>
-                    Type of Workout:{workout.category}
-                </CardText>
-                <CardText>
-                    Number of Circuits: 
+                    Type of Workout:{category.name}
                 </CardText>
                     <Link  className="btn btn-secondary" to={{ pathname: `/workouts/${workout.id}`}} style={{textDecoration: "none"}}>
                         Workout Details

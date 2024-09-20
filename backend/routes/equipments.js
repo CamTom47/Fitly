@@ -44,7 +44,8 @@ router.get('/:equipment_id', ensureLoggedIn, async function(req, res, next){
     try{
 
         const equipment_id = req.params.equipment_id;
-        const equipment = await Equipment.find(equipment_id, res.locals.user.id);
+        
+        const equipment = await Equipment.find(+equipment_id, res.locals.user.id);
 
         return res.json({equipment});
 

@@ -89,8 +89,6 @@ describe("delete", function(){
 describe("addUserExercise", function(){
     test("works", async function(){
         let addUserExercise = await Exercise.addUserExercise(testUserId[0], testExerciseId[0]);
-        console.log(addUserExercise)
-
 
     })
 })

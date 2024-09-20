@@ -29,14 +29,17 @@ class Circuit {
                     weight,
                     rest_period,
                     intensity,
-                    cw.workout_id AS workout_id
-                FROM circuits AS c
-                JOIN circuits_workouts AS cw
-                ON c.id= cw.circuit_id
+                    cw.workout_id AS workout_id,
+                    ce.exercise_id AS exercise_id
+                    FROM circuits AS c
+                    JOIN circuits_workouts AS cw
+                    ON c.id= cw.circuit_id
                     JOIN workouts AS w
                     ON cw.workout_id = w.id
-            WHERE w.user_id = $1`,
-            [user_id])
+                    JOIN circuits_exercises AS ce
+                    ON c.id = ce.circuit_id
+                    WHERE w.user_id = $1`,
+                    [user_id])
 
         let circuits = result.rows;
 
