@@ -16,8 +16,6 @@ const Homepage = () => {
         <div className="d-flex justify-content-center m-5 ">
             <Card className="d-flex flex-column align-items-center p-5">
                 <LoginForm></LoginForm>
-                <hr className="w-75"></hr>
-                <p>New to Fitly?</p><a href="/register">Sign Up Here</a>
             </Card>
         </div>
     )

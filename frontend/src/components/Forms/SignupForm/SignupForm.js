@@ -2,12 +2,14 @@ import React, { useContext} from "react";
 import {Formik, Form, Field, ErrorMessage} from "formik";
 import { useNavigate } from "react-router-dom";
 import { Card } from "reactstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
-    selectCurrentUser
-} from '../../../slices/usersSlice'
+    selectCurrentUser,
+    signup
+} from '../../../slices/usersSlice';
 
 const SignupForm = ({signup}) => { 
+    const dispatch = useDispatch();
     
     const navigate = useNavigate();
     
@@ -33,7 +35,7 @@ const SignupForm = ({signup}) => {
 
                     onSubmit={(values, { setSubmitting }) => {
                         setTimeout(() => { 
-                            signup(values); 
+                            dispatch(signup(values));
                             setSubmitting(false);
                             localStorage.setItem('isAuthenticated', true);
                             navigate("/exercises")
