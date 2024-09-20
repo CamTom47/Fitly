@@ -6,13 +6,15 @@ import "reactstrap";
 import { useDispatch, useSelector} from 'react-redux'
 import { 
     userLogIn,
-    selectCurrentUser
+    selectCurrentUser,
+    selectErrorMessage
 } from '../../../slices/usersSlice'
 
 const LoginForm = () => { 
 
-    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const errorMessage = useSelector(selectErrorMessage)
+    const navigate = useNavigate();
     const user = useSelector(selectCurrentUser);
 
    if (user !== null) return  navigate('/')
@@ -57,6 +59,7 @@ const LoginForm = () => {
                                 <div style={{color: "red"}}>
                                     <ErrorMessage name='password' component='div'/> 
                                 </div>
+                                <p>{errorMessage}</p>
                             </div>
                                 <button className="my-4" id="loginFormSubmitButton" type='submit' disabled={isSubmitting}>Login</button>
                         </Form>

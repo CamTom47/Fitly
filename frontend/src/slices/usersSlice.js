@@ -1,13 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import FitlyApi from '../Api/FitlyApi'
 import { decodeToken } from 'react-jwt';
+import { ErrorMessage } from 'formik';
 
 const initialState = {
     users: [],
     selectedUser: {},
     currentUser: null,
     token: null,
-    isAuthenticated: false
+    isAuthenticated: false,
+    errorMessage : null
 }
 
 export const usersSlice = createSlice({
@@ -25,9 +27,13 @@ export const usersSlice = createSlice({
             state.token = state.token
         })
         .addCase(userLogIn.fulfilled, (state, action) => {
-            state.currentUser = action.payload.currentUser;
-            state.token = action.payload.token;
-            state.isAuthenticated = true;
+            if(action.payload.token){
+                state.currentUser = action.payload.currentUser;
+                state.token = action.payload.token;
+                state.isAuthenticated = true;
+            } else {
+                state.errorMessage = action.payload[0]
+            }
         })
         .addCase(findAUser.fulfilled, (state, action) => {
             state.selectedUser = action.payload;
@@ -50,13 +56,16 @@ export const { userLoggedOut } = usersSlice.actions;
 export const userCheckLoggedIn = createAsyncThunk(
     "users/userCheckLoggedIn",
     async () =>  {
-        let token = localStorage.getItem('token');
+        let res = localStorage.getItem('token');
+        const {token } = res
     if(token) {
         FitlyApi.token = token;
         const { username } = await decodeToken(token);
         const currentUser  = await FitlyApi.findUser(username)
         const results = { token, currentUser }
         return results
+    } else {
+        return res
     }
 })
 
@@ -65,12 +74,16 @@ export const userLogIn = createAsyncThunk(
     async (data) => {
         try{
             const token = await FitlyApi.login(data)
-            FitlyApi.token = token;
-            localStorage.setItem('token', token);
-            const { username } = await decodeToken(token);
-            const currentUser = await FitlyApi.findUser(username)
-            const results = { token , currentUser }
-            return results
+            if(token){
+                FitlyApi.token = token;
+                localStorage.setItem('token', token);
+                const { username } = await decodeToken(token);
+                const currentUser = await FitlyApi.findUser(username)
+                const results = { token , currentUser }
+                return results
+            } else {
+
+            }
         }
         catch (err){
             return err
@@ -140,5 +153,6 @@ export const selectuser = state => state.users.selecteduser;
 export const selectCurrentUser = state => state.users.currentUser;
 export const selectToken = state => state.users.token;
 export const selectAuthenticated = state => state.users.isAuthenticated;
+export const selectErrorMessage = state => state.users.errorMessage;
 
 export default usersSlice.reducer;

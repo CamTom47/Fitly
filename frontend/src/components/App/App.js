@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import { Routes, Route, useNavigate } from "react-router"
 
 import NavBar from "../NavBar/NavBar";
@@ -27,26 +27,36 @@ import { useDispatch, useSelector } from "react-redux";
 
 function App() {
   
-  const [isLoading, setIsLoading] = useState(true);
-  let token = useSelector(selectToken);
-  let currentUser = useSelector(selectCurrentUser);
-  let isAuthenticated = useSelector(selectAuthenticated);
+  const [isLoading, setIsLoading] = useState(false);
+  const token = useSelector(selectToken);
+  const currentUser = useSelector(selectCurrentUser);
+  const isAuthenticated = useSelector(selectAuthenticated);
+
   const dispatch = useDispatch();
   
-  if(isAuthenticated){
-      dispatch(userCheckLoggedIn());
-  }
-  
+  const checkLoggedIn = useCallback(() => {
+    setIsLoading(true)
+    dispatch(userCheckLoggedIn());
+    setIsLoading(false)
+  } , [isAuthenticated]);
 
+  useEffect(() => { 
+    checkLoggedIn()
+  } , [checkLoggedIn])
+  
     console.debug(
       "App",
       "currentUser", currentUser,
       "token=", token
     )
 
-
-
   //Find current user using local storage "token"
+
+  if(isLoading){
+    return <LoadingComponent/>
+  } else {
+
+  
   
   if(!(token && isAuthenticated)){
     return (
@@ -55,7 +65,7 @@ function App() {
           <Routes>
             <Route exact path="/register" element={<SignupForm/>}/>
             <Route exact path="/" element={<Homepage/>}/>
-            <Route path="*" element={<Unauthorized/>}/>
+            <Route path="*" element={<Homepage/>}/>
           </Routes>
       </div>
     )
@@ -77,6 +87,7 @@ function App() {
         </Routes>
     </div>
   );
+}
 }
 }
 
