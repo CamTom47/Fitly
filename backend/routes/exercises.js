@@ -60,8 +60,9 @@ router.post('/', ensureLoggedIn, async function(req, res, next){
         };
 
         const exercise = await Exercise.add(req.body);
+        const exerciseEquipment = await Exercise.addExerciseEquipment(exercise.id, req.body.equipment_id);
+        exercise.equipment_id = exerciseEquipment.equipment_id
         await Exercise.addUserExercise(res.locals.user.id, exercise.id)
-        await Exercise.addExerciseEquipment(exercise.id, req.body.equipment_id);
         return res.status(201).json({exercise});
 
     } catch(err){

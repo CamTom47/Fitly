@@ -28,8 +28,6 @@ describe(' GET / ', function(){
         .get("/circuits")
         .set("authorization", `Bearer ${u1token}`)
 
-        console.log(resp)
-
         expect(resp.body).toEqual({
             circuits: [{
                 sets: 5,

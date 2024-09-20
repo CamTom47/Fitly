@@ -4,7 +4,6 @@ import FitlyApi from '../Api/FitlyApi'
 const initialState = {
     circuits: [],
     selectedCircuit: {},
-    status: 'static'
 }
 
 export const circuitsSlice = createSlice({
@@ -22,14 +21,11 @@ export const circuitsSlice = createSlice({
         .addCase(addCircuit.fulfilled, (state, action) => {
             state.circuits.push(action.payload)
         })
-        .addCase(updateCircuit.pending, (state) => {
-            state.status = 'pending';
-        })
         .addCase(updateCircuit.fulfilled, (state, action) => {
             state.circuits = [...(state.circuits.filter( circuit => circuit.id !== action.payload.id)), action.payload]
-            state.status = 'success';
         })
-        .addCase(deleteCircuit.fulfilled, (state, action ) => {
+        .addCase(deleteCircuit.fulfilled, (state, action) => {
+            state.circuits = state.circuits.filter( circuit => circuit.id !== action.payload)
         })
     }
 });
@@ -117,8 +113,6 @@ export const updateCircuit = createAsyncThunk(
     "circuits/circuitUpdated",
     async (data) => {
         try{
-            console.log(data)
-
             const { 
                 circuitId,
                 sets,
@@ -139,7 +133,7 @@ export const updateCircuit = createAsyncThunk(
 
             await FitlyApi.updateExerciseCircuit({circuitId, exerciseId});
             
-            return circuit;
+            return {...circuit, exercise_id: +exerciseId};
         }
         catch (err){
             return err
@@ -162,6 +156,5 @@ export const deleteCircuit = createAsyncThunk(
 
 export const selectCircuits = state => state.circuits.circuits;
 export const selectCircuit = state => state.circuits.selectedCircuit;
-export const selectCircuitStatus = state => state.circuits.status;
 
 export default circuitsSlice.reducer;

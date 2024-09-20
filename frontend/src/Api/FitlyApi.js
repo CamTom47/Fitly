@@ -91,8 +91,6 @@ class FitlyApi {
         }
 
         static async updateUser(username, data){
-            console.log(username)
-            console.log("data:", data)
             let res = await this.request(`users/${username}`, data, 'patch');
             return res.user;
         }
@@ -134,9 +132,7 @@ class FitlyApi {
          */
 
         static async createWorkout(data){
-            console.log("oihfdsaio", data)
             let res = await this.request(`workouts/`, data, 'post');
-            console.log(res.newWorkout)
             return res.newWorkout;
         }
 
@@ -149,7 +145,7 @@ class FitlyApi {
 
         static async updateWorkout(workout_id,data){
             let res = await this.request(`workouts/${workout_id}`, data, 'patch');
-            return res.workout;
+            return res.updatedWorkout;
         }
         
         /**
@@ -204,8 +200,8 @@ class FitlyApi {
          */
 
         static async createExercise(data){
-            let res = await this.request(`exercises/`, data, 'post');
-            return res.exercise
+            let exercise = await this.request(`exercises/`, data, 'post');
+            return exercise
         }
         
         /**
@@ -391,13 +387,11 @@ class FitlyApi {
 
         static async findAllMuscleGroups(data){
             let res = await this.request(`muscleGroups/`, data, 'get');
-
             return res.muscleGroups
         }
         
         static async findMuscleGroup(data){
             let res = await this.request(`muscleGroups/${data.muscleGroupId}`, data, 'get');
-
             return res.muscleGroup
         }
     }

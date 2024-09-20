@@ -26,7 +26,7 @@ export const workoutsSlice = createSlice({
                 state.workouts.push(action.payload)
             })
             .addCase(updateWorkout.fulfilled, (state, action) => {
-                state.selected += action.payload
+                state.workouts = [...(state.workouts.filter( workout => workout.id !== action.payload.id)), action.payload]
             })
             .addCase(deleteWorkout.fulfilled, (state) => {
                 return state
@@ -69,9 +69,7 @@ export const addWorkout = createAsyncThunk(
     "workouts/workoutAdded",
     async (data) => {
         try{ 
-            console.log('data things', data)
             const workout = await FitlyApi.createWorkout(data);
-            console.log('workout stuff', workout)
             return workout
         }   
         catch (err){
@@ -86,7 +84,7 @@ export const updateWorkout = createAsyncThunk(
         try{
             const {workoutId, data} = formData
             const workout = await FitlyApi.updateWorkout(workoutId, data)
-            return workout
+            return {...workout, id: workoutId}
         } catch (err){
             return err
         }

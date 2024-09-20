@@ -17,7 +17,8 @@ import {
 } from '../../slices/muscleGroupsSlice';
 
 import {
-    deleteExercise
+    deleteExercise,
+    selectExercises
 } from '../../slices/exercisesSlice';
 
 import {
@@ -31,12 +32,12 @@ import {
  * Props: updateExercise, exercise
 */
 
-const ExerciseDetails = ({exercise, updateExercise}) => {
+const ExerciseDetails = ({exerciseId, updateExercise}) => {
     const dispatch = useDispatch();
+    const exercises = useSelector(selectExercises);
+    const exercise = exercises.filter( exercise => exercise.id === exerciseId)[0];
     const muscleGroups = useSelector(selectMuscleGroups);
     const muscleGroup = muscleGroups.find( muscleGroup => muscleGroup.id === exercise.muscle_group);
-    const currentUser = useSelector(selectCurrentUser);
-    
     const [toggleExerciseUpdateForm, setToggleExerciseUpdateForm] = useState(false);
     const [equipment, setEquipment] = useState({});
     
@@ -59,8 +60,6 @@ const ExerciseDetails = ({exercise, updateExercise}) => {
     const handleDeleteClick = () => {
         dispatch(deleteExercise({"exercise_id": exercise.id}))
     }
-
-
 
     return (
         <Card className="my-2 d-flex flex-column align-items-center pb-3">

@@ -21,12 +21,7 @@ import { useDispatch,useSelector } from "react-redux";
 import { 
     deleteWorkout,
     selectWorkouts,
-    selectWorkout,
-    findWorkoutById
 } from '../../slices/workoutsSlice';
-import {
-    selectCurrentUser
-} from '../../slices/usersSlice';
 import {
     selectCircuits,
     findAllCircuits
@@ -34,7 +29,6 @@ import {
 } from '../../slices/circuitsSlice';
 import {
     selectCategories,
-    findAllCategories
 } from '../../slices/categoriesSlice';
 
 const WorkoutDetail = () => {

@@ -18,39 +18,27 @@ import { faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { v4 as uuid } from "uuid";
 
 import {
-    selectExercise,
     selectExercises,
     findAllExercises
 } from '../../slices/exercisesSlice'
 
 import {
-    selectMuscleGroups,
-    selectMuscleGroup,
     findAllMuscleGroups,
-    findAMuscleGroup
 } from '../../slices/muscleGroupsSlice';
 
-import {
-    selectEquipments
-} from '../../slices/equipmentsSlice'
-
 const ExerciseList = () => {
-    const userExercises = useSelector(selectExercises);
     const dispatch = useDispatch();
     dispatch(findAllMuscleGroups());
-
-    // const [userExercises, setUserExercises] = useState([]);
+    
+    const userExercises = useSelector(selectExercises);
     const [wgerExercises, setWgerExercises] = useState([]);
     const [showUserExercises, setShowUserExercises] = useState(true);
     const [showWgerExercises, setShowWgerExercises] = useState(false);
     const [exerciseFormToggle, setExerciseFormToggle] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    // const [muscleGroups, setMuscleGroups] = useState([]);
     const [nextWgerCall, setNextWgerCall] = useState(null);
     const [previousWgerCall, setPreviousWgerCall] = useState(null);
     const [currentWgerCall, setCurrentWgerCall] = useState();
-    
-    const currentUser = useSelector(selectCurrentUser);
 
     const getExercises = useCallback(async () => {
         setIsLoading(true);
@@ -79,7 +67,6 @@ const ExerciseList = () => {
                     setWgerExercises(exercises.data.results);
                     }
                     
-                    // setUserExercises([]);
                 } catch(err){
                     return err
                 }
@@ -98,7 +85,7 @@ const ExerciseList = () => {
     //Map through userExercises state and create an exercise component from each item
     const userExerciseComponents = userExercises.map(e => (
         <Col xs="4" className="my-3">
-            <ExerciseDetails exercise={e} key={uuid()}/>
+            <ExerciseDetails exerciseId={e.id} key={uuid()}/>
         </Col>
     ))
 

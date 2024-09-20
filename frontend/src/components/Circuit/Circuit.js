@@ -4,14 +4,10 @@ import useToggle from "../../hooks/useToggle/useToggle";
 import { v4 as uuid } from 'uuid';
 import { Col, Row } from "reactstrap";
 import { 
-    selectCircuit,
     selectCircuits,
     deleteCircuit,
-    findAllCircuits,
-    selectCircuitStatus
 } from '../../slices/circuitsSlice';
 import { 
-    selectExercise,
     selectExercises,
 } from '../../slices/exercisesSlice';
 
@@ -19,21 +15,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Circuit = ({circuitId}) => {
     const dispatch = useDispatch();
-
     const circuits = useSelector(selectCircuits);
     const circuit = circuits.filter( circuit => circuit.id === circuitId)[0];
-    let status = useSelector(selectCircuitStatus)
     const exercises = useSelector(selectExercises);
     let exercise = exercises.filter( exercise => exercise.id === circuit.exercise_id)[0];
     const [showUpdateCircuitForm, setShowUpdateCircuitForm ] = useToggle();
 
-    const getCircuits = useCallback(() => {
-        dispatch(findAllCircuits())
-    } , [status])
-
-    useEffect(() => {
-        getCircuits()
-    } , [getCircuits])
 
     const handleDelete = () => {
         dispatch(deleteCircuit(circuitId))

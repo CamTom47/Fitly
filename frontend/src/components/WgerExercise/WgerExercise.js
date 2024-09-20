@@ -55,7 +55,6 @@ const WgerExercise = ({addExercise, exercise}) => {
         for( let muscleGroup of muscleGroups){
             if( muscleGroup.name === exercise.category.name){
                 muscleGroupId = muscleGroup.id
-                console.log(muscleGroupId)
             }
         }
         //Map through all of the required equipment for the new exercise being create and see if it is currently in the in Fitly database.

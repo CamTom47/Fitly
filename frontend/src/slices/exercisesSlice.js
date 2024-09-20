@@ -19,19 +19,16 @@ export const exerciseSlice = createSlice({
             state.selectedExercise = action.payload
         })
         .addCase(addExercise.fulfilled, (state, action) => {
-            state.exercises.push(action.payload)
+            state.exercises.push(action.payload.exercise)
         })
         .addCase(updateExercise.fulfilled, (state, action) => {
-            let exercises = state.exercises = state.exercises.filter( exercise => exercise.id !== action.payload.id)
-            exercises.push(action.payload)
+            state.exercises = [...(state.exercises.filter( exercise => exercise.id !== action.payload.id)), action.payload]
         })
-        .addCase(deleteExercise.fulfilled, (state) => {
-            return state
+        .addCase(deleteExercise.fulfilled, (state, action) => {
+            state.exercises = state.exercises.filter( exercise => exercise.id !== action.payload.exercise_id)
         })
     }
-
 })
-
 
 export const selectExercises = state => state.exercises.exercises;
 export const selectExercise = state => state.exercises.selectedExercise;
@@ -79,7 +76,7 @@ export const updateExercise = createAsyncThunk(
         try{
             const { exerciseId, name, muscle_group, equipment_id } = data;
             const exercise = await FitlyApi.updateExercise(exerciseId, {name, muscle_group, equipment_id});
-            return exercise
+            return {...exercise, equipment_id}
         }
         catch (err){
             return err
@@ -91,8 +88,8 @@ export const deleteExercise = createAsyncThunk(
     "exercises/exerciseDeleted",
     async (exerciseId) => {
         try{
-            const exercise = await FitlyApi.deleteExercise(exerciseId);
-            return exercise
+            await FitlyApi.deleteExercise(exerciseId);
+            return exerciseId
         }
         catch (err){
             return err

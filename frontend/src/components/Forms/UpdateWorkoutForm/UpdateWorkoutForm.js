@@ -23,14 +23,6 @@ const UpdateWorkoutForm = ({workout, handleToggle}) => {
         <option value={cat.id}>{cat.name}</option>
     ))
     
-    useEffect(() => {
-        const getCategories = () => {
-            dispatch(findAllCategories());
-        }
-        getCategories();
-    }, [])
-    console.log(workout, 'oifhdsa;oifasd')
-
     return (
         <div className="d-flex justify-content-center py-4">
             <Card className="w-25 d-flex flex-column align-items-center pb-2">
