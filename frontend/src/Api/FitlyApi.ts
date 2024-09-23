@@ -117,7 +117,7 @@ class FitlyApi {
          * @returns {workout}
          */
 
-        static async findWorkout<Promise>(data: {workoutId: string}) : Promise{
+        static async findWorkout<Promise>(data: {workoutId: number}) : Promise{
             console.log(data)
             let res = await this.request(`workouts/${data.workoutId}`);
             return res.workout;
@@ -392,7 +392,7 @@ class FitlyApi {
             return res.muscleGroups
         }
         
-        static async findMuscleGroup<Promise>(data : {muscleGroupId}) : Promise{
+        static async findMuscleGroup<Promise>(data : {muscleGroupId : number}) : Promise{
             let res = await this.request(`muscleGroups/${data.muscleGroupId}`, data, 'get');
             return res.muscleGroup
         }

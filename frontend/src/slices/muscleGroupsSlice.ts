@@ -1,7 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import FitlyApi from '../Api/FitlyApi'
 
-const initialState = {
+interface MuscleGroupState {
+    muscleGroups : {}[],
+    selectedMuscleGroup: {}
+};
+
+const initialState : MuscleGroupState= {
     muscleGroups: [],
     selectedMuscleGroup: {}
 }
@@ -9,7 +14,7 @@ const initialState = {
 export const muscleGroupsSlice = createSlice({
     name: "muscleGroups",
     initialState,
-    reducer: {},
+    reducers: {},
     extraReducers: builder => {
         builder
         .addCase(findAllMuscleGroups.fulfilled, (state, action) => {
@@ -45,9 +50,9 @@ export const findAllMuscleGroups = createAsyncThunk(
 
 export const findAMuscleGroup = createAsyncThunk(
     "muscleGroups/findAMuscleGroup",
-    async (muscleGroupId) => {
+    async (muscleGroupId : number) => {
         try{
-            let muscleGroup = await FitlyApi.findMuscleGroup({muscleGroup_id: muscleGroupId})
+            let muscleGroup = await FitlyApi.findMuscleGroup({muscleGroupId})
             return muscleGroup
         }
         catch (err){

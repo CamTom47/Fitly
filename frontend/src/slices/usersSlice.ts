@@ -3,7 +3,17 @@ import FitlyApi from '../Api/FitlyApi'
 import { decodeToken } from 'react-jwt';
 import { ErrorMessage } from 'formik';
 
-const initialState = {
+interface UserState {
+    users: {}[],
+    selectedUser: {},
+    currentUser: {} | null,
+    token: string | null,
+    isAuthenticated: boolean,
+    errorMessage : string | null
+
+
+}
+const initialState : UserState = {
     users: [],
     selectedUser: {},
     currentUser: null,
@@ -15,7 +25,7 @@ const initialState = {
 export const usersSlice = createSlice({
     name: "users",
     initialState,
-    reducer: {
+    reducers: {
         userLoggedOut(state) {
             state = initialState;
         }
@@ -44,9 +54,6 @@ export const usersSlice = createSlice({
         .addCase(updateUser.fulfilled, (state, action) => {
             state.currentUser = action.payload;
         })
-        .addCase(deleteUser.fulfilled, (state) => {
-            return state;
-        })
     }
 });
 
@@ -56,33 +63,36 @@ export const { userLoggedOut } = usersSlice.actions;
 export const userCheckLoggedIn = createAsyncThunk(
     "users/userCheckLoggedIn",
     async () =>  {
-        let res = localStorage.getItem('token');
-        const {token } = res
-    if(token) {
-        FitlyApi.token = token;
-        const { username } = await decodeToken(token);
-        const currentUser  = await FitlyApi.findUser(username)
-        const results = { token, currentUser }
-        return results
-    } else {
-        return res
-    }
+        try{
+            let token = localStorage.getItem('token');
+            if(token) {
+                FitlyApi.token = token;
+                const username : string | null = await decodeToken(token);
+                if(username){
+                    const currentUser  = await FitlyApi.findUser(username)
+                    const results = { token, currentUser }
+                    return results
+                }
+            } 
+        } catch (err){
+            return err
+        }
 })
 
 export const userLogIn = createAsyncThunk(
     "users/userLoggedIn",
-    async (data) => {
+    async (data : {username: string, password: string}) => {
         try{
-            const token = await FitlyApi.login(data)
+            const token : string = await FitlyApi.login(data)
             if(token){
                 FitlyApi.token = token;
                 localStorage.setItem('token', token);
-                const { username } = await decodeToken(token);
-                const currentUser = await FitlyApi.findUser(username)
-                const results = { token , currentUser }
-                return results
-            } else {
-
+                const username : string | null = await decodeToken(token);
+                if (username){
+                    const currentUser = await FitlyApi.findUser(username)
+                    const results = { token , currentUser }
+                    return results
+                }
             }
         }
         catch (err){
@@ -93,9 +103,9 @@ export const userLogIn = createAsyncThunk(
 
 export const findAUser = createAsyncThunk(
     "users/findAUser",
-    async (user_id) => {
+    async (username : string) => {
         try{
-            let user = await FitlyApi.findUser({user_id: user_id})
+            let user = await FitlyApi.findUser(username)
             return user
         }
         catch (err){
@@ -106,7 +116,7 @@ export const findAUser = createAsyncThunk(
 
 export const addUser = createAsyncThunk(
     "users/userAdded",
-    async (data) => {
+    async (data : {username: string, password: string}) => {
         try{
             let user = await FitlyApi.signup(data);
             return user;
@@ -119,7 +129,14 @@ export const addUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
     "users/userUpdated",
-    async (data) => {
+    async (data : { username: string, formData: {
+        username: string,
+        firstName: string,
+        lastName? : string
+        email? : string,
+        password? : string,
+        confirmedPassword? : string
+    }}) => {
         try{
             const {username , formData} = data
             if(formData.confirmedPassword){
@@ -129,18 +146,6 @@ export const updateUser = createAsyncThunk(
                 let user = await FitlyApi.updateUser(username, formData);
                 return user;
             }
-        }
-        catch (err){
-            return err
-        }
-    }
-)
-
-export const deleteUser = createAsyncThunk(
-    "users/userDeleted",
-    async (user_id, data) => {
-        try{
-            await FitlyApi.updateUser(user_id, data);
         }
         catch (err){
             return err
