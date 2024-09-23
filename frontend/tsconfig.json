@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",        // path to output directory
+        "sourceMap": true,          // allow sourcemap support
+        "strictNullChecks": true,   // enable strict null checks as a best practice
+        "module": "NodeNext",            // specify module code generation
+        "jsx": "react",             // use typescript to transpile jsx to js
+        "target": "es5",            // specify ECMAScript target version
+        "allowJs": true,            // allow a partial TypeScript and JavaScript codebase
+        "noImplicitReturns": true,  // prevents forgetting to return at the end of a function
+        "moduleResolution": "NodeNext",
+        "allowSyntheticDefaultImports": true
+    },
+    "include": [
+        "./src/"
+    ]
+}

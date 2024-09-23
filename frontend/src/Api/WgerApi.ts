@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-const WGER_BASE_URL = "https://wger.de/api/v2"
+const WGER_BASE_URL : string = "https://wger.de/api/v2"
 
     class WgerApi {
         static async request( endpoint, data = {}, method = "get"){
             console.debug("WGER Call:", endpoint, data, method)
 
-            const url = `${WGER_BASE_URL}/${endpoint}`
+            const url : string = `${WGER_BASE_URL}/${endpoint}`
 
-            const params = (method === "get")
+            const params : {} = (method === "get")
             ? data
             : {};
             try{
@@ -16,7 +16,7 @@ const WGER_BASE_URL = "https://wger.de/api/v2"
                 return res
             } catch(err){
                 console.error("wger API Error:", err.response)
-                let message = err.response.data.error.message
+                let message : string = err.response.data.error.message
                 throw Array.isArray(message) ? message : [message];
             }
         }
@@ -26,7 +26,7 @@ const WGER_BASE_URL = "https://wger.de/api/v2"
                 endpoint = endpoint.split(`${WGER_BASE_URL}/`)[1]
             };
             
-            let res = await this.request(`${endpoint}`)
+            let res : {} = await this.request(`${endpoint}`)
             return res
         }
 

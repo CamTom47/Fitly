@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios, {Axios, AxiosHeaders, AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders, RawAxiosRequestHeaders} from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
+const BASE_URL : string = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 /** Fitly API Class
  * 
@@ -10,25 +10,24 @@ const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 class FitlyApi {
     //the token for interaction with API will be stored here.
-    static token;
+    static token: string;
 
-    static async request( endpoint, data = {}, method = "get"){
+    static async request( endpoint: string, data: object = {}, method: string = "get"){
         console.debug("API Call:", endpoint, data, method)
 
-        const url = `${BASE_URL}/${endpoint}`;
-        let headers;
-        
-        (FitlyApi.token !== "") ? headers = { Authorization: `Bearer ${FitlyApi.token}` } : headers = null;
-        const params = (method === "get")
-            ? data
-            : {};
+        const url: string =  `${BASE_URL}/${endpoint}`
+        const params: {} = (method === "get")
+        ? data
+        : {}
+        const headers : {} | undefined = (FitlyApi.token !== "") ? { Authorization: `Bearer ${FitlyApi.token}` } : undefined;
 
             try{
-                return (await axios({url, method, data, params, headers})).data;
+                const response = (await axios({ url, params, method, data, headers})).data
+
+                return response
             } catch(err) {
                 console.error("API Error:", err.response);
-                console.log(headers)
-                let message = err.response.data.error.message;
+                let message: string = err.response.data.error.message;
                 throw Array.isArray(message) ? message : [message];
             }
             }
@@ -55,7 +54,7 @@ class FitlyApi {
         *           "isAdmin"}}
              */
 
-            static async findUser(username){
+            static async findUser<Promise>(username: string) : Promise {
                 let res = await this.request(`users/${username}`)
                 return res.user
             }
@@ -70,7 +69,7 @@ class FitlyApi {
          * @returns {token}
          */
 
-        static async login(data){   
+        static async login<Promise>(data: {}) : Promise{   
             let res = await this.request('auth/token', data, 'post')
             return res.token;
         }
@@ -85,12 +84,12 @@ class FitlyApi {
          * @returns {token}
          */
 
-        static async signup(data){
+        static async signup<Promise>(data: {}) : Promise{
             let res = await this.request(`auth/register`, data, 'post')
             return res.token;
         }
 
-        static async updateUser(username, data){
+        static async updateUser<Promise>(username: string, data : {}) : Promise{
             let res = await this.request(`users/${username}`, data, 'patch');
             return res.user;
         }
@@ -103,7 +102,7 @@ class FitlyApi {
          * 
          */
 
-        static async findAllWorkouts(){
+        static async findAllWorkouts<Promise>() : Promise{
             let res = await this.request(`workouts/`);
             return res.workouts;
 
@@ -118,7 +117,7 @@ class FitlyApi {
          * @returns {workout}
          */
 
-        static async findWorkout(data){
+        static async findWorkout<Promise>(data: {workoutId: string}) : Promise{
             console.log(data)
             let res = await this.request(`workouts/${data.workoutId}`);
             return res.workout;
@@ -131,7 +130,7 @@ class FitlyApi {
          * @returns {workout}
          */
 
-        static async createWorkout(data){
+        static async createWorkout<Promise>(data : {}) : Promise{
             let res = await this.request(`workouts/`, data, 'post');
             return res.newWorkout;
         }
@@ -143,8 +142,8 @@ class FitlyApi {
          * @returns {workout}
          */
 
-        static async updateWorkout(workout_id,data){
-            let res = await this.request(`workouts/${workout_id}`, data, 'patch');
+        static async updateWorkout<Promise>(workoutId: string ,data : {}) : Promise{
+            let res = await this.request(`workouts/${workoutId}`, data, 'patch');
             return res.updatedWorkout;
         }
         
@@ -155,12 +154,12 @@ class FitlyApi {
          * @returns {message}
          */
 
-        static async deleteWorkout(workoutId){
+        static async deleteWorkout<Promise>(workoutId: string) : Promise{
             let res = await this.request(`workouts/${workoutId}`, {}, 'delete');
             return res.workout;
         }
 
-        static async addWorkoutCircuit(data){
+        static async addWorkoutCircuit<Promise>(data : {workoutId: number | undefined, circuitId: number | undefined}) : Promise{
             let res = await this.request(`workouts//${data.workoutId}/circuits/${data.circuitId}`, data, 'post');
             return res.workoutCircuit;
         }
@@ -174,7 +173,7 @@ class FitlyApi {
          * @returns {exercises}
          */
 
-        static async findAllExercises(data){
+        static async findAllExercises<Promise>(data: {}) : Promise{
             let res = await this.request(`exercises/`, data, 'get');
             return res.exercises
         }
@@ -187,8 +186,8 @@ class FitlyApi {
          * @returns {exercise}
          */
 
-        static async findExercise(data){
-            let res = await this.request(`exercises/${data.exercise_id}`, data, 'get');
+        static async findExercise<Promise>(data : {exericseId: string}): Promise{
+            let res = await this.request(`exercises/${data.exericseId}`, data, 'get');
             return res.exercise
         }
         
@@ -199,7 +198,7 @@ class FitlyApi {
          * @returns {exercise}
          */
 
-        static async createExercise(data){
+        static async createExercise<Promise>(data: {}): Promise{
             let exercise = await this.request(`exercises/`, data, 'post');
             return exercise
         }
@@ -210,7 +209,7 @@ class FitlyApi {
          * {data: {exercise}}
          * @returns {exercise}
          */
-        static async updateExercise(exerciseId, data){
+        static async updateExercise<Promise>(exerciseId : string, data: {}): Promise{
             let res = await this.request(`exercises/${exerciseId}`, data, 'patch');
             return res.updatedExercise
         }
@@ -222,8 +221,8 @@ class FitlyApi {
          * @returns {message}
          */
 
-        static async deleteExercise(data){
-            let res = await this.request(`exercises/${data.exercise_id}`, data, 'delete');
+        static async deleteExercise<Promise>(data : {exerciseId: string}): Promise{
+            let res = await this.request(`exercises/${data.exerciseId}`, data, 'delete');
             return res.message
         }
 
@@ -236,8 +235,8 @@ class FitlyApi {
          * @returns {categories}
          */
 
-        static async findAllCategories(data){
-            let res = await this.request(`categories/`, data, 'get');
+        static async findAllCategories<Promise>() : Promise{
+            let res = await this.request(`categories/`);
             return res.categories
         }
 
@@ -247,8 +246,8 @@ class FitlyApi {
          * {data: {user_id}}
          * @returns {category}
          */
-        static async findCategory(data){
-            let res = await this.request(`categories/${data.category_id}`, data, 'get');
+        static async findCategory<Promise>(data : {categoryId : string}) : Promise{
+            let res = await this.request(`categories/${data.categoryId}`, data, 'get');
             return res.category;
         }
 
@@ -259,7 +258,7 @@ class FitlyApi {
          * @returns {category}
          */
 
-        static async createCategory(data){
+        static async createCategory<Promise>(data : {}) : Promise{
             let res = await this.request(`categories/`, data, 'post');
             return res.category;
         }
@@ -271,8 +270,11 @@ class FitlyApi {
          * @returns {category}
          */
 
-        static async updateCategory(data){
-            let res = await this.request(`categories/:category_id`, data, 'patch');
+        static async updateCategory<Promise>(data : {categoryId : number,
+                                                    name: string,
+                                                    description: string
+        }) : Promise{
+            let res = await this.request(`categories/${data.categoryId}`, data, 'patch');
             return res.category;
         }
 
@@ -282,8 +284,8 @@ class FitlyApi {
          * {data: {user_id}}
          * @returns {message}
          */
-        static async deleteCategory(data){
-            let res = await this.request(`categories/:category_id`, data, 'delete');
+        static async deleteCategory<Promise>(data : {categoryId : number}) : Promise{
+            let res = await this.request(`categories/${data.categoryId}`, data, 'delete');
             return res.category;
         }
 
@@ -296,7 +298,7 @@ class FitlyApi {
          * @returns {equipments}
          */
 
-        static async findAllEquipments(data){
+        static async findAllEquipments<Promise>(data : {}) : Promise{
             let res = await this.request(`equipments/`, data, 'get');
             return res.equipments
         }
@@ -307,8 +309,8 @@ class FitlyApi {
          * {data: {user_id}}
          * @returns {equipment}
          */
-        static async findEquipment(data){
-            let res = await this.request(`equipments/${data.equipment_id}`, data, 'get');
+        static async findEquipment<Promise>(data : {equipmentId}) : Promise{
+            let res = await this.request(`equipments/${data.equipmentId}`, data, 'get');
             return res.equipment;
         }
 
@@ -319,7 +321,7 @@ class FitlyApi {
          * @returns {equipment}
          */
 
-        static async createEquipment(data){
+        static async createEquipment<Promise>(data : {}) : Promise{
             let res = await this.request(`equipments/`, data, 'post');
             return res.equipment;
         }
@@ -331,8 +333,8 @@ class FitlyApi {
          * @returns {equipment}
          */
 
-        static async updatEquipment(data){
-            let res = await this.request(`equipments/:equipment_id`, data, 'patch');
+        static async updatEquipment<Promise>(data : {equipmentId}) : Promise{
+            let res = await this.request(`equipments/${data.equipmentId}`, data, 'patch');
             return res.equipment;
         }
 
@@ -342,55 +344,55 @@ class FitlyApi {
          * {data: {user_id}}
          * @returns {message}
          */
-        static async deleteEquipment(data){
-            let res = await this.request(`equipments/:equipment_id`, data, 'delete');
+        static async deleteEquipment<Promise>(data : {equipmentId}) : Promise{
+            let res = await this.request(`equipments/${data.equipmentId}`, data, 'delete');
             return res.equipment;
         }
 
         //Circuit Methods
 
 
-        static async findAllCircuits(data){
+        static async findAllCircuits<Promise>(data? : {}) : Promise{
             let res = await this.request(`circuits/`, data, 'get');
             return res.circuits;
         }
 
-        static async findCircuit(data){
-            let res = await this.request(`circuits/${data.circuit_id}`, data, 'get');
+        static async findCircuit<Promise>(data : {circuitId}) : Promise{
+            let res = await this.request(`circuits/${data.circuitId}`, data, 'get');
             return res.circuit;
         }
 
-        static async addCircuit(data){
+        static async addCircuit<Promise>(data : {}) : Promise{
             let res = await this.request(`circuits/`, data, 'post');
             return res.circuit;
         }
         
-        static async updateCircuit(circuitId,data){
+        static async updateCircuit<Promise>(circuitId : number, data : {}) : Promise{
             let res = await this.request(`circuits/${circuitId}`, data, 'patch');
             return res.updatedCircuit;
         }
 
-        static async deleteCircuit(circuitId){
+        static async deleteCircuit<Promise>(circuitId : number) : Promise{
             let res = await this.request(`circuits/${circuitId}`, {} , 'delete');
             return res.message;
         }
 
-        static async addExerciseCircuit(data){
+        static async addExerciseCircuit<Promise>(data : {circuitId : number | undefined, exerciseId : number | undefined}) : Promise{
             let res = await this.request(`circuits/${data.circuitId}/exercises/${data.exerciseId}`, data, 'post');
             return res.circuitExercise;
         }
         
-        static async updateExerciseCircuit(data){
+        static async updateExerciseCircuit<Promise>(data : {circuitId: number | undefined, exerciseId: number | undefined}) : Promise{
             let res = await this.request(`circuits/${data.circuitId}/exercises/${data.exerciseId}`, data, 'patch');
             return res.circuitExercise;
         }
 
-        static async findAllMuscleGroups(data){
+        static async findAllMuscleGroups<Promise>(data : {}) : Promise{
             let res = await this.request(`muscleGroups/`, data, 'get');
             return res.muscleGroups
         }
         
-        static async findMuscleGroup(data){
+        static async findMuscleGroup<Promise>(data : {muscleGroupId}) : Promise{
             let res = await this.request(`muscleGroups/${data.muscleGroupId}`, data, 'get');
             return res.muscleGroup
         }

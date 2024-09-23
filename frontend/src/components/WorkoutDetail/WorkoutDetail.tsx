@@ -13,7 +13,7 @@ import LoadingComponent from "../LoadingComponent/LoadingComponent";
 //component imports
 import NewCircuitForm from "../Forms/NewCircuitForm/NewCircuitForm";
 import UpdateWorkoutForm from "../Forms/UpdateWorkoutForm/UpdateWorkoutForm"
-import Circuit from "../../components/Circuit/Circuit";
+import Circuit from "../Circuit/Circuit";
 import FitlyApi from "../../Api/FitlyApi";
 
 import { useDispatch,useSelector } from "react-redux";

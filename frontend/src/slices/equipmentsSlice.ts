@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import FitlyApi from '../Api/FitlyApi';
 
 const initialState = {

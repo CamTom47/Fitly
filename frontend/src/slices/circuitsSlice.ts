@@ -1,15 +1,32 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import FitlyApi from '../Api/FitlyApi'
 
-const initialState = {
+type CircuitState = {
+    circuits: {}[],
+    selectedCircuit: {}
+};
+
+const initialState : CircuitState = {
     circuits: [],
     selectedCircuit: {},
+};
+
+type Circuit = {
+    id?: number,
+    sets: number,
+    reps: number,
+    weight: number
+    rest_period: number,
+    intensity: string,
+    exerciseId? : number,
+    workoutId? : number
+
 }
 
 export const circuitsSlice = createSlice({
     name: "circuits",
     initialState,
-    reducer: {},
+    reducers: {},
     extraReducers: builder => {
         builder
         .addCase(findAllCircuits.fulfilled, (state, action) => {
@@ -22,26 +39,13 @@ export const circuitsSlice = createSlice({
             state.circuits.push(action.payload)
         })
         .addCase(updateCircuit.fulfilled, (state, action) => {
-            state.circuits = [...(state.circuits.filter( circuit => circuit.id !== action.payload.id)), action.payload]
+            state.circuits = [...(state.circuits.filter( (circuit : Circuit) => circuit.id !== action.payload.id)), action.payload]
         })
         .addCase(deleteCircuit.fulfilled, (state, action) => {
-            state.circuits = state.circuits.filter( circuit => circuit.id !== action.payload)
+            state.circuits = state.circuits.filter( (circuit : Circuit) => circuit.id !== action.payload)
         })
     }
 });
-
-export const findWorkoutCircuits = createAsyncThunk(
-    "circuits/findAllCircuits",
-    async () => {
-        try{
-            let circuits = await FitlyApi.findAllCircuits();
-            return circuits;
-        }
-        catch (err){
-            return err
-        }
-    }
-)
 
 export const findAllCircuits = createAsyncThunk(
     "circuits/findAllCircuits",
@@ -60,7 +64,7 @@ export const findACircuit = createAsyncThunk(
     "circuits/findACircuit",
     async (circuitId) => {
         try{
-            let circuit = await FitlyApi.findCircuit({circuit_id: circuitId})
+            let circuit = await FitlyApi.findCircuit({circuitId})
             return circuit
         }
         catch (err){
@@ -69,39 +73,33 @@ export const findACircuit = createAsyncThunk(
     }
 )
 
+
 export const addCircuit = createAsyncThunk(
     "circuits/circuitAdded",
-    async (data) => {
-        try{
-            const {
-                sets,
-                reps,
-                weight,
-                rest_period,
-                intensity,
-                exerciseId,
-                workoutId
-            } = data
+    async (data : Circuit) => {
+        try{            
+
+                const { 
+                    id,
+                    sets,
+                    reps,
+                    weight,
+                    rest_period,
+                    intensity,
+                    exerciseId,
+                    workoutId
+                } = data;
+
+            const  circuit : Circuit = await FitlyApi.addCircuit(data);
             
-            let circuit = await FitlyApi.addCircuit({
-                sets,
-                reps,
-                weight,
-                rest_period,
-                intensity
-            });
-            
-            await FitlyApi.addExerciseCircuit({
-                circuitId: circuit.id, 
-                exerciseId
-            });
+            await FitlyApi.addExerciseCircuit({circuitId: circuit.id, exerciseId});
 
             await FitlyApi.addWorkoutCircuit({
-                workoutId,
+                workoutId: workoutId,
                 circuitId: circuit.id
             })
 
-            return {...circuit, exercise_id: +exerciseId};
+            return {...circuit, exercise_id: exerciseId};
         }
         catch (err){
             return err
@@ -111,7 +109,15 @@ export const addCircuit = createAsyncThunk(
 
 export const updateCircuit = createAsyncThunk(
     "circuits/circuitUpdated",
-    async (data) => {
+    async (data : {
+                circuitId: number,
+                sets: number,
+                reps: number,
+                weight: number,
+                rest_period: number,
+                intensity: string,
+                exerciseId: number 
+    }) => {
         try{
             const { 
                 circuitId,
@@ -123,7 +129,7 @@ export const updateCircuit = createAsyncThunk(
                 exerciseId                
             } = data
 
-            let circuit = await FitlyApi.updateCircuit(circuitId, {
+            let circuit : Circuit = await FitlyApi.updateCircuit(circuitId, {
                                                                     sets,
                                                                     reps,
                                                                     weight,
@@ -143,7 +149,7 @@ export const updateCircuit = createAsyncThunk(
 
 export const deleteCircuit = createAsyncThunk(
     "circuits/circuitDeleted",
-    async (circuitId) => {
+    async (circuitId : number) => {
         try{
             await FitlyApi.deleteCircuit(circuitId);
             return circuitId
