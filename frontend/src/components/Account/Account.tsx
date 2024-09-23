@@ -9,8 +9,13 @@ import {
     selectCurrentUser
 } from '../../slices/usersSlice'
 
+/**
+ * Account Component 
+ * State: currentUser
+ * Props: none
+ */
 
-const Account = () => {
+const Account = () : React.JSX.Element => {
 
     const currentUser = useSelector(selectCurrentUser);
 

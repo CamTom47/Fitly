@@ -4,29 +4,45 @@ import FitlyApi from "../Api/FitlyApi";
 /**
  * Helper function equipmentCheckForExerciseUpdate
  * @param {*} allEquipment all equipment in fitly database
- * @param {*} equipmentCompare equipment name being checked against
+ * @param {*} equipmentNameCompare equipment name being checked against
  * @param {*} currentUser currently logged in user
  * @returns equipmentId
  */
 
-export const equipmentCheckForExerciseUpdate = async (equipmentCompare, user_id) => {
-    let allEquipment = await FitlyApi.findAllEquipments();
-    for( let equipment of allEquipment){
-        if(equipment.name === equipmentCompare){
-            return equipment.id
-        } else{
-            let newEquipment = await FitlyApi.createEquipment({
-                "user_id": user_id,
-                "name": equipmentCompare
-            })
-            return newEquipment.id
-        }}
-        
+interface Equipment {
+    id?: number,
+    name: string,
+    user_id: number,
+    systemDefault: boolean
+};
+
+export const equipmentCheckForExerciseUpdate = async (equipmentNameCompare : string , user_id : number) => {
+    try{
+
+        let allEquipment : {id: number, name: string, user_id: number}[] = await FitlyApi.findAllEquipments();
+        for( let equipment of allEquipment){
+            if(equipment.name === equipmentNameCompare){
+                return equipment.id
+            } else{
+                let newEquipment : Equipment = await FitlyApi.createEquipment({
+                    "user_id": user_id,
+                    "name": equipmentNameCompare
+                })
+                return newEquipment.id
+            }}
+        } catch (err){
+            return err
+        }
+             
         
 }
 
-export const equipmentMatch = async (equipmentId) => {
-        let equipment = await FitlyApi.findEquipment(equipmentId);
+export const equipmentMatch = async (equipmentId : number) => {
+    try{
+        let equipment : Equipment = await FitlyApi.findEquipment({equipmentId});
         return equipment
+    } catch(err){
+        return err
+    }
    
 }
