@@ -1,7 +1,11 @@
 import { createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import FitlyApi from '../Api/FitlyApi';
 
-const initialState = {
+interface ExerciseState {
+    exercises: {}[],
+    selectedExercise: {}
+}
+const initialState : ExerciseState = {
     exercises: [],
     selectedExercise: {}
 };
@@ -22,16 +26,24 @@ export const exerciseSlice = createSlice({
             state.exercises.push(action.payload.exercise)
         })
         .addCase(updateExercise.fulfilled, (state, action) => {
-            state.exercises = [...(state.exercises.filter( exercise => exercise.id !== action.payload.id)), action.payload]
+            state.exercises = [...(state.exercises.filter( (exercise : Exercise) => exercise.id !== action.payload.id)), action.payload]
         })
         .addCase(deleteExercise.fulfilled, (state, action) => {
-            state.exercises = state.exercises.filter( exercise => exercise.id !== action.payload.exercise_id)
+            state.exercises = state.exercises.filter( (exercise : Exercise) => exercise.id !== action.payload.exercise_id)
         })
     }
 })
 
 export const selectExercises = state => state.exercises.exercises;
 export const selectExercise = state => state.exercises.selectedExercise;
+
+
+interface Exercise {
+    id?: number,
+    name: string,
+    muscle_group: number,
+    equipment_id: number
+};
 
 export const findAllExercises = createAsyncThunk(
     "exercises/findAllExercises",
@@ -48,9 +60,9 @@ export const findAllExercises = createAsyncThunk(
 
 export const findAExercise = createAsyncThunk(
     "exercises/findAExercise",
-    async (exerciseId) => {
+    async (exerciseId: number) => {
         try{
-            const exercise = await FitlyApi.findExercise({exerciseId: exerciseId});
+            const exercise = await FitlyApi.findExercise({exerciseId});
             return exercise
         }
         catch (err){
@@ -60,7 +72,7 @@ export const findAExercise = createAsyncThunk(
 )
 export const addExercise = createAsyncThunk(
     "exercises/exerciseAdded",
-    async (data) => {
+    async (data : Exercise) => {
         try{
             const exercise = await FitlyApi.createExercise(data);
             return exercise
@@ -70,12 +82,17 @@ export const addExercise = createAsyncThunk(
         }
     } 
 )
+
+interface UpdateExercise extends Exercise {
+    exerciseId : number
+};
+
 export const updateExercise = createAsyncThunk(
     "exercises/exerciseUpdated",
-    async (data) => {
+    async (data : UpdateExercise ) => {
         try{
             const { exerciseId, name, muscle_group, equipment_id } = data;
-            const exercise = await FitlyApi.updateExercise(exerciseId, {name, muscle_group, equipment_id});
+            const exercise : Exercise = await FitlyApi.updateExercise(exerciseId, {name, muscle_group, equipment_id});
             return {...exercise, equipment_id}
         }
         catch (err){
@@ -86,9 +103,9 @@ export const updateExercise = createAsyncThunk(
 
 export const deleteExercise = createAsyncThunk(
     "exercises/exerciseDeleted",
-    async (exerciseId) => {
+    async (exerciseId : number) => {
         try{
-            await FitlyApi.deleteExercise(exerciseId);
+            await FitlyApi.deleteExercise({exerciseId});
             return exerciseId
         }
         catch (err){

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction, Update } from '@reduxjs/toolkit'
 import FitlyApi from '../Api/FitlyApi'
 
 type CircuitState = {
@@ -106,18 +106,14 @@ export const addCircuit = createAsyncThunk(
         }
     }
 )
+interface UpdateCircuit extends Circuit{
+    circuitId : number
+};
 
 export const updateCircuit = createAsyncThunk(
     "circuits/circuitUpdated",
-    async (data : {
-                circuitId: number,
-                sets: number,
-                reps: number,
-                weight: number,
-                rest_period: number,
-                intensity: string,
-                exerciseId: number 
-    }) => {
+    async (data : UpdateCircuit
+    ) => {
         try{
             const { 
                 circuitId,
@@ -139,7 +135,7 @@ export const updateCircuit = createAsyncThunk(
 
             await FitlyApi.updateExerciseCircuit({circuitId, exerciseId});
             
-            return {...circuit, exercise_id: +exerciseId};
+            return {...circuit, exercise_id: exerciseId};
         }
         catch (err){
             return err

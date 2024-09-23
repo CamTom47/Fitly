@@ -1,7 +1,12 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, GetThunkAPI } from '@reduxjs/toolkit';
 import FitlyApi from '../Api/FitlyApi';
 
-const initialState = {
+interface EquipmentState {
+    equipments: {}[],
+    selectedEquipment: {}
+}
+
+const initialState : EquipmentState = {
     equipments: [],
     selectedEquipment: {}
 };
@@ -34,6 +39,10 @@ export const equipmentsSlice = createSlice({
 export const selectEquipments = state => state.equipments.equipments;
 export const selectEquipment = state => state.equipments.selectedEquipment;
 
+interface Equipments {
+    id? : number,
+    name: string
+}
 export const findAllEquipments = createAsyncThunk(
     "equipments/findAllEquipments",
     async () => {
@@ -48,9 +57,9 @@ export const findAllEquipments = createAsyncThunk(
 )
 export const findAEquipment = createAsyncThunk(
     "equipments/findAEquipment",
-    async (equipmentId) => {
+    async (equipmentId: number) => {
         try{
-            const equipment = await FitlyApi.findEquipment({equipment_id: equipmentId});
+            const equipment = await FitlyApi.findEquipment({equipmentId});
             return equipment
         }
         catch (err){
@@ -60,7 +69,7 @@ export const findAEquipment = createAsyncThunk(
 )
 export const addEquipment = createAsyncThunk(
     "equipments/equipmentAdded",
-    async (data) => {
+    async (data : Equipments) => {
         try{
             const equipment = await FitlyApi.createEquipment(data);
             return equipment
@@ -72,7 +81,7 @@ export const addEquipment = createAsyncThunk(
 )
 export const updateEquipment = createAsyncThunk(
     "equipments/equipmentUpdated",
-    async (exerciseId, data) => {
+    async (exerciseId: number, data) => {
         try{
             const exercise = await FitlyApi.updateExercise(exerciseId, data);
             return exercise
@@ -85,9 +94,9 @@ export const updateEquipment = createAsyncThunk(
 
 export const deleteEquipment = createAsyncThunk(
     "equipments/equipmentDelete",
-    async (equipmentId) => {
+    async (equipmentId : number) => {
         try{
-            const equipment = await FitlyApi.deleteEquipment(equipmentId);
+            const equipment = await FitlyApi.deleteEquipment({equipmentId});
             return equipment
         }
         catch (err){

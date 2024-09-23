@@ -102,8 +102,8 @@ class FitlyApi {
          * 
          */
 
-        static async findAllWorkouts<Promise>() : Promise{
-            let res = await this.request(`workouts/`);
+        static async findAllWorkouts<Promise>(data? : {}) : Promise{
+            let res = await this.request(`workouts/`, data, 'get');
             return res.workouts;
 
         }
@@ -142,7 +142,7 @@ class FitlyApi {
          * @returns {workout}
          */
 
-        static async updateWorkout<Promise>(workoutId: string ,data : {}) : Promise{
+        static async updateWorkout<Promise>(workoutId: number ,data : {}) : Promise{
             let res = await this.request(`workouts/${workoutId}`, data, 'patch');
             return res.updatedWorkout;
         }
@@ -154,7 +154,7 @@ class FitlyApi {
          * @returns {message}
          */
 
-        static async deleteWorkout<Promise>(workoutId: string) : Promise{
+        static async deleteWorkout<Promise>(workoutId: number) : Promise{
             let res = await this.request(`workouts/${workoutId}`, {}, 'delete');
             return res.workout;
         }
@@ -173,7 +173,7 @@ class FitlyApi {
          * @returns {exercises}
          */
 
-        static async findAllExercises<Promise>(data: {}) : Promise{
+        static async findAllExercises<Promise>(data?: {}) : Promise{
             let res = await this.request(`exercises/`, data, 'get');
             return res.exercises
         }
@@ -186,8 +186,8 @@ class FitlyApi {
          * @returns {exercise}
          */
 
-        static async findExercise<Promise>(data : {exericseId: string}): Promise{
-            let res = await this.request(`exercises/${data.exericseId}`, data, 'get');
+        static async findExercise<Promise>(data : {exerciseId : number}): Promise{
+            let res = await this.request(`exercises/${data.exerciseId}`, data, 'get');
             return res.exercise
         }
         
@@ -209,7 +209,7 @@ class FitlyApi {
          * {data: {exercise}}
          * @returns {exercise}
          */
-        static async updateExercise<Promise>(exerciseId : string, data: {}): Promise{
+        static async updateExercise<Promise>(exerciseId : number, data: {}): Promise{
             let res = await this.request(`exercises/${exerciseId}`, data, 'patch');
             return res.updatedExercise
         }
@@ -221,7 +221,7 @@ class FitlyApi {
          * @returns {message}
          */
 
-        static async deleteExercise<Promise>(data : {exerciseId: string}): Promise{
+        static async deleteExercise<Promise>(data : {exerciseId: number}): Promise{
             let res = await this.request(`exercises/${data.exerciseId}`, data, 'delete');
             return res.message
         }
@@ -235,8 +235,8 @@ class FitlyApi {
          * @returns {categories}
          */
 
-        static async findAllCategories<Promise>() : Promise{
-            let res = await this.request(`categories/`);
+        static async findAllCategories<Promise>(data? : {}) : Promise{
+            let res = await this.request(`categories/`, data, 'get');
             return res.categories
         }
 
@@ -298,7 +298,7 @@ class FitlyApi {
          * @returns {equipments}
          */
 
-        static async findAllEquipments<Promise>(data : {}) : Promise{
+        static async findAllEquipments<Promise>(data? : {}) : Promise{
             let res = await this.request(`equipments/`, data, 'get');
             return res.equipments
         }
@@ -309,7 +309,7 @@ class FitlyApi {
          * {data: {user_id}}
          * @returns {equipment}
          */
-        static async findEquipment<Promise>(data : {equipmentId}) : Promise{
+        static async findEquipment<Promise>(data : {equipmentId : number}) : Promise{
             let res = await this.request(`equipments/${data.equipmentId}`, data, 'get');
             return res.equipment;
         }
@@ -344,7 +344,7 @@ class FitlyApi {
          * {data: {user_id}}
          * @returns {message}
          */
-        static async deleteEquipment<Promise>(data : {equipmentId}) : Promise{
+        static async deleteEquipment<Promise>(data : {equipmentId : number}) : Promise{
             let res = await this.request(`equipments/${data.equipmentId}`, data, 'delete');
             return res.equipment;
         }
@@ -387,7 +387,7 @@ class FitlyApi {
             return res.circuitExercise;
         }
 
-        static async findAllMuscleGroups<Promise>(data : {}) : Promise{
+        static async findAllMuscleGroups<Promise>(data? : {}) : Promise{
             let res = await this.request(`muscleGroups/`, data, 'get');
             return res.muscleGroups
         }
