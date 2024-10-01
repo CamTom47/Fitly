@@ -170,7 +170,7 @@ export const updateUser = createAsyncThunk(
         confirmedPassword? : string
     }}) => {
         try{
-            const {username , formData} = data
+            const {username , formData} = data;
             if(formData.confirmedPassword){
                 let user = await FitlyApi.updateUser(username, {"password": formData.confirmedPassword});
                 return user;

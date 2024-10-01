@@ -1,9 +1,12 @@
 import React, { useEffect, useState} from "react";
 import { Card, CardBody, CardText, CardTitle, Col, Row} from "reactstrap"
 import FitlyApi from "../../Api/FitlyApi"
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { useAppSelector, useAppDispatch } from "../../hooks/reduxHooks";
 import "./WgerExercise.css";
 import { selectCurrentUser } from "../../slices/usersSlice";
+import { selectMuscleGroups } from "../../slices/muscleGroupsSlice";
+import { selectEquipments } from "../../slices/equipmentsSlice";
+import { addExercise } from "../../slices/exercisesSlice";
 
 
 
@@ -15,44 +18,37 @@ import { selectCurrentUser } from "../../slices/usersSlice";
  * Props: addExercise, exercise
  */
 
-const WgerExercise = ({exercise}): React.JSX.Element => {
+interface Equipment {
+    id?: number,
+    name: string,
+    user_id: number,
+    systemDefault: boolean
+};
 
-    const currentUser = useAppSelector(selectCurrentUser)
-    const [muscleGroups, setMuscleGroups] = useState([]);
+interface MuscleGroup {
+    id: number,
+    name: string
+}
 
-    useEffect( () => { 
-        const gatherMuscleGroups = async () => {
-            let muscleGroups = await FitlyApi.findAllMuscleGroups();
-            setMuscleGroups(muscleGroups);
-        }
-        gatherMuscleGroups();
-    }, []);
+const WgerExercise = ({exercise, key}): React.JSX.Element => {
 
-    let newEquipment;
+    const dispatch = useAppDispatch();
+    const currentUser = useAppSelector(selectCurrentUser);
+    const muscleGroups = useAppSelector(selectMuscleGroups);
+    const equipments = useAppSelector(selectEquipments)
 
-    // add a new equipment to the Fitly database if it does not currently exist.
-    const createNewEquipment = async (muscleGroup) => {
-        newEquipment = await FitlyApi.createEquipment({
-            "user_id": UserContext.id,
-            "name": muscleGroup,
-            "systemDefault": false })
-        }
+    //convert all exercises languages to enlish
+    let englishExercise: string | null = null;
 
-
-
-
-        //convert all exercises to enlish
-        let englishExercise = null;
-
-        for( let ex of exercise.exercises){
-            if(ex.language === 2){
-                englishExercise = ex
-            } 
-        }
+    for( let ex of exercise.exercises){
+        if(ex.language === 2){
+            englishExercise = ex
+        } 
+    }
 
 
     const handleClick = async () => {
-        let muscleGroupId;
+        let muscleGroupId: number;
 
         for( let muscleGroup of muscleGroups){
             if( muscleGroup.name === exercise.category.name){
@@ -64,18 +60,17 @@ const WgerExercise = ({exercise}): React.JSX.Element => {
         // If not, create the new equipment and then create the new exercise using the new equipment's id.
 
                 if(exercise.equipment.length === 0){
-                    addExercise({
-                        "name": englishExercise.name,
-                        "muscle_group": muscleGroupId,
+                    dispatch(addExercise({
+                        "name": exercise.englishExercise.name,
+                        "muscle_group": exercise.muscleGroupId,
                         "equipment_id": 1
-                    })
+                    }))
 
                 } else {
 
-                    let allEquipment = await FitlyApi.findAllEquipments();
                     let equipmentCheck;
                     
-                    for( let equipment of allEquipment){
+                    for( let equipment of equipments){
                         if(equipment.name === exercise.equipment[0].name){
                             equipmentCheck = true;
                         } else {
@@ -84,22 +79,26 @@ const WgerExercise = ({exercise}): React.JSX.Element => {
                     }    
                     
                     if(equipmentCheck) {
-                        addExercise({
-                            "name": englishExercise.name,
-                            "muscle_group": muscleGroupId,
+                        dispatch(addExercise({
+                            "name": exercise.englishExercise.name,
+                            "muscle_group": exercise.muscleGroupId,
                             "equipment_id": exercise.equipment[0].id
-                        })
+                        }))
                     } else {
-                        let newEquipment = await FitlyApi.createEquipment({
+                        let newEquipment: {
+                            id: number,
+                            name: string,
+                            user_id: number
+                        } = await FitlyApi.createEquipment({
                             "user_id": currentUser.id,
                             "name": exercise.equipment[0].name
                         })
     
-                        addExercise({
-                            "name": englishExercise.name,
-                            "muscle_group": muscleGroupId,
+                        dispatch(addExercise({
+                            "name": exercise.englishExercise.name,
+                            "muscle_group": exercise.muscleGroupId,
                             "equipment_id": newEquipment.id
-                        })
+                        }))
                     }
                     
                 } 
@@ -116,19 +115,19 @@ const WgerExercise = ({exercise}): React.JSX.Element => {
         //then add new equipment id to newExerciseObject
         
 
-    const equipmentComponents = exercise.equipment.map ( equipment => (
+    const equipmentComponents = exercise.equipment.map ( (equipment: Equipment) => (
         <CardText>Equipment: {equipment.name}</CardText>
     ))
 
-    const imageComponents = exercise.images.map( image => (
+    const imageComponents = exercise.images.map( (image:{image: string}) => (
         <Col xs="6">
             <img className="exerciseImage d-flexbox" src={image.image}></img>
         </Col>
     ))
 
     return (
-        <Card className="d-flex flex-column align-items-center pb-3">
-            <CardTitle>Name: {englishExercise.name}</CardTitle>
+        <Card key={key} className="d-flex flex-column align-items-center pb-3">
+            <CardTitle>Name: {exercise.englishExercise.name}</CardTitle>
             <Row>
                 {imageComponents}
             </Row>

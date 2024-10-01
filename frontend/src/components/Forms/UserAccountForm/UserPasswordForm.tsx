@@ -1,16 +1,27 @@
-import React, {useContext} from "react";
-import {Formik, Form, Field, ErrorMessage} from "formik";
+import React from "react";
+import {Formik, Form, Field, ErrorMessage, FormikErrors, FormikHelpers} from "formik";
 import { Card } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import {
     selectCurrentUser,
     updateUser
 } from '../../../slices/usersSlice'
 
-const UserPasswordForm = ({handleUserPasswordToggle}): React.JSX.Element => {
+interface FormValues{
+    currentPassword: string,
+    newPassword: string,
+    confirmedPassword?: string
+}
 
-    const currentUser = useSelector(selectCurrentUser);
-    const dispatch = useDispatch();
+interface FormProps{
+    handleUserPasswordToggle: () => void
+}
+
+const UserPasswordForm = ({handleUserPasswordToggle}: FormProps): React.JSX.Element => {
+
+    const currentUser = useAppSelector(selectCurrentUser);
+    const dispatch = useAppDispatch();
+
 
 
     return (
@@ -21,19 +32,17 @@ const UserPasswordForm = ({handleUserPasswordToggle}): React.JSX.Element => {
                     newPassword: '', 
                     confirmedPassword: '', 
                     }}
-                validate={values => {
-                    const errors = {};
+                validate={(values: FormValues) => {
+                    const errors: FormikErrors<FormValues> = {};
                     if (!values.currentPassword){ errors.currentPassword = 'Current password required'}
-                    if (!values.newPassword.length > 6){ errors.newPassword = 'Password must be at least 6 characters long'}
+                    if (Number(!values.newPassword.length) > 6){ errors.newPassword = 'Password must be at least 6 characters long'}
                     if (values.confirmedPassword && values.newPassword !== values.confirmedPassword) {errors.confirmedPassword = 'New passwords do not match'}
                     return errors
                 }}
 
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
                     setTimeout(() => {  
-                        dispatch(updateUser({username:currentUser.username, formData: values.confirmedPassword}));      
-                        dispatch(updateUser({username: currentUser.username, formData: values}));           
-               
+                        dispatch(updateUser({username:currentUser.username, formData: values}));               
                         setSubmitting(false);
                         handleUserPasswordToggle();
                     }, 400)

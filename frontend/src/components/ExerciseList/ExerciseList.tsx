@@ -103,8 +103,8 @@ const ExerciseList = (): React.JSX.Element => {
     //Map through the wgerExercise state and creat an exercise component from each item
     const wgerExerciseComponents = wgerExercises.map( e => (
         <Col xs="4" className="my-3">
-            <WgerExercise exercise={e} key={uuid()}>
-                </WgerExercise></Col>
+            <WgerExercise exercise={e} key={uuid()}/>
+        </Col>
     ))
 
     //toggle state that show's user's workouts and wger API workouts

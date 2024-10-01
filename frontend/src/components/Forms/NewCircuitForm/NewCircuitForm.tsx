@@ -20,7 +20,7 @@ interface FormValues {
 
 interface FormProps{
     workout: {id: number},
-    toggleShowNewCircuitForm: () => boolean
+    toggleShowNewCircuitForm: () => void
 }
 
 const NewCircuitForm = ({workout, toggleShowNewCircuitForm}: FormProps ): React.JSX.Element => {

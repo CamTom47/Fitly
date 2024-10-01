@@ -29,12 +29,20 @@ import {
 } from '../../slices/circuitsSlice';
 import { selectCategories } from '../../slices/categoriesSlice';
 
+interface Workout{
+    id: number,
+    user_id: number,
+    name: string,
+    category: number,
+    favorited: boolean,
+}
+
 const WorkoutDetail = (): React.JSX.Element => {
     const dispatch = useAppDispatch();
     let navigate = useNavigate();
     const workoutId = useParams().workout_id;
     const workouts = useAppSelector(selectWorkouts);
-    const workout = workouts.filter( workout => workout.id === +workoutId)[0];
+    const workout = workouts.filter( workout => workout.id === Number(workoutId))[0];
     const circuits = useAppSelector(selectCircuits);
     const categories = useAppSelector(selectCategories);
     const category = categories.filter( category => category.id === workout.category)[0];
@@ -55,7 +63,7 @@ const WorkoutDetail = (): React.JSX.Element => {
 
    //remove a workout for the fitly database
    const removeWorkout = () => {
-        dispatch(deleteWorkout(workoutId))    
+        dispatch(deleteWorkout(Number(workoutId)))    
         navigate('/workouts')
     }
 
@@ -72,11 +80,11 @@ const WorkoutDetail = (): React.JSX.Element => {
         }
     }
 
-    const toggleShowWorkoutUpdateForm = () => {
+    const toggleShowWorkoutUpdateForm = () : void =>{
         setShowWorkoutUpdateForm(showWorkoutUpdateForm => !showWorkoutUpdateForm)
     }
 
-    const toggleShowNewCircuitForm = () => {
+    const toggleShowNewCircuitForm = () : void => {
         setShowNewCircuitForm(showNewCircuitForm => !showNewCircuitForm);
     }
 
