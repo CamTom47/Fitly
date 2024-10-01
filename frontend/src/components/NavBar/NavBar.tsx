@@ -1,5 +1,6 @@
-import React,{useContext, useState} from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import {
     selectCurrentUser,
@@ -20,6 +21,7 @@ import { Nav } from "react-bootstrap";
 
 const NavBar = (): React.JSX.Element => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     
     const [collapsed, setCollapsed] = useState(true);
     
@@ -30,6 +32,7 @@ const NavBar = (): React.JSX.Element => {
     const handleLogOut = () => {
         localStorage.clear();
         dispatch(userLoggedOut());
+        navigate('/')
     }
 
     const loggedInNavComponents = (

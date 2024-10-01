@@ -55,6 +55,7 @@ class FitlyApi {
              */
 
             static async findUser<Promise>(username: string) : Promise {
+                console.log(username)
                 let res = await this.request(`users/${username}`)
                 return res.user
             }

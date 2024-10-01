@@ -27,6 +27,7 @@ export const usersSlice = createSlice({
     initialState,
     reducers: {
         userLoggedOut(state) {
+            state.isAuthenticated = false
             state = initialState;
         }
     },
@@ -77,9 +78,9 @@ export const userCheckLoggedIn = createAsyncThunk(
             let token = localStorage.getItem('token');
             if(token) {
                 FitlyApi.token = token;
-                const username : string | null = await decodeToken(token);
-                if(username){
-                    const currentUser  = await FitlyApi.findUser(username)
+                const user : {id:number, username: string, isAdmin: boolean} | null = await decodeToken(token);
+                if(user){
+                    const currentUser  = await FitlyApi.findUser(user.username)
                     const results = { token, currentUser }
                     return results
                 }
@@ -97,9 +98,9 @@ export const userLogIn = createAsyncThunk(
             if(token){
                 FitlyApi.token = token;
                 localStorage.setItem('token', token);
-                const username : string | null = await decodeToken(token);
-                if (username){
-                    const currentUser = await FitlyApi.findUser(username)
+                const user : {id: number, username: string, isAdmin: boolean} | null = await decodeToken(token);
+                if (user){
+                    const currentUser = await FitlyApi.findUser(user.username)
                     const results = { token , currentUser }
                     return results
                 }
@@ -115,6 +116,7 @@ export const signup = createAsyncThunk(
     "users/signup",
     async (data : {username: string, password: string}) => {
         try{
+            console.log(data)
             const token : string = await FitlyApi.signup(data)
             if(token){
                 FitlyApi.token = token;

@@ -25,11 +25,6 @@ interface Equipment {
     systemDefault: boolean
 };
 
-interface MuscleGroup {
-    id: number,
-    name: string
-}
-
 const WgerExercise = ({exercise, key}): React.JSX.Element => {
 
     const dispatch = useAppDispatch();
