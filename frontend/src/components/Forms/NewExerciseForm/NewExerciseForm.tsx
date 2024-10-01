@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Formik, Field, ErrorMessage, Form} from "formik";
+import React from "react";
+import { Formik, Field, ErrorMessage, Form, FormikHelpers, FormikErrors} from "formik";
 import { equipmentCheckForExerciseUpdate } from "../../../helpers/helpers"
 import { Card } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import {
     selectCurrentUser,
 } from '../../../slices/usersSlice';
@@ -13,12 +13,28 @@ import {
     selectMuscleGroups
 } from '../../../slices/muscleGroupsSlice';
 
-const NewExerciseForm = ({toggle}) => {
-    const dispatch = useDispatch();
-    const currentUser = useSelector(selectCurrentUser);
-    const muscleGroups = useSelector(selectMuscleGroups);
 
-    const muscleGroupComponents = muscleGroups.map( muscleGroup => (
+interface FormProps{
+    toggle?: (() => void) | undefined
+}
+
+interface FormValues {
+    name: string,
+    muscle_group: number,
+    equipment: string
+}
+
+interface MuscleGroup{
+    id: number,
+    name: string
+}
+
+const NewExerciseForm = ({toggle} : FormProps): React.JSX.Element => {
+    const dispatch = useAppDispatch();
+    const currentUser = useAppSelector(selectCurrentUser);
+    const muscleGroups = useAppSelector(selectMuscleGroups);
+
+    const muscleGroupComponents =  muscleGroups.map( (muscleGroup : MuscleGroup) => (
         <option value={muscleGroup.id}>{muscleGroup.name}</option>
     ))
     
@@ -29,17 +45,17 @@ const NewExerciseForm = ({toggle}) => {
                 <Formik
                     initialValues={{name: "", 
                         muscle_group: 1,
-                        equipment: "N/A"
+                        equipment: ""
                         }}
-                    validate={values => {
-                        const errors = {};
+                    validate={(values: FormValues) => {
+                        const errors: FormikErrors<FormValues> = {};
                         if (!values.name){ errors.name = 'Name Required'}
                         if (!values.muscle_group){ errors.muscle_group = 'Muscle Group Required'}
                         if (!values.equipment){ errors.equipment = 'Equipment Required'}
                         return errors
                     }}
 
-                    onSubmit={(values, { setSubmitting }) => {
+                    onSubmit={(values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
                         setTimeout( async () => {
                             setSubmitting(false);
 
@@ -47,11 +63,12 @@ const NewExerciseForm = ({toggle}) => {
 
                             dispatch(addExercise({
                                 name: values.name,
-                                muscle_group: parseInt(values.muscle_group),
+                                muscle_group: Number(values.muscle_group),
                                 equipment_id: equipmentId
                             }))
-                            
-                            toggle();
+                            if(toggle){
+                                toggle();
+                            }
                         }, 400)}}
                     >
                         {({isSubmitting}) => (

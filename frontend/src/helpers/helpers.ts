@@ -19,7 +19,7 @@ interface Equipment {
 export const equipmentCheckForExerciseUpdate = async (equipmentNameCompare : string , user_id : number) => {
     try{
 
-        let allEquipment : {id: number, name: string, user_id: number}[] = await FitlyApi.findAllEquipments();
+        let allEquipment : Equipment[] = await FitlyApi.findAllEquipments();
         for( let equipment of allEquipment){
             if(equipment.name === equipmentNameCompare){
                 return equipment.id

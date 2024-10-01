@@ -1,23 +1,27 @@
-import React, { useContext} from "react";
-import {Formik, Form, Field, ErrorMessage} from "formik";
+import React from "react";
+import {Formik, Form, Field, ErrorMessage, FormikHelpers, FormikErrors} from "formik";
 import { useNavigate } from "react-router-dom";
-import UserContext from "../../../context/UserContext";
 import "reactstrap";
-import { useDispatch, useSelector} from 'react-redux'
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { 
     userLogIn,
     selectCurrentUser,
     selectErrorMessage
 } from '../../../slices/usersSlice'
 
-const LoginForm = () => { 
+interface FormValues {
+    username: string,
+    password: string
+}
 
-    const dispatch = useDispatch();
-    const errorMessage = useSelector(selectErrorMessage)
+const LoginForm = (): React.JSX.Element => { 
+
     const navigate = useNavigate();
-    const user = useSelector(selectCurrentUser);
+    const dispatch = useAppDispatch();
+    const errorMessage = useAppSelector(selectErrorMessage)
+    const user = useAppSelector(selectCurrentUser);
 
-   if (user !== null) return  navigate('/')
+   if (user !== null) navigate('/')
 
     return (
         <div className="d-flex flex-column justify-content-center align-items-center">
@@ -26,15 +30,15 @@ const LoginForm = () => {
                 initialValues={{username: '', 
                     password: '', 
                     }}
-                validate={values => {
-                    const errors = {};
+                validate={(values: FormValues) => {
+                    const errors: FormikErrors<FormValues> = {};
                     if (!values.username){ errors.username = 'Username Required'}
                     if (!values.password){ errors.password = 'Password Required'}
-                    if (!values.password.length > 6){ errors.password = 'Password must be at least 6 characters long'}
+                    if (Number(!values.password.length) > 6){ errors.password = 'Password must be at least 6 characters long'}
                     return errors
                 }}
 
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
                     setTimeout(() => {
                         setSubmitting(false);
                         dispatch(userLogIn(values))

@@ -1,8 +1,7 @@
 
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router';
 
-const Unauthorized = () => {
+const Unauthorized = (): React.JSX.Element => {
 
   return (
     <div className='d-flex flex-column align-items-center'>

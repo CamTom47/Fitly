@@ -4,6 +4,7 @@
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
+    "babel-loader": "^9.2.1",
     "json-schema": "^0.4.0",
     "jsonschema": "^1.4.1",
     "source-map-loader": "^5.0.0",

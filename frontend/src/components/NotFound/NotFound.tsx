@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-const NotFound = () => {
+const NotFound = (): React.JSX.Element => {
   return (
     <div className='d-flex flex-column align-items-center'>
       <h1 className='pb-3'>404 - Page Not Found</h1>

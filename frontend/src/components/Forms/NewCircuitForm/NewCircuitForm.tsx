@@ -1,48 +1,37 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Formik, Field, ErrorMessage, Form} from "formik";
-import FitlyApi from "../../../Api/FitlyApi";
-import { useNavigate } from "react-router";
+import React, { useState } from "react";
+import { Formik, Field, ErrorMessage, Form, FormikErrors, FormikHelpers} from "formik";
 import LoadingComponent from "../../LoadingComponent/LoadingComponent";
-import { useSelector, useDispatch } from "react-redux";
-import {
-    selectCurrentUser
-} from '../../../slices/usersSlice';
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import {
     addCircuit
 } from '../../../slices/circuitsSlice';
+import {
+    selectExercises
+} from '../../../slices/exercisesSlice'
 
+interface FormValues {
+    sets: number,
+    reps: number,
+    weight: number,
+    rest_period: number,
+    intensity: string,
+    exercise: number | undefined,
+}
 
-const NewCircuitForm = ({workout, toggleShowNewCircuitForm}) => {
-    const dispatch = useDispatch();
-    
-    const currentUser = useSelector(selectCurrentUser);
-    const [exercises, setExercises] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+interface FormProps{
+    workout: {id: number},
+    toggleShowNewCircuitForm: () => boolean
+}
 
-    const navigate = useNavigate();
-
-    useEffect( () => {
-        setIsLoading(true);
-            const getExercises = async () => {
-                try{
-                    const exercises = await FitlyApi.findAllExercises()
-                    setExercises(exercises);
-                }
-                catch(err){
-                    return err
-                }  
-            }
-        getExercises()
-        setIsLoading(false);
-    } , []);
+const NewCircuitForm = ({workout, toggleShowNewCircuitForm}: FormProps ): React.JSX.Element => {
+    const dispatch = useAppDispatch();
+    const exercises = useAppSelector(selectExercises);
 
     const exerciseOptionComponents = exercises.map(  exercise => (
         <option value={exercise.id}>{exercise.name}</option>
     ))
-
-    return (isLoading)
-    ? <LoadingComponent/>
-    : (
+    
+    return (
         <div className="pt-3">
             <Formik
                 initialValues={{
@@ -51,10 +40,10 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm}) => {
                     weight: 0,
                     rest_period: 0,
                     intensity: "Low",
-                    exercise: ""
+                    exercise: undefined
                     }}
-                validate={values => {
-                    const errors = {};
+                validate={(values: FormValues ) => {
+                    const errors: FormikErrors<FormValues> = {};
                     if (!values.sets){ errors.sets = 'Sets Required'}
                     if (!values.reps){ errors.reps = 'Reps Required'}
                     if (!values.rest_period){ errors.rest_period = 'Rest_period Required'}
@@ -63,7 +52,7 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm}) => {
                     return errors
                 }}
 
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
                     setTimeout( async () => {
 
                         dispatch(addCircuit({

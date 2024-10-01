@@ -1,26 +1,39 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Formik, Field, ErrorMessage, Form} from "formik";
-import FitlyApi from "../../../Api/FitlyApi";
-import { useNavigate } from "react-router";
+import React from "react";
+import { Formik, Field, ErrorMessage, Form, FormikHelpers, FormikErrors} from "formik";
 import { Card } from "reactstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { 
-    addWorkout,
-    } from '../../../slices/workoutsSlice';
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
+import { addWorkout } from '../../../slices/workoutsSlice';
+import { selectCategories } from '../../../slices/categoriesSlice';
+import { selectCurrentUser } from "../../../slices/usersSlice";
 
-import {
-    selectCurrentUser
-} from '../../../slices/usersSlice';
-import {
-    selectCategories,
-    findAllCategories
-} from '../../../slices/categoriesSlice';
+/**
+ * NewWorkoutForm Component => Handles form data and creates a new workout.
+ * State: Categories
+ * Props: toggleCreateForm
+ */
 
-const NewWorkoutForm = ({toggleCreateForm}) => {
-    const dispatch = useDispatch();
-    const categories = useSelector(selectCategories);
+interface FormValues {
+    name: string,
+    category: number
+};
 
-    const categoryComponents = categories.map( cat => (
+interface Category {
+    id: number,
+    user_id: number
+    name: string,
+    systemdefault: boolean
+};
+
+interface FormProps{
+    toggleCreateForm? : (() => void) | undefined
+}
+
+const NewWorkoutForm = ({toggleCreateForm} : FormProps): React.JSX.Element => {
+    const dispatch = useAppDispatch();
+    const categories = useAppSelector(selectCategories);
+    const currentUser = useAppSelector(selectCurrentUser);
+
+    const categoryComponents : object[] = categories.map( (cat : Category) => (
         <option value={cat.id}>{cat.name}</option>
     ))
 
@@ -29,20 +42,27 @@ const NewWorkoutForm = ({toggleCreateForm}) => {
             <Card className="w-25 d-flex flex-column align-items-center pb-3">
                 <h3>New Workout Form</h3>
                 <Formik
-                    initialValues={{name: '', 
-                        category: "1", 
+                    initialValues={{
+                        name: '', 
+                        category: 1,
                         }}
-                    validate={values => {
-                        const errors = {};
+                    validate={(values: FormValues) => {
+                        const errors: FormikErrors<FormValues> = {};
                         if (!values.name){ errors.name = 'Name Required'}
                         return errors
                     }}
 
-                    onSubmit={(values, { setSubmitting }) => {
+                    onSubmit={(values : FormValues, { setSubmitting } : FormikHelpers<FormValues>) => {
                         setTimeout( async () => {
-                            dispatch(addWorkout(values))
+                            dispatch(addWorkout({
+                                ...values,
+                                user_id: currentUser.id,
+                                favorited: false
+                            }))
                             setSubmitting(false);
-                            toggleCreateForm();
+                            if(toggleCreateForm){
+                                toggleCreateForm();
+                            }
                         }, 400)
                     }}
                     >
@@ -77,7 +97,6 @@ const NewWorkoutForm = ({toggleCreateForm}) => {
                             </Form>
                             </div>
                         )}
-
                 </Formik>
             </Card>
         </div>

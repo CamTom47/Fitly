@@ -11,7 +11,6 @@ import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import Account from "../Account/Account";
 import NewWorkoutForm from "../Forms/NewWorkoutForm/NewWorkoutForm";
 import WorkoutDetail from "../WorkoutDetail/WorkoutDetail";
-import Unauthorized from "../Unauthorized/Unauthorized";
 import NotFound from "../NotFound/NotFound";
 import "./App.css"
 import { 
@@ -20,19 +19,18 @@ import {
   selectAuthenticated,
   selectCurrentUser
 } from '../../slices/usersSlice';
-import { useDispatch, useSelector } from "react-redux";
 
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
 
-
-
-function App() {
+function App(): React.JSX.Element {
   
   const [isLoading, setIsLoading] = useState(false);
-  const token = useSelector(selectToken);
-  const currentUser = useSelector(selectCurrentUser);
-  const isAuthenticated = useSelector(selectAuthenticated);
+  const token = useAppSelector(selectToken);
+  const currentUser = useAppSelector(selectCurrentUser);
+  const isAuthenticated = useAppSelector(selectAuthenticated);
+  
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   
   const checkLoggedIn = useCallback(() => {
     setIsLoading(true)
@@ -49,7 +47,7 @@ function App() {
       "currentUser", currentUser,
       "token=", token
     )
-
+    
   //Find current user using local storage "token"
 
   if(isLoading){
@@ -63,8 +61,8 @@ function App() {
       <div className="">
           <NavBar></NavBar>
           <Routes>
-            <Route exact path="/register" element={<SignupForm/>}/>
-            <Route exact path="/" element={<Homepage/>}/>
+            <Route path="/register" element={<SignupForm/>}/>
+            <Route path="/" element={<Homepage/>}/>
             <Route path="*" element={<Homepage/>}/>
           </Routes>
       </div>
@@ -75,15 +73,15 @@ function App() {
       <div className="App">
         <NavBar></NavBar>
         <Routes>
-          <Route exact path="/workouts" element={<WorkoutList/>}/>
-          <Route exact path="/workouts/:workout_id" element={<WorkoutDetail/>}/>
-          <Route exact path="/workouts/add" element={<NewWorkoutForm/>}/>
-          <Route exact path="/register" element={<SignupForm/>}/>
-          <Route exact path="/exercises" element={<ExerciseList/>}/>
-          <Route exact path="/exercises/add" element={<NewExerciseForm/>}/>
-          <Route exact path="/account" element={<Account/>}/>
-          <Route exact path="/" element={<Homepage/>}/>
-          <Route exact path="*" element={<NotFound/>}/>
+          <Route path="/workouts" element={<WorkoutList/>}/>
+          <Route path="/workouts/:workout_id" element={<WorkoutDetail/>}/>
+          <Route path="/workouts/add" element={<NewWorkoutForm/>}/>
+          <Route path="/register" element={<SignupForm/>}/>
+          <Route path="/exercises" element={<ExerciseList/>}/>
+          <Route path="/exercises/add" element={<NewExerciseForm/>}/>
+          <Route path="/account" element={<Account/>}/>
+          <Route path="/" element={<Homepage/>}/>
+          <Route path="*" element={<NotFound/>}/>
         </Routes>
     </div>
   );

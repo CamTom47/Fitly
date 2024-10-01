@@ -1,6 +1,6 @@
 import React,{useContext, useState} from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import {
     selectCurrentUser,
     userLoggedOut
@@ -18,14 +18,14 @@ import { Collapse,
 
 import { Nav } from "react-bootstrap";
 
-const NavBar = () => {
-    const dispatch = useDispatch();
+const NavBar = (): React.JSX.Element => {
+    const dispatch = useAppDispatch();
     
     const [collapsed, setCollapsed] = useState(true);
     
     const toggleNavbar = () => setCollapsed(!collapsed);
     
-    const currentUser = useSelector(selectCurrentUser);
+    const currentUser = useAppSelector(selectCurrentUser);
 
     const handleLogOut = () => {
         localStorage.clear();

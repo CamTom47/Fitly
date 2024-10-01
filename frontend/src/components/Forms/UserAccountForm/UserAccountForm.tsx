@@ -1,17 +1,25 @@
 import React, {useContext} from "react";
-import {Formik, Form, Field, ErrorMessage} from "formik";
+import {Formik, Form, Field, ErrorMessage, FormikErrors, FormikHelpers} from "formik";
 import { Card } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import {
     selectCurrentUser,
     updateUser
 } from '../../../slices/usersSlice'
 
+interface FormValues{
+    first_name: string,
+    last_name: string,
+    email: string
+}
 
+interface FormProps{
+    handleUserInfoToggle: () => void
+}
 
-const UserAccountForm = ({handleUserInfoToggle}) => {
-    const dispatch = useDispatch();
-    const currentUser = useSelector(selectCurrentUser);
+const UserAccountForm = ({handleUserInfoToggle}: FormProps): React.JSX.Element => {
+    const dispatch = useAppDispatch();
+    const currentUser = useAppSelector(selectCurrentUser);
 
     return (
         <div className="d-flex flex-column align-items-center pb-5">
@@ -22,8 +30,8 @@ const UserAccountForm = ({handleUserInfoToggle}) => {
                     last_name: currentUser.lastName || "",
                     email: currentUser.email || ""
                     }}
-                validate={values => {
-                    const errors = {};
+                validate={(values: FormValues) => {
+                    const errors: FormikErrors<FormValues>= {};
                     if (values.email){
                         if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)){
                             errors.email = 'Invalid Email Address'
@@ -32,7 +40,7 @@ const UserAccountForm = ({handleUserInfoToggle}) => {
                     return errors
                 }}
 
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
                     setTimeout(() => {     
                         dispatch(updateUser({username: currentUser.username, formData: values}));           
                         setSubmitting(false);

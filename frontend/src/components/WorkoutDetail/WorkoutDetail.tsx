@@ -1,7 +1,6 @@
 //functionality imports
 import React, { useCallback, useEffect, useState, useContext } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { createSelector } from 'reselect';
 import { v4 as uuid } from 'uuid'
 
 //styling imports
@@ -16,29 +15,28 @@ import UpdateWorkoutForm from "../Forms/UpdateWorkoutForm/UpdateWorkoutForm"
 import Circuit from "../Circuit/Circuit";
 import FitlyApi from "../../Api/FitlyApi";
 
-import { useDispatch,useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 
 import { 
     deleteWorkout,
     selectWorkouts,
 } from '../../slices/workoutsSlice';
+
 import {
     selectCircuits,
     findAllCircuits
 
 } from '../../slices/circuitsSlice';
-import {
-    selectCategories,
-} from '../../slices/categoriesSlice';
+import { selectCategories } from '../../slices/categoriesSlice';
 
-const WorkoutDetail = () => {
-    const dispatch = useDispatch();
+const WorkoutDetail = (): React.JSX.Element => {
+    const dispatch = useAppDispatch();
     let navigate = useNavigate();
     const workoutId = useParams().workout_id;
-    const workouts = useSelector(selectWorkouts);
+    const workouts = useAppSelector(selectWorkouts);
     const workout = workouts.filter( workout => workout.id === +workoutId)[0];
-    const circuits = useSelector(selectCircuits);
-    const categories = useSelector(selectCategories);
+    const circuits = useAppSelector(selectCircuits);
+    const categories = useAppSelector(selectCategories);
     const category = categories.filter( category => category.id === workout.category)[0];
     
     const [showNewCircuitForm, setShowNewCircuitForm] = useState(false);

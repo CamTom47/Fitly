@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Formik, Field, ErrorMessage, Form} from "formik";
-import { useNavigate } from "react-router";
-import LoadingComponent from "../../LoadingComponent/LoadingComponent";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import { Formik, Field, ErrorMessage, Form, FormikHelpers, FormikErrors} from "formik";
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 
 import {
     updateCircuit
@@ -12,10 +10,42 @@ import {
     selectExercises
 } from '../../../slices/exercisesSlice';
 
-const UpdateCircuitForm = ({workout, toggleShowUpdateCircuitForm, circuit, exercise}) => {
-    const dispatch = useDispatch();    
-    const exercises = useSelector(selectExercises)
-    const [isLoading, setIsLoading] = useState(true);
+interface FormValues {
+    sets: number,
+    reps: number,
+    weight: number,
+    rest_period: number,
+    intensity: string,
+    exercise: number | undefined,
+}
+
+interface FormProps{
+    circuit: {
+        id: number,
+        sets: number,
+        reps: number,
+        weight: number,
+        rest_period: number,
+        intensity: string,
+    },
+    toggleShowUpdateCircuitForm: (() => void),
+    exercise: {
+        id: number
+    },
+}
+
+interface Circuit{
+    sets: number,
+    reps: number,
+    weight: number,
+    rest_period: number,
+    intensity: string,
+    exercise: number | undefined,
+}
+
+const UpdateCircuitForm = ({toggleShowUpdateCircuitForm, circuit, exercise} : FormProps): React.JSX.Element => {
+    const dispatch = useAppDispatch();    
+    const exercises = useAppSelector(selectExercises)
 
     const exerciseOptionComponents = exercises.map(  exercise => (
         <option value={exercise.id}>{exercise.name}</option>
@@ -33,8 +63,8 @@ const UpdateCircuitForm = ({workout, toggleShowUpdateCircuitForm, circuit, exerc
                     intensity: circuit.intensity,
                     exercise: exercise.id
                     }}
-                validate={values => {
-                    const errors = {};
+                validate={(values: FormValues) => {
+                    const errors: FormikErrors<FormValues> = {};
                     if (!values.sets){ errors.sets = 'Sets Required'}
                     if (!values.reps){ errors.reps = 'Reps Required'}
                     if (!values.rest_period){ errors.rest_period = 'Rest_period Required'}
@@ -43,7 +73,7 @@ const UpdateCircuitForm = ({workout, toggleShowUpdateCircuitForm, circuit, exerc
                     return errors
                 }}
 
-                onSubmit={(values, { setSubmitting }) => {
+                onSubmit={(values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
                     setTimeout( async () => {
                         dispatch(updateCircuit({
                             circuitId: circuit.id,

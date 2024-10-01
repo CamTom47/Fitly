@@ -7,7 +7,7 @@ import {
     updateUser
 } from '../../../slices/usersSlice'
 
-const UserPasswordForm = ({handleUserPasswordToggle}) => {
+const UserPasswordForm = ({handleUserPasswordToggle}): React.JSX.Element => {
 
     const currentUser = useSelector(selectCurrentUser);
     const dispatch = useDispatch();

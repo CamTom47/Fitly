@@ -1,26 +1,41 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Formik, Field, ErrorMessage, Form} from "formik";
-import FitlyApi from "../../../Api/FitlyApi";
-import { useNavigate } from "react-router";
+import React from "react";
+import { Formik, Field, ErrorMessage, Form, FormikErrors, FormikHelpers} from "formik";
 import { Card } from "reactstrap";
-import { useDispatch, useSelector } from "react-redux";
-import {
-    selectCurrentUser
-} from '../../../slices/usersSlice';
+import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import {
     updateWorkout
 } from '../../../slices/workoutsSlice';
 import {
     selectCategories,
-    findAllCategories
 } from '../../../slices/categoriesSlice';
 
-const UpdateWorkoutForm = ({workout, handleToggle}) => {
-    const dispatch = useDispatch();
-    const categories = useSelector(selectCategories);
+interface FormValues {
+    name: string,
+    category: number
+};
+
+interface Category {
+    id: number,
+    user_id: number
+    name: string,
+    systemdefault: boolean
+};
+
+interface FormProps{
+    workout: {
+        id: number,
+        name: string,
+        muscle_group: number
+    }
+    handleToggle? : (() => void) | undefined
+}
+
+const UpdateWorkoutForm = ({workout, handleToggle}: FormProps): React.JSX.Element => {
+    const dispatch = useAppDispatch();
+    const categories = useAppSelector(selectCategories);
     
-    const categoryComponents = categories.map( cat => (
-        <option value={cat.id}>{cat.name}</option>
+    const categoryComponents = categories.map( (category: Category) => (
+        <option value={category.id}>{category.name}</option>
     ))
     
     return (
@@ -30,15 +45,15 @@ const UpdateWorkoutForm = ({workout, handleToggle}) => {
                 <hr></hr>
                 <Formik
                     initialValues={{name: workout.name, 
-                        category: "1", 
+                        category: 1, 
                         }}
-                    validate={values => {
-                        const errors = {};
+                    validate={(values: FormValues) => {
+                        const errors: FormikErrors<FormValues> = {};
                         if (!values.name){ errors.name = 'Name Required'}
                         return errors
                     }}
 
-                    onSubmit={(values, { setSubmitting }) => {
+                    onSubmit={(values: FormValues, { setSubmitting }: FormikHelpers<FormValues>) => {
                         setTimeout( async () => {
                             dispatch(updateWorkout({
                                 workoutId: workout.id,
@@ -47,7 +62,10 @@ const UpdateWorkoutForm = ({workout, handleToggle}) => {
                                 category: values.category}
                             }))
                             setSubmitting(false);
-                            handleToggle();
+                            if(handleToggle){
+                                handleToggle();
+                            }
+                            
                         }, 400)
                     }}
                     >

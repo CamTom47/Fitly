@@ -64,7 +64,7 @@ class Circuit {
                     circuits.weight,
                     circuits.rest_period,
                     circuits.intensity,
-                    exercises.id AS exercise_id
+                    exercises.id AS exercise_id,
             FROM circuits
             RIGHT JOIN circuits_exercises 
             ON circuits.id = circuits_exercises.circuit_id

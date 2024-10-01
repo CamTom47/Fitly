@@ -45,6 +45,15 @@ export const usersSlice = createSlice({
                 state.errorMessage = action.payload[0]
             }
         })
+        .addCase(signup.fulfilled, (state, action) => {
+            if(action.payload.token){
+                state.currentUser = action.payload.currentUser;
+                state.token = action.payload.token;
+                state.isAuthenticated = true;
+            } else {
+                state.errorMessage = action.payload[0]
+            }
+        })
         .addCase(findAUser.fulfilled, (state, action) => {
             state.selectedUser = action.payload;
         })
@@ -53,6 +62,7 @@ export const usersSlice = createSlice({
         })
         .addCase(updateUser.fulfilled, (state, action) => {
             state.currentUser = action.payload;
+
         })
     }
 });
@@ -101,6 +111,28 @@ export const userLogIn = createAsyncThunk(
     }
 )
 
+export const signup = createAsyncThunk(
+    "users/signup",
+    async (data : {username: string, password: string}) => {
+        try{
+            const token : string = await FitlyApi.signup(data)
+            if(token){
+                FitlyApi.token = token;
+                localStorage.setItem('token', token);
+                const username : string | null = await decodeToken(token);
+                if (username){
+                    const currentUser = await FitlyApi.findUser(username)
+                    const results = { token , currentUser }
+                    return results
+                }
+            }
+        }
+        catch (err){
+            return err
+        }
+    }
+)
+
 export const findAUser = createAsyncThunk(
     "users/findAUser",
     async (username : string) => {
@@ -130,9 +162,9 @@ export const addUser = createAsyncThunk(
 export const updateUser = createAsyncThunk(
     "users/userUpdated",
     async (data : { username: string, formData: {
-        username: string,
-        firstName: string,
-        lastName? : string
+        username?: string,
+        first_name?: string,
+        last_name? : string
         email? : string,
         password? : string,
         confirmedPassword? : string

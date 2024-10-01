@@ -1,45 +1,55 @@
 import React, { useContext} from "react";
-import {Formik, Form, Field, ErrorMessage} from "formik";
+import {Formik, Form, Field, ErrorMessage, withFormik, FormikProps, FormikErrors, FormikHelpers} from "formik";
 import { useNavigate } from "react-router-dom";
 import { Card } from "reactstrap";
-import { useDispatch, useSelector } from "react-redux";
 import {
     selectCurrentUser,
     signup
 } from '../../../slices/usersSlice';
 
-const SignupForm = ({signup}) => { 
-    const dispatch = useDispatch();
-    
-    const navigate = useNavigate();
-    
-    const currentUser = useSelector(selectCurrentUser);
+import { useAppSelector, useAppDispatch } from "../../../hooks/reduxHooks";
 
-   if (currentUser !== null) return  navigate('/')
+/**
+ * SignupForm Component: Validates a user's input and registers them in Fitly's database
+ * State: currentUser
+ * Props: none
+ */
+
+interface FormValues {
+    username: string,
+    password: string
+};
+
+const SignupForm = () : React.JSX.Element => { 
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const currentUser = useAppSelector(selectCurrentUser);
+
+   if (currentUser !== null) navigate('/')
 
     return (
         <div className="d-flex justify-content-center">
             <Card className="d-flex flex-column align-items-center py-3 w-25">
                 <h5>Signup Form</h5>
                 <Formik
-                    initialValues={{username: '', 
+                    initialValues={{
+                        username: '', 
                         password: '', 
                         }}
-                    validate={values => {
-                        const errors = {};
+                    validate = {(values : FormValues) => {
+                        let errors: FormikErrors<FormValues> = {};
                         if (!values.username){ errors.username = 'Username Required'}
                         if (!values.password){ errors.password = 'Password Required'}
-                        if (!values.password.length > 6){ errors.password = 'Password must be at least 6 characters long'}
+                        if (Number(!values.password.length) > 6){ errors.password = 'Password must be at least 6 characters long'}
                         return errors
                     }}
 
-                    onSubmit={(values, { setSubmitting }) => {
+                    onSubmit={(values : FormValues, { setSubmitting } : FormikHelpers<FormValues>) => {
                         setTimeout(() => { 
                             dispatch(signup(values));
                             setSubmitting(false);
-                            localStorage.setItem('isAuthenticated', true);
+                            localStorage.setItem('isAuthenticated', "true");
                             navigate("/exercises")
-
                         }, 400)
                         
                     }}
@@ -64,9 +74,7 @@ const SignupForm = ({signup}) => {
                                     </div>
                                         <button className="btn btn-success" type='submit' disabled={isSubmitting}>Sign Up</button>
                                 </Form>
-
                         )}
-
                 </Formik>
             </Card>
         </div>
@@ -74,4 +82,4 @@ const SignupForm = ({signup}) => {
     )
 }
 
-export default SignupForm
+export default SignupForm 

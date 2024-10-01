@@ -1,29 +1,14 @@
 import React, {useContext, useEffect, useState} from "react";
 import { Card, CardBody, CardText, CardTitle, Col, Row, Button} from "reactstrap"
-import FitlyApi from "../../Api/FitlyApi"
 import UpdateExerciseForm from "../Forms/UpdateExerciseForm/UpdateExerciseForm";
 import {equipmentMatch} from "../../helpers/helpers";
-
-import { useDispatch, useSelector } from "react-redux";
-import {
-    selectCurrentUser
-} from '../../slices/usersSlice';
-
-import {
-    selectMuscleGroup,
-    selectMuscleGroups,
-    // findAMuscleGroup,
-    findAllMuscleGroups
-} from '../../slices/muscleGroupsSlice';
-
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import {selectMuscleGroups} from '../../slices/muscleGroupsSlice';
 import {
     deleteExercise,
     selectExercises
 } from '../../slices/exercisesSlice';
 
-import {
-    findAEquipment
-} from '../../slices/equipmentsSlice';
 /**
  * Exercise component
  * 
@@ -32,19 +17,45 @@ import {
  * Props: updateExercise, exercise
 */
 
-const ExerciseDetails = ({exerciseId, updateExercise}) => {
-    const dispatch = useDispatch();
-    const exercises = useSelector(selectExercises);
-    const exercise = exercises.filter( exercise => exercise.id === exerciseId)[0];
-    const muscleGroups = useSelector(selectMuscleGroups);
-    const muscleGroup = muscleGroups.find( muscleGroup => muscleGroup.id === exercise.muscle_group);
+interface Exercise {
+    id: number,
+    name: string,
+    muscle_group: number,
+    equipment_id: number
+};
+
+interface MuscleGroup {
+    id?: number,
+    name: string,
+};
+
+interface Equipment { 
+    id: number | null,
+    name: string | null
+};
+
+interface ExerciseDetailProps { 
+    exerciseId: number,
+};
+
+const initial_equipment_state : Equipment = {
+    id: null,
+    name: null
+}
+
+const ExerciseDetails = ({exerciseId}: ExerciseDetailProps) : React.JSX.Element => {
+    const dispatch = useAppDispatch();
+    const exercises = useAppSelector(selectExercises);
+    const exercise : Exercise = exercises.filter( (exercise : Exercise) => exercise.id === exerciseId)[0];
+    const muscleGroups = useAppSelector(selectMuscleGroups);
+    const muscleGroup : MuscleGroup = muscleGroups.find( (muscleGroup: MuscleGroup) => muscleGroup.id === exercise.muscle_group);
     const [toggleExerciseUpdateForm, setToggleExerciseUpdateForm] = useState(false);
-    const [equipment, setEquipment] = useState({});
+    const [equipment, setEquipment] = useState(initial_equipment_state);
     
     //use the exercise equipment id to match a the name of a the respective equipment from the database.
     useEffect(() => {
         const matchEquipment = () => {
-            equipmentMatch({equipment_id: exercise.equipment_id})
+            equipmentMatch(exercise.equipment_id)
             .then( data =>  {
                 setEquipment(data)
             })
@@ -58,13 +69,13 @@ const ExerciseDetails = ({exerciseId, updateExercise}) => {
     }
 
     const handleDeleteClick = () => {
-        dispatch(deleteExercise({"exercise_id": exercise.id}))
+        dispatch(deleteExercise(exercise.id))
     }
 
     return (
         <Card className="my-2 d-flex flex-column align-items-center pb-3">
             {(toggleExerciseUpdateForm)
-                ?  <UpdateExerciseForm exercise={exercise} toggle={handleEditClick} equipment={equipment} updateExercise={updateExercise} />
+                ?  <UpdateExerciseForm exercise={exercise} toggle={handleEditClick} equipment={equipment}/>
                 : (
                     <div className="d-flex flex-column align-items-center">
                         <CardTitle className="fs-3 d-flex">{exercise.name}</CardTitle>

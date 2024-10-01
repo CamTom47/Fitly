@@ -3,21 +3,19 @@ import UpdateCircuitForm from "../Forms/UpdateCircuitForm/UpdateCircuitForm";
 import useToggle from "../../hooks/useToggle/useToggle";
 import { v4 as uuid } from 'uuid';
 import { Col, Row } from "reactstrap";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { 
     selectCircuits,
     deleteCircuit,
 } from '../../slices/circuitsSlice';
-import { 
-    selectExercises,
-} from '../../slices/exercisesSlice';
+import {selectExercises} from '../../slices/exercisesSlice';
 
-import { useDispatch, useSelector } from "react-redux";
 
-const Circuit = ({circuitId}) => {
-    const dispatch = useDispatch();
-    const circuits = useSelector(selectCircuits);
+const Circuit = ({circuitId}): React.JSX.Element => {
+    const dispatch = useAppDispatch();
+    const circuits = useAppSelector(selectCircuits);
     const circuit = circuits.filter( circuit => circuit.id === circuitId)[0];
-    const exercises = useSelector(selectExercises);
+    const exercises = useAppSelector(selectExercises);
     let exercise = exercises.filter( exercise => exercise.id === circuit.exercise_id)[0];
     const [showUpdateCircuitForm, setShowUpdateCircuitForm ] = useToggle();
 
@@ -27,7 +25,7 @@ const Circuit = ({circuitId}) => {
     }
 
     const toggleShowUpdateCircuitForm = () => {
-        setShowUpdateCircuitForm(showUpdateCircuitForm => !showUpdateCircuitForm);
+        setShowUpdateCircuitForm();
     }
 
     return (showUpdateCircuitForm)

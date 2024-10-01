@@ -1,17 +1,12 @@
 import React, { useEffect, useState, useContext, useCallback, useMemo} from "react";
 
 import { Container, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
-import FitlyApi from "../../Api/FitlyApi";
 import WgerApi from "../../Api/WgerApi"
 import ExerciseDetails from "../ExerciseDetails/ExerciseDetails";
 import WgerExercise from "../WgerExercise/WgerExercise";
 import NewExerciseForm from "../Forms/NewExerciseForm/NewExerciseForm";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
-import { useSelector, useDispatch } from "react-redux";
-import {
-    selectCurrentUser
-} from '../../slices/usersSlice'
-
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
@@ -25,23 +20,39 @@ import {
 import {
     findAllMuscleGroups,
 } from '../../slices/muscleGroupsSlice';
+import useToggle from "../../hooks/useToggle/useToggle";
 
-const ExerciseList = () => {
-    const dispatch = useDispatch();
+interface WgerExercises {
+    request: {
+        responseURL: string | null;
+    }, 
+    results: WgerExerciseObject[],
+    previous: string,
+    next: string;
+}
+
+interface WgerExerciseObject {
+    next: string,
+    results: object,
+    previous: string
+}
+
+const ExerciseList = (): React.JSX.Element => {
+    const dispatch = useAppDispatch();
     dispatch(findAllMuscleGroups());
     
-    const userExercises = useSelector(selectExercises);
-    const [wgerExercises, setWgerExercises] = useState([]);
-    const [showUserExercises, setShowUserExercises] = useState(true);
-    const [showWgerExercises, setShowWgerExercises] = useState(false);
-    const [exerciseFormToggle, setExerciseFormToggle] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [nextWgerCall, setNextWgerCall] = useState(null);
-    const [previousWgerCall, setPreviousWgerCall] = useState(null);
-    const [currentWgerCall, setCurrentWgerCall] = useState();
+    const userExercises = useAppSelector(selectExercises);
+    const [wgerExercises, setWgerExercises] = useState<WgerExerciseObject[]>([]);
+    const [showUserExercises, toggleShowUserExercises] = useToggle(true);
+    const [showWgerExercises, toggleShowWgerExercises] = useToggle(false);
+    const [exerciseFormToggle, toggleExerciseFormToggle] = useToggle(false);
+    const [isLoading, toggleIsLoading] = useToggle(false);
+    const [nextWgerCall, setNextWgerCall] = useState<string | undefined>(undefined);
+    const [previousWgerCall, setPreviousWgerCall] = useState<string | undefined>(undefined);
+    const [currentWgerCall, setCurrentWgerCall] = useState<string | null>(null);
 
     const getExercises = useCallback(async () => {
-        setIsLoading(true);
+        toggleIsLoading();
             if(showUserExercises === true){
                 try{
                     dispatch(findAllExercises())
@@ -53,25 +64,25 @@ const ExerciseList = () => {
                 try{
                     //Get a list of exercises not currently in the data base from the Wger Api    
                     if(currentWgerCall === undefined){
-                        const exercises = await WgerApi.getAllExercises()
-                    setCurrentWgerCall(exercises.request.responseURL)
-                    setPreviousWgerCall(exercises.data.previous);
-                    setNextWgerCall(exercises.data.next);
-                    setWgerExercises(exercises.data.results);
+                        const exercises: WgerExercises = await WgerApi.getAllExercises();
+                        setCurrentWgerCall(exercises.request.responseURL)
+                        setPreviousWgerCall(exercises.previous);
+                        setNextWgerCall(exercises.next);
+                        setWgerExercises(exercises.results);
 
                     } else {
-                        const exercises = await WgerApi.getAllExercises(nextWgerCall)
-                    setCurrentWgerCall(exercises.request.responseURL)
-                    setPreviousWgerCall(exercises.data.previous);
-                    setNextWgerCall(exercises.data.next);
-                    setWgerExercises(exercises.data.results);
+                        const exercises: WgerExercises= await WgerApi.getAllExercises(nextWgerCall)
+                        setCurrentWgerCall(exercises.request.responseURL)
+                        setPreviousWgerCall(exercises.previous);
+                        setNextWgerCall(exercises.next);
+                        setWgerExercises(exercises.results);
                     }
                     
                 } catch(err){
                     return err
                 }
             }
-            setIsLoading(false);
+            toggleIsLoading();
         }, []);
 
      
@@ -98,27 +109,27 @@ const ExerciseList = () => {
 
     //toggle state that show's user's workouts and wger API workouts
     const toggleUserExercises = () => {
-        setShowWgerExercises(false);
-        setShowUserExercises(true);
+        toggleShowWgerExercises();
+        toggleShowUserExercises();
     }
 
     const toggleWgerExercises = () => {
-        setShowUserExercises(false);
-        setShowWgerExercises(true);
+        toggleShowUserExercises();
+        toggleShowWgerExercises();
     }
 
     //toggle state that shows exercise update form
     const toggleExerciseFormVisibility = () => {
-        setExerciseFormToggle( toggle => !toggle )
+        toggleExerciseFormToggle()
     }
 
     const getNextExercises = async () => {
-        if(wgerExercises.next !== null) {
+        if(nextWgerCall !== null) {
             try{
-                const exercises = await WgerApi.getAllExercises(nextWgerCall)
-                setPreviousWgerCall(exercises.data.previous);
-                setNextWgerCall(exercises.data.next);
-                setWgerExercises(exercises.data.results);
+                const exercises: WgerExercises = await WgerApi.getAllExercises(nextWgerCall)
+                setPreviousWgerCall(exercises.previous);
+                setNextWgerCall(exercises.next);
+                setWgerExercises(exercises.results);
             } catch(err){
                 return err
             }
@@ -127,12 +138,12 @@ const ExerciseList = () => {
     }
 
     const getPreviousExercises = async () => {
-        if(wgerExercises.previous !== null){
+        if(previousWgerCall !== null){
             try{
-                const exercises = await WgerApi.getAllExercises(previousWgerCall)
-                setPreviousWgerCall(exercises.data.previous);
-                setNextWgerCall(exercises.data.next);
-                setWgerExercises(exercises.data.results);
+                const exercises: WgerExercises= await WgerApi.getAllExercises(previousWgerCall)
+                setPreviousWgerCall(exercises.previous);
+                setNextWgerCall(exercises.next);
+                setWgerExercises(exercises.results);
             }catch(err){
                 return err
             }
@@ -189,4 +200,4 @@ const ExerciseList = () => {
         </Container>)
 }
 
-export default ExerciseList
+export default ExerciseList;

@@ -1,8 +1,10 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import { Card, CardBody, CardText, CardTitle, Col, Row} from "reactstrap"
 import FitlyApi from "../../Api/FitlyApi"
-import UserContext from "../../context/UserContext";
-import "./WgerExercise.css"
+import { useAppSelector } from "../../hooks/reduxHooks";
+import "./WgerExercise.css";
+import { selectCurrentUser } from "../../slices/usersSlice";
+
 
 
 /**
@@ -13,9 +15,9 @@ import "./WgerExercise.css"
  * Props: addExercise, exercise
  */
 
-const WgerExercise = ({addExercise, exercise}) => {
+const WgerExercise = ({exercise}): React.JSX.Element => {
 
-    let {currentUser} = useContext(UserContext);
+    const currentUser = useAppSelector(selectCurrentUser)
     const [muscleGroups, setMuscleGroups] = useState([]);
 
     useEffect( () => { 

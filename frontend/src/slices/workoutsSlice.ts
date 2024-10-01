@@ -90,7 +90,7 @@ export const addWorkout = createAsyncThunk(
     }
 )
 
-interface WorkoutUpdate extends Workout { 
+interface WorkoutUpdate { 
     workoutId: number,
     data: {}
 }

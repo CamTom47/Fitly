@@ -1,34 +1,20 @@
-import React, {useEffect, useState, useCallback, useContext} from "react";
-import FitlyApi from "../../Api/FitlyApi"
+import React, {useEffect, useState, useCallback} from "react";
 import WorkoutSummary  from "../WorkoutSummary/WorkoutSummary"
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import { v4 as uuid } from "uuid";
-import { useNavigate } from "react-router-dom";
 import useToggle from "../../hooks/useToggle/useToggle";
 import NewWorkoutForm from "../Forms/NewWorkoutForm/NewWorkoutForm";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { 
-    findWorkoutById, 
     findAllWorkouts, 
-    updateWorkout, 
-    selectWorkout, 
     selectWorkouts,
  } from '../../slices/workoutsSlice';
-import {
-    selectCurrentUser
-} from '../../slices/usersSlice';
+import {findAllCategories} from '../../slices/categoriesSlice';
+import {findAllCircuits} from '../../slices/circuitsSlice';
 
-import {
-    findAllCategories
-} from '../../slices/categoriesSlice';
-
-import {
-    findAllCircuits
-} from '../../slices/circuitsSlice';
-
-const WorkoutList = () => {
-    const dispatch = useDispatch();
-    const workouts = useSelector(selectWorkouts);
+const WorkoutList = (): React.JSX.Element => {
+    const dispatch = useAppDispatch();
+    const workouts = useAppSelector(selectWorkouts);
     dispatch(findAllCategories());
     dispatch(findAllCircuits());
     
@@ -46,7 +32,7 @@ const WorkoutList = () => {
     
 
     const toggleCreateForm = () => { 
-        setShowCreateWorkoutForm( showCreateWorkoutForm => !showCreateWorkoutForm)
+        setShowCreateWorkoutForm()
     }
     
     const workoutSummaryComponents = workouts.map(workout => (
