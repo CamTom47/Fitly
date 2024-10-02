@@ -18,7 +18,7 @@ export const muscleGroupsSlice = createSlice({
     extraReducers: builder => {
         builder
         .addCase(findAllMuscleGroups.fulfilled, (state, action) => {
-            state.muscleGroups = (action.payload)
+            state.muscleGroups = action.payload
         })
         .addCase(findAMuscleGroup.fulfilled, (state, action) => {
             state.selectedMuscleGroup = action.payload

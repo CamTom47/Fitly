@@ -13,7 +13,7 @@ interface FormValues {
     sets: number,
     reps: number,
     weight: number,
-    rest_period: number,
+    restPeriod: number,
     intensity: string,
     exercise: number | undefined,
 }
@@ -38,7 +38,7 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm}: FormProps ): React.
                     sets: 1,
                     reps: 1,
                     weight: 0,
-                    rest_period: 0,
+                    restPeriod: 0,
                     intensity: "Low",
                     exercise: undefined
                     }}
@@ -46,7 +46,7 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm}: FormProps ): React.
                     const errors: FormikErrors<FormValues> = {};
                     if (!values.sets){ errors.sets = 'Sets Required'}
                     if (!values.reps){ errors.reps = 'Reps Required'}
-                    if (!values.rest_period){ errors.rest_period = 'Rest_period Required'}
+                    if (!values.restPeriod){ errors.restPeriod = 'Rest Period Required'}
                     if (!values.intensity){ errors.intensity = 'Intensity Required'}
                     if (!values.exercise){ errors.exercise = 'Exercise Required'}
                     return errors
@@ -59,7 +59,7 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm}: FormProps ): React.
                             sets: values.sets,
                             reps: values.reps,
                             weight: values.weight,
-                            rest_period: values.rest_period,
+                            restPeriod: values.restPeriod,
                             intensity: values.intensity,
                             exerciseId : values.exercise,
                             workoutId: workout.id
@@ -102,11 +102,11 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm}: FormProps ): React.
                                 </div>
                             
                                 <div className="d-flex justify-content-between column-gap-3">
-                                    <label htmlFor="rest_period">Rest(Seconds):</label>
-                                    <Field type='number' name='rest_period'/>
+                                    <label htmlFor="restPeriod">Rest(Seconds):</label>
+                                    <Field type='number' name='restPeriod'/>
                                 </div>
                                 <div style={{color: "red"}}>
-                                    <ErrorMessage name='rest_period' component='div'/>
+                                    <ErrorMessage name='restPeriod' component='div'/>
                                 </div>
                                                        
                                 <div className="d-flex justify-content-between column-gap-3">

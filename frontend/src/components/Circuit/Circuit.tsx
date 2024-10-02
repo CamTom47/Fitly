@@ -10,13 +10,30 @@ import {
 } from '../../slices/circuitsSlice';
 import {selectExercises} from '../../slices/exercisesSlice';
 
+type Circuit = {
+    id: number,
+    sets: number,
+    reps: number,
+    weight: number
+    rest_period: number,
+    intensity: string,
+    exerciseId? : number,
+    workoutId? : number
+}
+
+interface Exercise {
+    id: number,
+    name: string,
+    muscle_group: number,
+    equipment_id: number
+};
 
 const Circuit = ({circuitId}): React.JSX.Element => {
     const dispatch = useAppDispatch();
     const circuits = useAppSelector(selectCircuits);
-    const circuit = circuits.filter( circuit => circuit.id === circuitId)[0];
+    const circuit = circuits.find( (circuit: Circuit) => circuit.id === circuitId);
     const exercises = useAppSelector(selectExercises);
-    let exercise = exercises.filter( exercise => exercise.id === circuit.exercise_id)[0];
+    let exercise = exercises.find( (exercise: Exercise) => exercise.id === circuit.exerciseId);
     const [showUpdateCircuitForm, setShowUpdateCircuitForm ] = useToggle();
 
 

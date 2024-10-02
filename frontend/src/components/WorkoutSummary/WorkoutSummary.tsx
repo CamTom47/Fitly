@@ -8,10 +8,14 @@ import {
     selectCategories
 } from '../../slices/categoriesSlice'
 
+interface Category {
+    id: number,
+    name: string
+}
 const WorkoutSummary = ({workout}) => {
 
     const categories = useSelector(selectCategories);
-    const category = categories.filter( category => category.id === workout.category)[0];
+    const category = categories.filter( (category: Category) => category.id === workout.category)[0];
     // Add/remove workout from favorites to allow for filtering 
     const handleFavorite = async () => {
         (workout.favorited === false)

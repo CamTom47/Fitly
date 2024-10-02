@@ -28,14 +28,20 @@ export const usersSlice = createSlice({
     reducers: {
         userLoggedOut(state) {
             state.isAuthenticated = false
-            state = initialState;
+            state.users = []
+            state.selectedUser = {}
+            state.currentUser = null
+            state.token = null
+            state.isAuthenticated = false
+            state.errorMessage = null
+            
         }
     },
     extraReducers: builder => {
         builder
         .addCase(userCheckLoggedIn.fulfilled, (state, action) => {
             state.currentUser = state.currentUser
-            state.token = state.token
+            state.token = state.token            
         })
         .addCase(userLogIn.fulfilled, (state, action) => {
             if(action.payload.token){
@@ -69,7 +75,6 @@ export const usersSlice = createSlice({
 });
 
 export const { userLoggedOut } = usersSlice.actions;
-
 
 export const userCheckLoggedIn = createAsyncThunk(
     "users/userCheckLoggedIn",

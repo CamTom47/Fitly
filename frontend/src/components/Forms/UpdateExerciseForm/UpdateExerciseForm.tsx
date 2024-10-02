@@ -20,7 +20,7 @@ interface FormProps{
     exercise: {
         id: number,
         name: string,
-        muscle_group: number
+        muscleGroup: number
     },
     equipment: {
         id: number | null,
@@ -30,7 +30,7 @@ interface FormProps{
 
 interface FormValues {
     name: string,
-    muscle_group: number,
+    muscleGroup: number,
     equipment: string
 }
 
@@ -55,13 +55,13 @@ const UpdateExerciseForm = ({toggle, exercise, equipment} : FormProps): React.JS
             <h3>Exercise Information</h3>
             <Formik
                 initialValues={{name: exercise.name, 
-                    muscle_group: exercise.muscle_group,
+                    muscleGroup: exercise.muscleGroup,
                     equipment: equipment.name
                     }}
                 validate={(values: FormValues) => {
                     const errors: FormikErrors<FormValues> = {};
                     if (!values.name){ errors.name = 'Name Required'}
-                    if (!values.muscle_group){ errors.muscle_group = 'Muscle Group Required'}
+                    if (!values.muscleGroup){ errors.muscleGroup = 'Muscle Group Required'}
                     if (!values.equipment){ errors.equipment = 'Equipment Required'}
                     return errors
                 }}
@@ -75,8 +75,8 @@ const UpdateExerciseForm = ({toggle, exercise, equipment} : FormProps): React.JS
                                     {
                                     exerciseId: exercise.id, 
                                     name: values.name,
-                                    muscle_group: Number(values.muscle_group),
-                                    equipment_id: equipmentId
+                                    muscleGroup: Number(values.muscleGroup),
+                                    equipmentId: equipmentId
                                 }))
                                 if(toggle){
                                     toggle();
@@ -94,11 +94,11 @@ const UpdateExerciseForm = ({toggle, exercise, equipment} : FormProps): React.JS
                                             <ErrorMessage name='name' component='div'/>
                                         </div>
                                         <div className="d-flex justify-content-between">
-                                            <label htmlFor="muscle_group">Muscle Group:</label>
-                                            <Field as='select' name='muscle_group'>
+                                            <label htmlFor="muscleGroup">Muscle Group:</label>
+                                            <Field as='select' name='muscleGroup'>
                                                 {muscleGroupSelections}
                                             </Field>
-                                            <ErrorMessage name='muscle_group' component='div'/>
+                                            <ErrorMessage name='muscleGroup' component='div'/>
                                         </div>
                                         <div className="d-flex justify-content-between">
                                             <label htmlFor="equipment">Equipment:</label>

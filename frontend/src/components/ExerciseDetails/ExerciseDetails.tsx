@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useCallback, useContext, useEffect, useState} from "react";
 import { Card, CardBody, CardText, CardTitle, Col, Row, Button} from "reactstrap"
 import UpdateExerciseForm from "../Forms/UpdateExerciseForm/UpdateExerciseForm";
 import {equipmentMatch} from "../../helpers/helpers";
@@ -20,13 +20,13 @@ import {
 interface Exercise {
     id: number,
     name: string,
-    muscle_group: number,
-    equipment_id: number
+    muscleGroup: number,
+    equipmentId: number
 };
 
 interface MuscleGroup {
-    id?: number,
-    name: string,
+    id: number,
+    name: string
 };
 
 interface Equipment { 
@@ -41,21 +41,21 @@ interface ExerciseDetailProps {
 const initial_equipment_state : Equipment = {
     id: null,
     name: null
-}
+};
 
 const ExerciseDetails = ({exerciseId}: ExerciseDetailProps) : React.JSX.Element => {
     const dispatch = useAppDispatch();
     const exercises = useAppSelector(selectExercises);
-    const exercise : Exercise = exercises.filter( (exercise : Exercise) => exercise.id === exerciseId)[0];
+    const exercise : Exercise = exercises.find( (exercise : Exercise) => exercise.id === exerciseId);
     const muscleGroups = useAppSelector(selectMuscleGroups);
-    const muscleGroup : MuscleGroup = muscleGroups.find( (muscleGroup: MuscleGroup) => muscleGroup.id === exercise.muscle_group);
+    const muscleGroup : MuscleGroup = muscleGroups.find((muscleGroup: MuscleGroup) => muscleGroup.id === exercise.muscleGroup);
     const [toggleExerciseUpdateForm, setToggleExerciseUpdateForm] = useState(false);
     const [equipment, setEquipment] = useState(initial_equipment_state);
-    
+
     //use the exercise equipment id to match a the name of a the respective equipment from the database.
     useEffect(() => {
         const matchEquipment = () => {
-            equipmentMatch(exercise.equipment_id)
+            equipmentMatch(exercise.equipmentId)
             .then( data =>  {
                 setEquipment(data)
             })

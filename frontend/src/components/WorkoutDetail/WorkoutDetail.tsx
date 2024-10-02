@@ -37,15 +37,20 @@ interface Workout{
     favorited: boolean,
 }
 
+interface Category{
+    id: number,
+    name: string
+}
+
 const WorkoutDetail = (): React.JSX.Element => {
     const dispatch = useAppDispatch();
     let navigate = useNavigate();
     const workoutId = useParams().workout_id;
     const workouts = useAppSelector(selectWorkouts);
-    const workout = workouts.filter( workout => workout.id === Number(workoutId))[0];
+    const workout = workouts.find( (workout: Workout) => workout.id === Number(workoutId));
     const circuits = useAppSelector(selectCircuits);
     const categories = useAppSelector(selectCategories);
-    const category = categories.filter( category => category.id === workout.category)[0];
+    const category = categories.find( (category: Category) => category.id === workout.category);
     
     const [showNewCircuitForm, setShowNewCircuitForm] = useState(false);
     const [showWorkoutUpdateForm, setShowWorkoutUpdateForm] = useState(false);

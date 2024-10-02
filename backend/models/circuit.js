@@ -27,10 +27,10 @@ class Circuit {
                     sets,
                     reps,
                     weight,
-                    rest_period,
+                    rest_period AS restPeriod,
                     intensity,
-                    cw.workout_id AS workout_id,
-                    ce.exercise_id AS exercise_id
+                    cw.workout_id AS workoutId,
+                    ce.exercise_id AS exerciseId
                     FROM circuits AS c
                     JOIN circuits_workouts AS cw
                     ON c.id= cw.circuit_id
@@ -62,9 +62,9 @@ class Circuit {
                     circuits.sets,
                     circuits.reps,
                     circuits.weight,
-                    circuits.rest_period,
+                    circuits.rest_period AS restPeriod,
                     circuits.intensity,
-                    exercises.id AS exercise_id,
+                    exercises.id AS exerciseId,
             FROM circuits
             RIGHT JOIN circuits_exercises 
             ON circuits.id = circuits_exercises.circuit_id

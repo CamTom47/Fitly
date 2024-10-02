@@ -16,12 +16,12 @@ type Circuit = {
     sets: number,
     reps: number,
     weight: number
-    rest_period: number,
+    restPeriod: number,
     intensity: string,
     exerciseId? : number,
     workoutId? : number
-
 }
+
 
 export const circuitsSlice = createSlice({
     name: "circuits",
@@ -84,7 +84,7 @@ export const addCircuit = createAsyncThunk(
                     sets,
                     reps,
                     weight,
-                    rest_period,
+                    restPeriod,
                     intensity,
                     exerciseId,
                     workoutId
@@ -99,7 +99,7 @@ export const addCircuit = createAsyncThunk(
                 circuitId: circuit.id
             })
 
-            return {...circuit, exercise_id: exerciseId};
+            return {...circuit, exerciseId};
         }
         catch (err){
             return err
@@ -120,7 +120,7 @@ export const updateCircuit = createAsyncThunk(
                 sets,
                 reps,
                 weight,
-                rest_period,
+                restPeriod,
                 intensity,
                 exerciseId                
             } = data
@@ -129,7 +129,7 @@ export const updateCircuit = createAsyncThunk(
                                                                     sets,
                                                                     reps,
                                                                     weight,
-                                                                    rest_period,
+                                                                    restPeriod,
                                                                     intensity
                                                                 });
 

@@ -14,7 +14,7 @@ interface FormValues {
     sets: number,
     reps: number,
     weight: number,
-    rest_period: number,
+    restPeriod: number,
     intensity: string,
     exercise: number | undefined,
 }
@@ -25,7 +25,7 @@ interface FormProps{
         sets: number,
         reps: number,
         weight: number,
-        rest_period: number,
+        restPeriod: number,
         intensity: string,
     },
     toggleShowUpdateCircuitForm: (() => void),
@@ -38,7 +38,7 @@ interface Circuit{
     sets: number,
     reps: number,
     weight: number,
-    rest_period: number,
+    restPeriod: number,
     intensity: string,
     exercise: number | undefined,
 }
@@ -59,7 +59,7 @@ const UpdateCircuitForm = ({toggleShowUpdateCircuitForm, circuit, exercise} : Fo
                     sets: circuit.sets,
                     reps: circuit.reps,
                     weight: circuit.weight,
-                    rest_period: circuit.rest_period,
+                    restPeriod: circuit.restPeriod,
                     intensity: circuit.intensity,
                     exercise: exercise.id
                     }}
@@ -67,7 +67,7 @@ const UpdateCircuitForm = ({toggleShowUpdateCircuitForm, circuit, exercise} : Fo
                     const errors: FormikErrors<FormValues> = {};
                     if (!values.sets){ errors.sets = 'Sets Required'}
                     if (!values.reps){ errors.reps = 'Reps Required'}
-                    if (!values.rest_period){ errors.rest_period = 'Rest_period Required'}
+                    if (!values.restPeriod){ errors.restPeriod = 'restPeriod Required'}
                     if (!values.intensity){ errors.intensity = 'Intensity Required'}
                     if (!values.exercise){ errors.exercise = 'Exercise Required'}
                     return errors
@@ -80,7 +80,7 @@ const UpdateCircuitForm = ({toggleShowUpdateCircuitForm, circuit, exercise} : Fo
                             sets: values.sets,
                             reps: values.reps,
                             weight: values.weight,
-                            rest_period: values.rest_period,
+                            restPeriod: values.restPeriod,
                             intensity: values.intensity,
                             exerciseId: values.exercise
                         }))
@@ -118,11 +118,11 @@ const UpdateCircuitForm = ({toggleShowUpdateCircuitForm, circuit, exercise} : Fo
                                     </div>
                                     
                                     <div className="d-flex justify-content-between column-gap-3">
-                                        <label htmlFor="rest_period">Rest(Seconds):</label>
-                                        <Field type='number' name='rest_period'/>
+                                        <label htmlFor="restPeriod">Rest(Seconds):</label>
+                                        <Field type='number' name='restPeriod'/>
                                     </div>
                                     <div style={{color: "red"}}>
-                                        <ErrorMessage name='rest_period' component='div'/>
+                                        <ErrorMessage name='restPeriod' component='div'/>
                                     </div>
                                                             
                                     <div className="d-flex justify-content-between column-gap-3">

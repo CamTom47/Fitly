@@ -21,7 +21,7 @@ import { addExercise } from "../../slices/exercisesSlice";
 interface Equipment {
     id?: number,
     name: string,
-    user_id: number,
+    userId: number,
     systemDefault: boolean
 };
 
@@ -57,8 +57,8 @@ const WgerExercise = ({exercise, key}): React.JSX.Element => {
                 if(exercise.equipment.length === 0){
                     dispatch(addExercise({
                         "name": exercise.englishExercise.name,
-                        "muscle_group": exercise.muscleGroupId,
-                        "equipment_id": 1
+                        "muscleGroup": exercise.muscleGroupId,
+                        "equipmentId": 1
                     }))
 
                 } else {
@@ -76,23 +76,23 @@ const WgerExercise = ({exercise, key}): React.JSX.Element => {
                     if(equipmentCheck) {
                         dispatch(addExercise({
                             "name": exercise.englishExercise.name,
-                            "muscle_group": exercise.muscleGroupId,
-                            "equipment_id": exercise.equipment[0].id
+                            "muscleGroup": exercise.muscleGroupId,
+                            "equipmentId": exercise.equipment[0].id
                         }))
                     } else {
                         let newEquipment: {
                             id: number,
                             name: string,
-                            user_id: number
+                            userId: number
                         } = await FitlyApi.createEquipment({
-                            "user_id": currentUser.id,
+                            "userId": currentUser.id,
                             "name": exercise.equipment[0].name
                         })
     
                         dispatch(addExercise({
                             "name": exercise.englishExercise.name,
-                            "muscle_group": exercise.muscleGroupId,
-                            "equipment_id": newEquipment.id
+                            "muscleGroup": exercise.muscleGroupId,
+                            "equipmentId": newEquipment.id
                         }))
                     }
                     

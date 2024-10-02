@@ -20,7 +20,7 @@ interface FormProps{
 
 interface FormValues {
     name: string,
-    muscle_group: number,
+    muscleGroup: number,
     equipment: string
 }
 
@@ -44,13 +44,13 @@ const NewExerciseForm = ({toggle} : FormProps): React.JSX.Element => {
                 <h3>New Exercise Form</h3>
                 <Formik
                     initialValues={{name: "", 
-                        muscle_group: 1,
+                        muscleGroup: 1,
                         equipment: ""
                         }}
                     validate={(values: FormValues) => {
                         const errors: FormikErrors<FormValues> = {};
                         if (!values.name){ errors.name = 'Name Required'}
-                        if (!values.muscle_group){ errors.muscle_group = 'Muscle Group Required'}
+                        if (!values.muscleGroup){ errors.muscleGroup = 'Muscle Group Required'}
                         if (!values.equipment){ errors.equipment = 'Equipment Required'}
                         return errors
                     }}
@@ -63,8 +63,8 @@ const NewExerciseForm = ({toggle} : FormProps): React.JSX.Element => {
 
                             dispatch(addExercise({
                                 name: values.name,
-                                muscle_group: Number(values.muscle_group),
-                                equipment_id: equipmentId
+                                muscleGroup: Number(values.muscleGroup),
+                                equipmentId
                             }))
                             if(toggle){
                                 toggle();
@@ -83,13 +83,13 @@ const NewExerciseForm = ({toggle} : FormProps): React.JSX.Element => {
                                             <ErrorMessage name='name' component='div'/>
                                 </div>
                                         <div className="d-flex justify-content-between column-gap-3">
-                                            <label htmlFor="muscle_group">Muscle Group:</label>
-                                            <Field as='select' name='muscle_group'>
+                                            <label htmlFor="muscleGroup">Muscle Group:</label>
+                                            <Field as='select' name='muscleGroup'>
                                                 {muscleGroupComponents}
                                             </Field>
                                         </div>
                                         <div style={{color: "red"}}>
-                                            <ErrorMessage name='muscle_group' component='div'/>
+                                            <ErrorMessage name='muscleGroup' component='div'/>
                                 </div>
                                         <div className="d-flex justify-content-between column-gap-3">
                                             <label htmlFor="equipment">Equipment:</label>
