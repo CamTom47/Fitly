@@ -14,20 +14,20 @@
     }
  */
 
-const categoryMap = {
-    id: "id",
-    userId: "user_id",
-    name: "name"
-}
-
-const categoryMapper = (data) => {
-    let categoryKeyValues = Object.entries(categoryMap)
-    let newObj = {}
-
-    for(let [k,v] of categoryKeyValues){
-        if (data[k]) newObj[v] = data[k]
+    const categoryMap = {
+        id: "id",
+        userId: "user_id",
+        name: "name"
     }
-    return newObj
-}
-
-module.exports = {categoryMapper}
+    
+    const categoryMapper = (data) => {
+        let categoryKeyValues = Object.entries(categoryMap)
+        let newObj = {}
+    
+        for(let [k,v] of categoryKeyValues){
+            if (data[k]) newObj[v] = data[k]
+        }
+        return newObj
+    }
+    
+    module.exports = {categoryMapper}
