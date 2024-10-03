@@ -22,7 +22,7 @@ class Category {
 
     static async findAll(user_id) {
         const result = await db.query(`
-            SELECT id, user_id, name
+            SELECT id, user_id AS "userId", name
             FROM categories
             WHERE systemDefault = $1 OR user_id = $2`, [true, user_id])
 
@@ -40,7 +40,7 @@ class Category {
 
     static async find(category_id) {
         const result = await db.query(`
-            SELECT id, user_id, name
+            SELECT id, user_id AS "userId", name
             FROM categories
             WHERE id = $1`,
         [category_id])
@@ -72,7 +72,7 @@ class Category {
     
     static async update(id, data){
         const category = await db.query(`
-            SELECT user_id, name
+            SELECT user_id AS "userId", name
             FROM categories
             WHERE id = $1`, [id]);
 

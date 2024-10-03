@@ -7,6 +7,7 @@ const { User } = require('../models/user');
 const jsonschema= require('jsonschema')
 const equipmentNewSchema = require('../schemas/equipment/equipmentNew.json');
 const equipmentUpdateSchema = require('../schemas/equipment/equipmentUpdate.json');
+const { equipmentMapper } = require('../helpers/equipmentMapper');
 
 
 const { BadRequestError } = require('../ExpressError');
@@ -23,10 +24,7 @@ const { ensureLoggedIn } = require('../middleware/auth');
 router.get('/', ensureLoggedIn,  async function(req, res, next) {
     try{
         const equipments = await Equipment.findAll(res.locals.user.id);
-
         return res.json({equipments});
-
-
     } catch(err){
         return next(err);
     }
@@ -42,13 +40,9 @@ router.get('/', ensureLoggedIn,  async function(req, res, next) {
 
 router.get('/:equipment_id', ensureLoggedIn, async function(req, res, next){
     try{
-
         const equipment_id = req.params.equipment_id;
-        
         const equipment = await Equipment.find(+equipment_id, res.locals.user.id);
-
         return res.json({equipment});
-
     } catch(err){
         return next(err)
     }
@@ -67,13 +61,16 @@ router.get('/:equipment_id', ensureLoggedIn, async function(req, res, next){
 
 router.post('/', ensureLoggedIn, async function(req, res, next){
     try{
-        const validator = jsonschema.validate(req.body, equipmentNewSchema);
+        console.log(req.body)
+        const data = equipmentMapper(req.body);
+        console.log(data)
+        const validator = jsonschema.validate(data, equipmentNewSchema);
         if (!validator.valid){
             const errs = validator.errors.map(err => err.stack);
             throw new BadRequestError(errs);
         }
 
-        const equipment = await Equipment.add(req.body);
+        const equipment = await Equipment.add(data);
         return res.status(201).json({equipment});
         
     } catch(err){

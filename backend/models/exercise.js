@@ -23,8 +23,8 @@ class Exercise {
         let query = `
             SELECT  exercises.id,
                     exercises.name,
-                    exercises.muscle_group,
-                    exercises_equipments.equipment_id
+                    exercises.muscle_group AS "muscleGroup",
+                    exercises_equipments.equipment_id AS "equipmentId"
             FROM exercises
             JOIN users_exercises
             ON exercises.id = users_exercises.exercise_id
@@ -62,8 +62,8 @@ class Exercise {
         const result = await db.query(`
             SELECT  exercises.id,
                     exercises.name,
-                    exercises.muscle_group,
-                    exercises_equipments.equipment_id
+                    exercises.muscle_group AS "muscleGroup",
+                    exercises_equipments.equipment_id AS "equipmentId"
             FROM exercises
             JOIN users_exercises 
             ON exercises.id = users_exercises.exercise_id
@@ -93,7 +93,7 @@ class Exercise {
             INSERT INTO exercises
             (name, muscle_group)
             VALUES ($1, $2)
-            RETURNING id, name, muscle_group`, 
+            RETURNING id, name, muscle_group AS "muscleGroup"`, 
             [name, muscle_group]);
 
             const exercise = result.rows[0];
@@ -152,7 +152,7 @@ class Exercise {
         const querySql = `UPDATE exercises
             SET ${ setCols }
             WHERE id = ${exerciseIdVarIdx}
-            RETURNING id, name, muscle_group`;
+            RETURNING id, name, muscle_group AS "muscleGroup"`;
 
         const result = await db.query(querySql, [...values, id]);
 

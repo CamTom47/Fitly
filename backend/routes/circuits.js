@@ -5,11 +5,13 @@ const { User } = require('../models/user');
  
 
 const jsonschema = require('jsonschema')
-const newCircuitSchema = require('../schemas/ciruit/circuitNew.json');
-const updatedCircuitSchema = require('../schemas/ciruit/circuitUpdate.json');
+const newCircuitSchema = require('../schemas/circuit/circuitNew.json');
+const updatedCircuitSchema = require('../schemas/circuit/circuitUpdate.json');
 
 const { BadRequestError } = require('../ExpressError');
 const { ensureLoggedIn } = require('../middleware/auth');
+const { circuitMapper } = require('../helpers/circuitMapper')
+
 
 /**
  * GET /circuits => {circuits}
@@ -54,13 +56,14 @@ router.get('/:circuit_id', ensureLoggedIn, async function(req, res, next){
 
 router.post('/', ensureLoggedIn, async function(req, res, next){
     try{
-        const validator = jsonschema.validate(req.body, newCircuitSchema);
+        const data = circuitMapper(req.body);
+        const validator = jsonschema.validate(data, newCircuitSchema);
         if(!validator.valid){
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs);
         }
         
-        const circuit = await Circuit.add(req.body);
+        const circuit = await Circuit.add(data);
         return res.status(201).json({circuit});
 
     } catch(err){
@@ -76,14 +79,15 @@ router.post('/', ensureLoggedIn, async function(req, res, next){
 
 router.patch('/:circuit_id', ensureLoggedIn, async function(req, res, next) {
     try{
-        const validator = jsonschema.validate(req.body, updatedCircuitSchema);
+        const data = circuitMapper(req.body)
+        const validator = jsonschema.validate(data, updatedCircuitSchema);
         if(!validator.valid){
             const errs = validator.errors.map(e => e.stack)
             throw new BadRequestError(errs);
         }
 
         const id = req.params.circuit_id;
-        const updatedCircuit = await Circuit.update(id, req.body);
+        const updatedCircuit = await Circuit.update(id, data);
 
         return res.json({updatedCircuit});
 
