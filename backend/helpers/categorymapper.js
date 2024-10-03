@@ -30,4 +30,4 @@
         return newObj
     }
     
-    module.exports = {categoryMapper}
+    module.exports = categoryMapper
