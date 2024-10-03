@@ -14,12 +14,11 @@
     }
  */
 
-    const categoryMap = {
-        id: "id",
-        userId: "user_id",
-        name: "name"
-    }
-    
+const categoryMap = {
+    id: "id",
+    userId: "user_id",
+    name: "name"
+}
     const categoryMapper = (data) => {
         let categoryKeyValues = Object.entries(categoryMap)
         let newObj = {}
@@ -30,4 +29,5 @@
         return newObj
     }
     
-    module.exports = {categoryMapper}
+module.exports = {categoryMapper}
+
