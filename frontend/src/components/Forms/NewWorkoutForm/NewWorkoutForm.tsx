@@ -19,7 +19,7 @@ interface FormValues {
 
 interface Category {
     id: number,
-    user_id: number
+    userId: number
     name: string,
     systemdefault: boolean
 };
@@ -55,8 +55,9 @@ const NewWorkoutForm = ({toggleCreateForm} : FormProps): React.JSX.Element => {
                     onSubmit={(values : FormValues, { setSubmitting } : FormikHelpers<FormValues>) => {
                         setTimeout( async () => {
                             dispatch(addWorkout({
-                                ...values,
-                                user_id: currentUser.id,
+                                name: values.name,
+                                category: Number(values.category),
+                                userId: currentUser.id,
                                 favorited: false
                             }))
                             setSubmitting(false);

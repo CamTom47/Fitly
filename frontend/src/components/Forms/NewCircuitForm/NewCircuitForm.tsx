@@ -61,7 +61,7 @@ const NewCircuitForm = ({workout, toggleShowNewCircuitForm}: FormProps ): React.
                             weight: values.weight,
                             restPeriod: values.restPeriod,
                             intensity: values.intensity,
-                            exerciseId : values.exercise,
+                            exerciseId : Number(values.exercise),
                             workoutId: workout.id
                         }))
 

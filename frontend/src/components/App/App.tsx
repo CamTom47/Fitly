@@ -16,47 +16,18 @@ import NotFound from "../NotFound/NotFound";
 import "./App.css"
 import { 
   selectToken,
-  userCheckLoggedIn,
   selectAuthenticated,
   selectCurrentUser
 } from '../../slices/usersSlice';
 
-import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks'
+import { useAppSelector } from '../../hooks/reduxHooks'
 
-function App(): React.JSX.Element {
-  const dispatch = useAppDispatch();
-  
+function App(): React.JSX.Element {  
   const [isLoading, setIsLoading] = useState(false);
   const token = useAppSelector(selectToken);
-  if(token){
-    FitlyApi.token = token
-  }
-  const currentUser = useAppSelector(selectCurrentUser);
+  if(token) FitlyApi.token = token
   const isAuthenticated = useAppSelector(selectAuthenticated);
-   
-  
-  /** May be able to remove this code. It was used to check that a user was logged in and set the Fitly.token in the reducer, but there were issues with the order in which the reducers were being called. 
-   * Fixed but setting FitlyApi.token upon render, assuming the token was found in localStorage to being with.
-   */
-  // const checkLoggedIn = useCallback( async () => {
-  //   setIsLoading(true)
-  //   await dispatch(userCheckLoggedIn());
-  //   setIsLoading(false)
-  // } , [isAuthenticated]);
-
-  // useEffect(() => { 
-  //   checkLoggedIn()
-
-  // } , [checkLoggedIn])
-  
-    console.debug(
-      "App",
-      "currentUser", currentUser,
-      "token=", token
-    )
     
-  //Find current user using local storage "token"
-
   if(isLoading){
     return <LoadingComponent/>
   } else { 

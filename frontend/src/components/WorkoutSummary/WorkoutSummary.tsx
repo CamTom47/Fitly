@@ -15,7 +15,7 @@ interface Category {
 const WorkoutSummary = ({workout}) => {
 
     const categories = useSelector(selectCategories);
-    const category = categories.filter( (category: Category) => category.id === workout.category)[0];
+    const category = categories.find( (category: Category) => category.id === workout.category);
     // Add/remove workout from favorites to allow for filtering 
     const handleFavorite = async () => {
         (workout.favorited === false)
@@ -36,7 +36,6 @@ const WorkoutSummary = ({workout}) => {
             </CardBody>
         </Card>
     )
-
 }
 
 export default WorkoutSummary;

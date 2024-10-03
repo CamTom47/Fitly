@@ -17,7 +17,6 @@ export const exerciseSlice = createSlice({
     extraReducers: builder => {
         builder
         .addCase(findAllExercises.fulfilled, (state, action) => {
-            console.log(action.payload)
             state.exercises = action.payload
         })
         .addCase(findAExercise.fulfilled, (state, action) => {
@@ -30,7 +29,7 @@ export const exerciseSlice = createSlice({
             state.exercises = [...(state.exercises.filter( (exercise : Exercise) => exercise.id !== action.payload.id)), action.payload]
         })
         .addCase(deleteExercise.fulfilled, (state, action) => {
-            state.exercises = state.exercises.filter( (exercise : Exercise) => exercise.id !== action.payload.exerciseId)
+            state.exercises = state.exercises.filter( (exercise : Exercise) => exercise.id !== action.payload)
         })
     }
 })
@@ -43,7 +42,7 @@ interface Exercise {
     id?: number,
     name: string,
     muscleGroup: number,
-    equipmentId: number
+    equipmentId?: number
 };
 
 export const findAllExercises = createAsyncThunk(
@@ -75,6 +74,7 @@ export const addExercise = createAsyncThunk(
     "exercises/exerciseAdded",
     async (data : Exercise) => {
         try{
+            console.log(data)
             const exercise = await FitlyApi.createExercise(data);
             return exercise
         }

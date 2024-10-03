@@ -12,7 +12,7 @@ const initialState : WorkoutState = {
 
 interface Workout {
     id? : number,
-    user_id : number,
+    userId : number,
     name : string,
     category : number,
     favorited : boolean

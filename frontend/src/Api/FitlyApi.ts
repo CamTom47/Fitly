@@ -133,6 +133,7 @@ class FitlyApi {
          */
 
         static async createWorkout<Promise>(data : {}) : Promise{
+            console.log(data)
             let res = await this.request(`workouts/`, data, 'post');
             return res.newWorkout;
         }

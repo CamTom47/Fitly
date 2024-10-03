@@ -41,6 +41,7 @@ export const selectEquipment = state => state.equipments.selectedEquipment;
 
 interface Equipments {
     id? : number,
+    userId: number,
     name: string
 }
 export const findAllEquipments = createAsyncThunk(

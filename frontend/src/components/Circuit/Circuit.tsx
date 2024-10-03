@@ -10,7 +10,7 @@ import {
 } from '../../slices/circuitsSlice';
 import {selectExercises} from '../../slices/exercisesSlice';
 
-type Circuit = {
+interface Circuit {
     id: number,
     sets: number,
     reps: number,
@@ -33,9 +33,7 @@ const Circuit = ({circuitId}): React.JSX.Element => {
     const circuits = useAppSelector(selectCircuits);
     const circuit = circuits.find( (circuit: Circuit) => circuit.id === circuitId);
     const exercises = useAppSelector(selectExercises);
-    console.log(circuit)
-    console.log(exercises)
-    let exercise = exercises.find( (exercise: Exercise) => exercise.id === circuit.exerciseId);
+    const exercise = exercises.find( (exercise: Exercise) => exercise.id === circuit.exerciseId);
     const [showUpdateCircuitForm, setShowUpdateCircuitForm ] = useToggle();
 
 

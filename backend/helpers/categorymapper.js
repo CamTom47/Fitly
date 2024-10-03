@@ -14,14 +14,14 @@
     }
  */
 
-const categorymap = {
+const categoryMap = {
     id: "id",
     userId: "user_id",
     name: "name"
 }
 
 const categoryMapper = (data) => {
-    let categoryKeyValues = Object.entries(categorymap)
+    let categoryKeyValues = Object.entries(categoryMap)
     let newObj = {}
 
     for(let [k,v] of categoryKeyValues){

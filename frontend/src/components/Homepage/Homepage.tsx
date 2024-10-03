@@ -8,19 +8,19 @@ const Homepage = (): React.JSX.Element  => {
     
     const currentUser = useAppSelector(selectCurrentUser);
 
-    if(!currentUser) {
-        return(
+    return !currentUser ? 
+        (
             <div className="d-flex justify-content-center m-5 ">
             <Card className="d-flex flex-column align-items-center p-5">
                 <LoginForm></LoginForm>
             </Card>
         </div>
-    )
-    } else {
-        return (
+        ) 
+    :
+        (
             <h1>User Dashboard In Progress</h1>
         )
-    }
+    
 }
 
 export default Homepage;

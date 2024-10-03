@@ -27,6 +27,7 @@ interface FormProps{
         weight: number,
         restPeriod: number,
         intensity: string,
+        workoutId: number
     },
     toggleShowUpdateCircuitForm: (() => void),
     exercise: {
@@ -40,12 +41,13 @@ interface Circuit{
     weight: number,
     restPeriod: number,
     intensity: string,
-    exercise: number | undefined,
+    exercise: number | undefined
 }
 
 const UpdateCircuitForm = ({toggleShowUpdateCircuitForm, circuit, exercise} : FormProps): React.JSX.Element => {
     const dispatch = useAppDispatch();    
     const exercises = useAppSelector(selectExercises)
+    console.log(circuit)
 
     const exerciseOptionComponents = exercises.map(  exercise => (
         <option value={exercise.id}>{exercise.name}</option>
@@ -82,7 +84,8 @@ const UpdateCircuitForm = ({toggleShowUpdateCircuitForm, circuit, exercise} : Fo
                             weight: values.weight,
                             restPeriod: values.restPeriod,
                             intensity: values.intensity,
-                            exerciseId: values.exercise
+                            exerciseId: Number(values.exercise),
+                            workoutId: circuit.workoutId
                         }))
                         
                         toggleShowUpdateCircuitForm();

@@ -16,7 +16,7 @@ interface FormValues {
 
 interface Category {
     id: number,
-    user_id: number
+    userId: number
     name: string,
     systemdefault: boolean
 };
@@ -25,7 +25,7 @@ interface FormProps{
     workout: {
         id: number,
         name: string,
-        muscle_group: number
+        muscleGroup: number
     }
     handleToggle? : (() => void) | undefined
 }
@@ -59,7 +59,7 @@ const UpdateWorkoutForm = ({workout, handleToggle}: FormProps): React.JSX.Elemen
                                 workoutId: workout.id,
                                 data: {
                                 name: values.name,
-                                category: values.category}
+                                category: Number(values.category)}
                             }))
                             setSubmitting(false);
                             if(handleToggle){
