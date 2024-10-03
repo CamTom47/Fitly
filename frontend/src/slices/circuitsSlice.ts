@@ -99,7 +99,7 @@ export const addCircuit = createAsyncThunk(
                 circuitId: circuit.id
             })
 
-            return {...circuit, exerciseId};
+            return {...circuit, exerciseId, workoutId};
         }
         catch (err){
             return err
@@ -107,7 +107,8 @@ export const addCircuit = createAsyncThunk(
     }
 )
 interface UpdateCircuit extends Circuit{
-    circuitId : number
+    circuitId : number,
+    workoutId : number
 };
 
 export const updateCircuit = createAsyncThunk(
@@ -115,6 +116,8 @@ export const updateCircuit = createAsyncThunk(
     async (data : UpdateCircuit
     ) => {
         try{
+
+            console.log(data);
             const { 
                 circuitId,
                 sets,
@@ -122,7 +125,8 @@ export const updateCircuit = createAsyncThunk(
                 weight,
                 restPeriod,
                 intensity,
-                exerciseId                
+                exerciseId,
+                workoutId             
             } = data
 
             let circuit : Circuit = await FitlyApi.updateCircuit(circuitId, {
@@ -135,7 +139,7 @@ export const updateCircuit = createAsyncThunk(
 
             await FitlyApi.updateExerciseCircuit({circuitId, exerciseId});
             
-            return {...circuit, exercise_id: exerciseId};
+            return {...circuit, exerciseId, workoutId};
         }
         catch (err){
             return err

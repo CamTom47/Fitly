@@ -42,31 +42,31 @@ interface Category{
     name: string
 }
 
+interface CircuitType {
+    id: number,
+    sets: number,
+    reps: number,
+    weight: number
+    rest_period: number,
+    intensity: string,
+    exerciseId? : number,
+    workoutId? : number
+}
+
 const WorkoutDetail = (): React.JSX.Element => {
     const dispatch = useAppDispatch();
     let navigate = useNavigate();
     const workoutId = useParams().workout_id;
     const workouts = useAppSelector(selectWorkouts);
     const workout = workouts.find( (workout: Workout) => workout.id === Number(workoutId));
-    const circuits = useAppSelector(selectCircuits);
+    const circuits = useAppSelector(selectCircuits).filter( (circuit: CircuitType) => circuit.workoutId === workout.id);
     const categories = useAppSelector(selectCategories);
     const category = categories.find( (category: Category) => category.id === workout.category);
-    
     const [showNewCircuitForm, setShowNewCircuitForm] = useState(false);
     const [showWorkoutUpdateForm, setShowWorkoutUpdateForm] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-
-    const getCircuits = useCallback(() => {
-        dispatch(findAllCircuits())
-    } , [])
-
-    useEffect(() => {
-        getCircuits()
-    } , [getCircuits])
-
-
-   //remove a workout for the fitly database
+    //remove a workout for the fitly database
    const removeWorkout = () => {
         dispatch(deleteWorkout(Number(workoutId)))    
         navigate('/workouts')

@@ -59,7 +59,7 @@ const NewExerciseForm = ({toggle} : FormProps): React.JSX.Element => {
                         setTimeout( async () => {
                             setSubmitting(false);
 
-                            let equipmentId = await equipmentCheckForExerciseUpdate(values.equipment, currentUser.id);
+                            const equipmentId = await equipmentCheckForExerciseUpdate(values.equipment, currentUser.id);
 
                             dispatch(addExercise({
                                 name: values.name,

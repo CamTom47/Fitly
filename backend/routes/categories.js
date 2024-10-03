@@ -8,8 +8,7 @@ const categoryUpdateSchema = require('../schemas/categories/categoryUpdate.json'
 
 const { ensureLoggedIn } = require('../middleware/auth');
 const { BadRequestError } = require('../ExpressError');
-
-const {categoryMapper} = require('../helpers/categoryMapper')
+const { categoryMapper } = require('../helpers/categoryMapper');
 
 
 /**
@@ -22,12 +21,8 @@ const {categoryMapper} = require('../helpers/categoryMapper')
 
 router.get('/', ensureLoggedIn,  async function(req, res, next) {
     try{
-
         const categories = await Category.findAll(res.locals.user.id);
-
         return res.json({categories});
-
-
     } catch(err){
         return next(err);
     }
@@ -46,9 +41,7 @@ try{
 
     let category_id = req.params.category_id;
     const category = await Category.find(category_id);
-
     return res.json({category});
-
 } catch(err){
     return next(err)
 }

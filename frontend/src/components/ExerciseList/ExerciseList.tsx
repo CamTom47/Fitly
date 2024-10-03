@@ -17,18 +17,18 @@ import {
     findAllExercises
 } from '../../slices/exercisesSlice'
 
-import {
-    findAllMuscleGroups,
-} from '../../slices/muscleGroupsSlice';
+import { findAllMuscleGroups } from '../../slices/muscleGroupsSlice';
+import { findAllEquipments } from '../../slices/equipmentsSlice';
 import useToggle from "../../hooks/useToggle/useToggle";
 
 interface WgerExercises {
     request: {
         responseURL: string | null;
-    }, 
-    results: WgerExerciseObject[],
-    previous: string,
-    next: string;
+    }, data:{
+        results: WgerExerciseObject[],
+        previous: string,
+        next: string;
+    }
 }
 
 interface WgerExerciseObject {
@@ -39,8 +39,6 @@ interface WgerExerciseObject {
 
 const ExerciseList = (): React.JSX.Element => {
     const dispatch = useAppDispatch();
-    dispatch(findAllMuscleGroups());
-    
     const userExercises = useAppSelector(selectExercises);
     const [wgerExercises, setWgerExercises] = useState<WgerExerciseObject[]>([]);
     const [showUserExercises, toggleShowUserExercises] = useToggle(true);
@@ -50,7 +48,16 @@ const ExerciseList = (): React.JSX.Element => {
     const [nextWgerCall, setNextWgerCall] = useState<string | undefined>(undefined);
     const [previousWgerCall, setPreviousWgerCall] = useState<string | undefined>(undefined);
     const [currentWgerCall, setCurrentWgerCall] = useState<string | null>(null);
+    
+    const getExerciseListInfo = useCallback( async () => { 
+        dispatch(findAllMuscleGroups());
+        dispatch(findAllEquipments());
+    }, []);
 
+    useEffect(() => {
+        getExerciseListInfo()
+    }, [getExerciseListInfo])
+    
     const getExercises = useCallback(async () => {
         toggleIsLoading();
             if(showUserExercises === true){
@@ -63,19 +70,19 @@ const ExerciseList = (): React.JSX.Element => {
             } else {
                 try{
                     //Get a list of exercises not currently in the data base from the Wger Api    
-                    if(currentWgerCall === undefined){
-                        const exercises: WgerExercises = await WgerApi.getAllExercises();
+                    if(currentWgerCall === null){
+                        const exercises = await WgerApi.getAllExercises();
                         setCurrentWgerCall(exercises.request.responseURL)
-                        setPreviousWgerCall(exercises.previous);
-                        setNextWgerCall(exercises.next);
-                        setWgerExercises(exercises.results);
+                        setPreviousWgerCall(exercises.data.previous);
+                        setNextWgerCall(exercises.data.next);
+                        setWgerExercises(exercises.data.results);
 
                     } else {
-                        const exercises: WgerExercises= await WgerApi.getAllExercises(nextWgerCall)
+                        const exercises = await WgerApi.getAllExercises(nextWgerCall)
                         setCurrentWgerCall(exercises.request.responseURL)
-                        setPreviousWgerCall(exercises.previous);
-                        setNextWgerCall(exercises.next);
-                        setWgerExercises(exercises.results);
+                        setPreviousWgerCall(exercises.data.previous);
+                        setNextWgerCall(exercises.data.next);
+                        setWgerExercises(exercises.data.results);
                     }
                     
                 } catch(err){
@@ -83,7 +90,7 @@ const ExerciseList = (): React.JSX.Element => {
                 }
             }
             toggleIsLoading();
-        }, []);
+        }, [showUserExercises, showWgerExercises]);
 
      
 
@@ -91,7 +98,7 @@ const ExerciseList = (): React.JSX.Element => {
     // Upon component mounting, get userExercises state from FitlyApi and display on page.
     useEffect(() => { 
         getExercises();
-    }, [showUserExercises, showWgerExercises]);
+    }, [getExercises]);
 
     //Map through userExercises state and create an exercise component from each item
     const userExerciseComponents = userExercises.map(e => (
@@ -126,10 +133,10 @@ const ExerciseList = (): React.JSX.Element => {
     const getNextExercises = async () => {
         if(nextWgerCall !== null) {
             try{
-                const exercises: WgerExercises = await WgerApi.getAllExercises(nextWgerCall)
-                setPreviousWgerCall(exercises.previous);
-                setNextWgerCall(exercises.next);
-                setWgerExercises(exercises.results);
+                const exercises = await WgerApi.getAllExercises(nextWgerCall)
+                setPreviousWgerCall(exercises.data.previous);
+                setNextWgerCall(exercises.data.next);
+                setWgerExercises(exercises.data.results);
             } catch(err){
                 return err
             }
@@ -140,10 +147,10 @@ const ExerciseList = (): React.JSX.Element => {
     const getPreviousExercises = async () => {
         if(previousWgerCall !== null){
             try{
-                const exercises: WgerExercises= await WgerApi.getAllExercises(previousWgerCall)
-                setPreviousWgerCall(exercises.previous);
-                setNextWgerCall(exercises.next);
-                setWgerExercises(exercises.results);
+                const exercises = await WgerApi.getAllExercises(previousWgerCall)
+                setPreviousWgerCall(exercises.data.previous);
+                setNextWgerCall(exercises.data.next);
+                setWgerExercises(exercises.data.results);
             }catch(err){
                 return err
             }
