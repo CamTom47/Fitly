@@ -29,5 +29,5 @@ const categoryMap = {
         return newObj
     }
     
-export default categoryMapper
+export default {categoryMapper}
 
