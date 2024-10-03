@@ -1,16 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { Circuit } = require('../models/circuit')
-const { User } = require('../models/user');
- 
-
 const jsonschema = require('jsonschema')
 const newCircuitSchema = require('../schemas/circuit/circuitNew.json');
 const updatedCircuitSchema = require('../schemas/circuit/circuitUpdate.json');
-
 const { BadRequestError } = require('../ExpressError');
 const { ensureLoggedIn } = require('../middleware/auth');
-const { circuitMapper } = require('../helpers/circuitMapper')
+const { circuitMapper } = require('../helpers/circuitMapper.js')
 
 
 /**
