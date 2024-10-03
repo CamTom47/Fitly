@@ -27,7 +27,7 @@ const categoryMapper = (data) => {
     for(let [k,v] of categoryKeyValues){
         if (data[k]) newObj[v] = data[k]
     }
+    
+    module.exports = categoryMapper
     return newObj
 }
-
-module.exports = {categoryMapper}
