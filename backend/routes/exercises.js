@@ -10,7 +10,7 @@ const updatedExerciseSchema = require('../schemas/exercise/exerciseUpdate.json')
 const { BadRequestError } = require('../ExpressError');
 const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require('../middleware/auth');
 
-const { exerciseMapper } = require('../helpers/exerciseMapper')
+const { exerciseMapper } = require('../helpers/exerciseMapper');
 
 /**
  * GET /exercises => {exercises}
@@ -87,7 +87,7 @@ router.patch('/:exercise_id', ensureLoggedIn, async function(req, res, next) {
             const errs = validator.errors.map(e => e.stack)
             throw new BadRequestError(errs);
         }
-        
+
         const id = req.params.exercise_id;
         const {name, muscle_group, equipment_id} = data;
         const updatedExercise = await Exercise.update(id, {name, muscle_group}, equipment_id);

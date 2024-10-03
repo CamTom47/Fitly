@@ -93,7 +93,7 @@ class Exercise {
             INSERT INTO exercises
             (name, muscle_group)
             VALUES ($1, $2)
-            RETURNING id, name, muscle_group`, 
+            RETURNING id, name, muscle_group AS "muscleGroup"`, 
             [name, muscle_group]);
 
             const exercise = result.rows[0];
@@ -143,7 +143,7 @@ class Exercise {
         const { setCols, values } = sqlForPartialUpdate(data, 
             {
                 name: "name",
-                muscle_group : "muscleGroup",
+                muscle_group : "muscle_group",
             }
         )
 
@@ -152,7 +152,7 @@ class Exercise {
         const querySql = `UPDATE exercises
             SET ${ setCols }
             WHERE id = ${exerciseIdVarIdx}
-            RETURNING id, name, muscle_group`;
+            RETURNING id, name, muscle_group AS "muscleGroup"`;
 
         const result = await db.query(querySql, [...values, id]);
 

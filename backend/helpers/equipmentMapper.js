@@ -14,20 +14,20 @@
     }
  */
 
-const categorymap = {
+const equipmentMap = {
     id: "id",
     userId: "user_id",
     name: "name"
 }
 
-const categoryMapper = (data) => {
-    let categoryKeyValues = Object.entries(categorymap)
+const equipmentMapper = (data) => {
+    let equipmentKeyValues = Object.entries(equipmentMap)
     let newObj = {}
 
-    for(let [k,v] of categoryKeyValues){
+    for(let [k,v] of equipmentKeyValues){
         if (data[k]) newObj[v] = data[k]
     }
     return newObj
 }
 
-module.exports = {categoryMapper}
+module.exports = {equipmentMapper}

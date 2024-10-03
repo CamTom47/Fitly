@@ -5,6 +5,8 @@ const { ensureLoggedIn, ensureAdmin, ensureCorrectUserOrAdmin} = require('../mid
 const jsonschema = require('json-schema')
 const userUpdateSchema = require('../schemas/user/userUpdate.json')
 const { NotFoundError, BadRequestError } = require('../ExpressError');
+const { userMapper } = require('../helpers/userMapper')
+
 
 /**
  * GET /users/:username => { user }
@@ -38,16 +40,18 @@ router.get('/:username', ensureCorrectUserOrAdmin, async function(req, res, next
 router.patch('/:username', ensureCorrectUserOrAdmin, async function(req, res, next) {
     try{
         const username = req.params.username;
+        console.log('req.body', req.body)
+        const data = userMapper(req.body);
+        console.log("data", data);
 
-        const validator = jsonschema.validate(req.body, userUpdateSchema);
+        const validator = jsonschema.validate(data, userUpdateSchema);
 
         if(!validator.valid){
             const errs = validator.errors.map( e => e.stack)
             throw new BadRequestError(errs)
         }
-    
 
-        const user = await User.update(username, req.body);
+        const user = await User.update(username, data);
 
         if(!user) throw new NotFoundError(`User ${username} not found`)
 
@@ -60,13 +64,9 @@ router.patch('/:username', ensureCorrectUserOrAdmin, async function(req, res, ne
 
 router.delete('/:username', ensureCorrectUserOrAdmin, async function(req, res, next) {
     try{
-
         const username = req.params.username;
-
-        const result = await User.remove(username);
-
+        await User.remove(username);
         return res.json({message: "deleted"})
-
 
     } catch(err){
         return next(err);

@@ -22,17 +22,17 @@
             ]
         },
         "category": {
-            "type": "string",
+            "type": "number",
             "default": "",
             "title": "The category Schema",
             "examples": [
-                "Strength"
+                1
             ]
         }
     },
     "examples": [{
         "name": "Leg Day 1",
         "user_id": 1,
-        "category": "Strength"
+        "category": 1
     }]
 }

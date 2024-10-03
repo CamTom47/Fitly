@@ -3,20 +3,27 @@
  * 
     input 
     {
-     id: 1,
-     name: "test",
-     muscleGroup: "arms",
-     equipmentId: 3
+        id: 1
+        sets: 1
+        reps: 1
+        weight: 1
+        restPeriod: 1
+        intensity: 1
+        workoutId: 1
+        exerciseId: 1
       }
 
       returns 
     {
-    id: 1,
-    name: "test",
-    muscle_group: "arms",
-    equipment_id: 3
+        id: 1
+        sets: 1
+        reps: 1
+        weight: 1
+        rest_period: 1
+        intensity: 1
+        workout_id: 1
+        exercise_id: 1
     }
-
  */
 
 const circuitMap = {
@@ -31,7 +38,7 @@ const circuitMap = {
 }
 
 const circuitMapper = (data) => {
-    let circuitKeyValues = Object.entries(mapper)
+    let circuitKeyValues = Object.entries(circuitMap)
     let newObj = {}
 
     for(let [k,v] of circuitKeyValues){
@@ -40,4 +47,4 @@ const circuitMapper = (data) => {
     return newObj
 }
 
-Module.export = {circuitMapper}
+module.exports = {circuitMapper}

@@ -9,6 +9,9 @@ const categoryUpdateSchema = require('../schemas/categories/categoryUpdate.json'
 const { ensureLoggedIn } = require('../middleware/auth');
 const { BadRequestError } = require('../ExpressError');
 
+const {categoryMapper} = require('../helpers/categoryMapper')
+
+
 /**
  * GET /categories  => {categories}
  * 
@@ -61,14 +64,15 @@ try{
 
 router.post('/', ensureLoggedIn, async function(req, res, next) {
     try{
-
-        const validator = jsonschema.validate({...req.body, systemDefault: false}, categoryNewSchema);
+        
+        const data = categoryMapper(req.body);
+        const validator = jsonschema.validate({...data, systemDefault: false}, categoryNewSchema);
         if(!validator.valid){
             const errs = validator.errors.map( err => err.stack);
             throw new BadRequestError(errs);
         }
 
-        let category = await Category.add(req.body);
+        let category = await Category.add(data);
 
         return res.status(201).json({category});
 
@@ -87,14 +91,15 @@ router.post('/', ensureLoggedIn, async function(req, res, next) {
 
 router.patch('/:category_id', ensureLoggedIn, async function(req, res, next) { 
     try{
-        const validator = jsonschema.validate(req.body, categoryUpdateSchema);
+        const data = categoryMapper(req.body);
+        const validator = jsonschema.validate(data, categoryUpdateSchema);
         if(!validator.valid){
             const errs = validator.errors.map(err => err.stack);
             throw new BadRequestError(errs);
         }
 
 
-        const category = await Category.update(req.params.category_id, req.body);
+        const category = await Category.update(req.params.category_id, data);
         return res.json({category});
 
     } catch(err){

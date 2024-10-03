@@ -3,34 +3,39 @@
  * 
     input 
     {
-     id: 1,
-     name: "test",
-     muscleGroup: "arms",
-     equipmentId: 3
+        id: 1,
+        username: testuser,
+        password: testtest,
+        firstName: testF,
+        lastName: testL,
+        email: test@test.com,
+        isAdmin: false
       }
 
       returns 
     {
-    id: 1,
-    name: "test",
-    muscle_group: "arms",
-    equipment_id: 3
+        id: 1,
+        username: testuser,
+        password: testtest,
+        first_name: testF,
+        last_name: testL,
+        email: test@test.com,
+        is_admin: false
     }
-
  */
 
-const categorymap = {
+const userMap = {
     id: "id",
     username: "username",
     password: "password",
-    firstName: "firs_name",
+    firstName: "first_name",
     lastName: "last_name",
     email: "email",
     isAdmin: "is_admin",
 }
 
 const userMapper = (data) => {
-    let userKeyValues = Object.entries(mapper)
+    let userKeyValues = Object.entries(userMap)
     let newObj = {}
 
     for(let [k,v] of userKeyValues){
@@ -39,4 +44,4 @@ const userMapper = (data) => {
     return newObj
 }
 
-Module.export = {userMapper}
+module.exports = {userMapper}

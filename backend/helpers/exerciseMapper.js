@@ -27,7 +27,7 @@ const exerciseMap = {
 }
 
 const exerciseMapper = (data) => {
-    const exerciseKeyValues = Object.entries(mapper)
+    const exerciseKeyValues = Object.entries(exerciseMap)
     let newObj = {}
 
     for(let [k,v] of exerciseKeyValues){
@@ -36,4 +36,4 @@ const exerciseMapper = (data) => {
     return newObj
 }
 
-Module.export = {exerciseMapper}
+module.exports = {exerciseMapper}

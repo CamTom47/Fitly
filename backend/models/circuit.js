@@ -117,13 +117,14 @@ class Circuit {
      */
 
     static async update(id, data) {
+        console.log(data)
 
         const { setCols, values } = sqlForPartialUpdate(data, 
             {
                 sets: "sets",
                 reps : "reps",
                 weight : "weight",
-                rest_period : "restPeriod",
+                rest_period : "rest_period",
                 intensity : "intensity"
             }
         )
@@ -133,7 +134,7 @@ class Circuit {
         const querySql = `UPDATE circuits
             SET ${ setCols }
             WHERE id = ${circuitIdVarIdx}
-            RETURNING id, sets, reps, weight, rest_period, intensity`;
+            RETURNING id, sets, reps, weight, rest_period AS "restPeriod", intensity`;
 
         const result = await db.query(querySql, [...values, id]);
         const circuit = result.rows[0];
