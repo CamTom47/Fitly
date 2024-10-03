@@ -12,6 +12,7 @@ const { BadRequestError } = require('../ExpressError');
 const { ensureLoggedIn } = require('../middleware/auth');
 const { circuitMapper } = require('../helpers/circuitMapper')
 
+
 /**
  * GET /circuits => {circuits}
  * 
