@@ -23,8 +23,8 @@ class Exercise {
         let query = `
             SELECT  exercises.id,
                     exercises.name,
-                    exercises.muscle_group AS muscleGroup,
-                    exercises_equipments.equipment_id AS equipmentId
+                    exercises.muscle_group AS "muscleGroup",
+                    exercises_equipments.equipment_id AS "equipmentId"
             FROM exercises
             JOIN users_exercises
             ON exercises.id = users_exercises.exercise_id
@@ -62,8 +62,8 @@ class Exercise {
         const result = await db.query(`
             SELECT  exercises.id,
                     exercises.name,
-                    exercises.muscle_group AS muscleGroup,
-                    exercises_equipments.equipment_id AS equipmentId
+                    exercises.muscle_group AS "muscleGroup",
+                    exercises_equipments.equipment_id AS "equipmentId"
             FROM exercises
             JOIN users_exercises 
             ON exercises.id = users_exercises.exercise_id
@@ -143,7 +143,7 @@ class Exercise {
         const { setCols, values } = sqlForPartialUpdate(data, 
             {
                 name: "name",
-                muscle_group : "muscle_group",
+                muscle_group : "muscleGroup",
             }
         )
 

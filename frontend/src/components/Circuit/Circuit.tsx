@@ -33,6 +33,8 @@ const Circuit = ({circuitId}): React.JSX.Element => {
     const circuits = useAppSelector(selectCircuits);
     const circuit = circuits.find( (circuit: Circuit) => circuit.id === circuitId);
     const exercises = useAppSelector(selectExercises);
+    console.log(circuit)
+    console.log(exercises)
     let exercise = exercises.find( (exercise: Exercise) => exercise.id === circuit.exerciseId);
     const [showUpdateCircuitForm, setShowUpdateCircuitForm ] = useToggle();
 

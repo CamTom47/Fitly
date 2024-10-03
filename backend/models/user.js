@@ -31,10 +31,10 @@ class User {
             `SELECT id,
                     username,
                     password,
-                    first_name AS firstName,
-                    last_name AS lastName,
+                    first_name AS "firstName",
+                    last_name AS "lastName",
                     email,
-                    is_admin AS isAdmin
+                    is_admin AS "isAdmin"
             FROM users
             WHERE username = $1
             `, [username]
@@ -113,10 +113,10 @@ class User {
             SELECT id,
                     username,
                     password,
-                    first_name AS firstName,
-                    last_name AS lastName,
+                    first_name AS "firstName",
+                    last_name AS "lastName",
                     email,
-                    is_admin AS isAdmin
+                    is_admin AS "isAdmin"
             FROM users
             WHERE username = $1`, 
         [username]);
@@ -171,10 +171,10 @@ class User {
                             RETURNING id,
                                         username,
                                         password,
-                                        first_name AS firstName,
-                                        last_name AS lastName,
+                                        first_name AS "firstName",
+                                        last_name AS "lastName",
                                         email,
-                                        is_admin AS isAdmin`;
+                                        is_admin AS "isAdmin"`;
 
         const result = await db.query(querySql, [...values, username]);
 

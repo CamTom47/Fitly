@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const { Exercise } = require('../models/exercise')
-const { User } = require('../models/user')
 
 
 const jsonschema = require('jsonschema')
@@ -10,6 +9,8 @@ const updatedExerciseSchema = require('../schemas/exercise/exerciseUpdate.json')
 
 const { BadRequestError } = require('../ExpressError');
 const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require('../middleware/auth');
+
+const { exerciseMapper } = require('../helpers/exerciseMapper')
 
 /**
  * GET /exercises => {exercises}
@@ -53,15 +54,16 @@ router.get('/:exercise_id', ensureLoggedIn, async function(req, res, next){
 
 router.post('/', ensureLoggedIn, async function(req, res, next){
     try{
-        const validator = jsonschema.validate(req.body, newExerciseSchema);
+        const data = exerciseMapper(req.body)
+        const validator = jsonschema.validate(data, newExerciseSchema);
         if(!validator.valid){
             const errs = validator.errors.map(e => e.stack);
             throw new BadRequestError(errs);
         };
 
-        const exercise = await Exercise.add(req.body);
-        const exerciseEquipment = await Exercise.addExerciseEquipment(exercise.id, req.body.equipment_id);
-        exercise.equipment_id = exerciseEquipment.equipment_id
+        const exercise = await Exercise.add(data);
+        const exerciseEquipment = await Exercise.addExerciseEquipment(exercise.id, data.equipment_id);
+        exercise.equipmentId = exerciseEquipment.equipment_id
         await Exercise.addUserExercise(res.locals.user.id, exercise.id)
         return res.status(201).json({exercise});
 
@@ -78,17 +80,16 @@ router.post('/', ensureLoggedIn, async function(req, res, next){
 
 router.patch('/:exercise_id', ensureLoggedIn, async function(req, res, next) {
     try{
-        const validator = jsonschema.validate(req.body, updatedExerciseSchema);
+        const data = exerciseMapper(req.body)
+
+        const validator = jsonschema.validate(data, updatedExerciseSchema);
         if(!validator.valid){
             const errs = validator.errors.map(e => e.stack)
             throw new BadRequestError(errs);
         }
-
+        
         const id = req.params.exercise_id;
-        const name = req.body.name;
-        const muscle_group = req.body.muscle_group;
-        const equipment_id = req.body.equipment_id;
-
+        const {name, muscle_group, equipment_id} = data;
         const updatedExercise = await Exercise.update(id, {name, muscle_group}, equipment_id);
 
         return res.json({updatedExercise});

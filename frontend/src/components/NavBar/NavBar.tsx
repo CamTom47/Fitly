@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { persistor } from '../../store';
 import {
     selectCurrentUser,
     userLoggedOut
@@ -27,6 +28,7 @@ const NavBar = (): React.JSX.Element => {
     const handleLogOut = () => {
         localStorage.clear();
         dispatch(userLoggedOut());
+        persistor.purge();
     }
 
     const loggedInNavComponents = (

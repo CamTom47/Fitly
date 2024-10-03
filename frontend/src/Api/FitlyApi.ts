@@ -71,6 +71,7 @@ class FitlyApi {
          */
 
         static async login<Promise>(data: {}) : Promise{   
+            console.log(data)
             let res = await this.request('auth/token', data, 'post')
             return res.token;
         }
