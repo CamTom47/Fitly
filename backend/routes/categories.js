@@ -8,7 +8,7 @@ const categoryUpdateSchema = require('../schemas/categories/categoryUpdate.json'
 
 const { ensureLoggedIn } = require('../middleware/auth');
 const { BadRequestError } = require('../ExpressError');
-const {categoryMapper} = require('../helpers/categoryMapper');
+const {categoryMapper} = require('../helpers/categorymapper');
 
 
 /**
