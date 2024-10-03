@@ -6,7 +6,7 @@ const newCircuitSchema = require('../schemas/circuit/circuitNew.json');
 const updatedCircuitSchema = require('../schemas/circuit/circuitUpdate.json');
 const { BadRequestError } = require('../ExpressError');
 const { ensureLoggedIn } = require('../middleware/auth');
-const { circuitMapper } = require('../helpers/circuitMapper.js')
+const { circuitMapper } = require('../helpers/circuitMapper')
 
 
 /**

@@ -29,5 +29,5 @@ const categoryMap = {
         return newObj
     }
     
-module.exports = {categoryMapper}
+export default categoryMapper
 
