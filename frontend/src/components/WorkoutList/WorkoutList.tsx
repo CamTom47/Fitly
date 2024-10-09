@@ -12,6 +12,8 @@ import {
 import {findAllCategories} from '../../slices/categoriesSlice';
 import {findAllCircuits} from '../../slices/circuitsSlice';
 
+import './WorkoutList.css'
+
 const WorkoutList = (): React.JSX.Element => {
     const dispatch = useAppDispatch();
     const workouts = useAppSelector(selectWorkouts);
@@ -47,17 +49,45 @@ const WorkoutList = (): React.JSX.Element => {
     (showCreateWorkoutForm)
     ? <NewWorkoutForm toggleCreateForm={toggleCreateForm}/>
     : ( 
-        <div className="d-flex justify-content-center">
-            <div className="d-flex align-items-center flex-column w-75">
+        <div id="WorkoutListContainer">
+            <div className="WorkoutListTitle">
                 <h3>Workouts</h3>
-                <hr className="w-100"></hr>
-                <button className="btn btn-secondary" onClick={toggleCreateForm}>Create New Workout</button>
-                <div className="d-flex flex-row justify-content-left flex-wrap column-gap-5 row-gap-5 pt-4">
-                    {workoutSummaryComponents}
-                </div>
             </div>
+            <div className="filterworkoutdivider">
+                <div className="filterworkoutdividerinner">
+                <div className="filtersection">
+                    filter placeholder
+                </div>
+                <div className="workoutsection">
+                    <div className="workouthead">
+                        <button onClick={toggleCreateForm}>Create New Workout</button>
+                        <div className="searchbar">
+                            <form>
+                                <label htmlFor="">Search:</label>
+                                <input type="text" placeholder="Search For Exercise"></input>
+                            </form>
+                        </div>
+                    </div>
+                    <div className="workoutbody">
+                        {workoutSummaryComponents}
+                    </div>
+                </div>
+                </div>
+            </div>           
         </div>
         )
 }
 
 export default WorkoutList;
+
+//container
+//section title
+//filterworkoutdivider
+//filterworkoutdividerinner
+//filtersection
+
+//workoutsection
+//workouthead
+//searchbar
+//workouthead2
+//workoutbody

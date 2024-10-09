@@ -19,7 +19,7 @@
     color: white;
     font-size: 3rem;
     padding: 0;
-    margin: 0
+    margin: 0;
 }
 
 .NavBarBody{
@@ -42,6 +42,16 @@
 
 .visible{
     left: 0;
+}
+
+.NavBarLinkContainer{
+    display: flex;
+    justify-content: center;
+}
+.NavBarMainLink{
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: white;
 }
 
 .NavBarLink{

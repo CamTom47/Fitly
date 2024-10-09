@@ -1,3 +1,20 @@
+:root{
+  --primary-color-text: white;
+  --app-background-primary: hsl(0, 0%, 10%);
+  --primary-color: hsl(0, 0%, 60%);
+  --primary-color-light: hsl(0, 0%, 65%);
+  --primary-color-dark: hsl(0, 0%, 50%);
+  --primary-gradient: radial-gradient(circle, hsl(212, 20%, 50%), hsl(212, 11%, 40%));
+  --primary-gradient-light: radial-gradient(circle, hsl(212, 11%, 60%), hsl(212, 11%, 50%));
+  --secondary-color: hsl(212, 11%, 30%);
+  --secondary-color-light: hsl(212, 11%, 50%);
+  --secondary-gradient: radial-gradient(circle, hsl(212, 11%, 50%), hsl(212, 11%, 30%));
+}
+
 .App{
   width: 100vw;
+}
+
+body{
+  background-color: var(--app-background-primary);
 }

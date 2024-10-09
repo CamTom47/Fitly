@@ -1,12 +1,13 @@
 import React from "react";
-import { Card, CardBody, CardText, CardTitle, ListGroup, ListGroupItem, Button} from "reactstrap"
 import FitlyApi from "../../Api/FitlyApi";
 import { Link } from "react-router-dom";
 import {useSelector} from 'react-redux'
 
 import {
     selectCategories
-} from '../../slices/categoriesSlice'
+} from '../../slices/categoriesSlice';
+
+import './WorkoutSummary.css'
 
 interface Category {
     id: number,
@@ -24,18 +25,22 @@ const WorkoutSummary = ({workout}) => {
     }
 
     return (
-        <Card className="d-flex pt-3 flex-column align-items-center">
-            <CardTitle className="fs-5">{workout.name}</CardTitle>
-            <CardBody className="d-flex pt-3 flex-column align-items-center">
-                <CardText>
-                    Type of Workout:{category.name}
-                </CardText>
-                    <Link  className="btn btn-secondary" to={{ pathname: `/workouts/${workout.id}`}} style={{textDecoration: "none"}}>
-                        Workout Details
+        <div id="WorkoutSummaryContainer">
+            <div className="WorkoutSummaryContent">
+                <div className="WorkoutSummaryContentHead">
+                    <h5>{workout.name}</h5>
+                </div>
+                <div className="WorkoutSummaryContentBody">
+                    <span>Type of Workout:</span>
+                    <p>{category.name}</p>
+                    <Link to={`/workouts/${workout.id}`}>
+                        <button>Workout Details</button>
                     </Link>
-            </CardBody>
-        </Card>
+                </div>
+            </div>
+        </div>
     )
 }
+
 
 export default WorkoutSummary;

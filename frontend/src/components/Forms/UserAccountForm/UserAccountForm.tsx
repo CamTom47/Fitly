@@ -1,11 +1,8 @@
-import React, {useContext} from "react";
-import {Formik, Form, Field, ErrorMessage, FormikErrors, FormikHelpers} from "formik";
-import { Card } from "reactstrap";
+import React from "react";
+import {Formik, Field, Form, ErrorMessage, FormikErrors, FormikHelpers} from "formik";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import {
-    selectCurrentUser,
-    updateUser
-} from '../../../slices/usersSlice'
+import { selectCurrentUser, updateUser } from '../../../slices/usersSlice'
+import '../Forms.css'
 
 interface FormValues{
     firstName: string,
@@ -22,8 +19,6 @@ const UserAccountForm = ({handleUserInfoToggle}: FormProps): React.JSX.Element =
     const currentUser = useAppSelector(selectCurrentUser);
 
     return (
-        <div className="d-flex flex-column align-items-center pb-5">
-            <h3>User Account Information</h3>
             <Formik
                 initialValues={{
                     firstName: currentUser.firstName || "",
@@ -50,37 +45,34 @@ const UserAccountForm = ({handleUserInfoToggle}: FormProps): React.JSX.Element =
                 }}
                 >
                     {({isSubmitting}) => (
-                        <Form className="d-flex flex-column align-items-center">
-                            <Card className="d-flex flex-column align-items-left row-gap-4 px-3 py-3">
-                                <h5 className="d-flex justify-content-center">Account Information</h5>
-                                <div className="d-flex justify-content-between">
-                                        <label htmlFor="firstName">First Name:</label>
-                                        <Field type='text' name='firstName'/>
-                                        <ErrorMessage name='firstName' component='div'/>
-                                </div>
+                            <div className="FormContent">
+                                <Form className="FormContentInput">
+                                    <div className="FormContentInputDiv">
+                                            <label htmlFor="firstName">First Name:</label>
+                                            <Field className="FormInput" type='text' name='firstName'/>
+                                            <ErrorMessage name='firstName' component='div'/>
+                                    </div>
 
-                                <div className="d-flex justify-content-between">
-                                        <label htmlFor="lastName">Last Name:</label>
-                                        <Field type='text' name='lastName'/>
-                                        <ErrorMessage name='lastName' component='div'/>
-                                </div>
+                                    <div className="FormContentInputDiv">
+                                            <label htmlFor="lastName">Last Name:</label>
+                                            <Field className="FormInput" type='text' name='lastName'/>
+                                            <ErrorMessage name='lastName' component='div'/>
+                                    </div>
 
-                                <div className="d-flex justify-content-between">
-                                        <label htmlFor="email">Email:</label>
-                                        <Field type='text' name='email'/>
-                                        <ErrorMessage name='email' component='div'/>
-                                </div>
+                                    <div className="FormContentInputDiv">
+                                            <label htmlFor="email">Email:</label>
+                                            <Field className="FormInput" type='text' name='email'/>
+                                            <ErrorMessage name='email' component='div'/>
+                                    </div>
 
-                                <div className="d-flex flex-row column-gap-3">
-                                    <button className="btn btn-danger" onClick={handleUserInfoToggle}>Cancel</button>
-                                    <button className="btn btn-success" type='submit' disabled={isSubmitting}>Update Information</button>
-                                </div>
-                            </Card>
-                        </Form>
+                                    <div className="FormContentInputDiv">
+                                        <button className="FormButton" onClick={handleUserInfoToggle}>Cancel</button>
+                                        <button className="FormButton" type='submit' disabled={isSubmitting}>Update Information</button>
+                                    </div>
+                                </Form>
+                            </div>
                     )}
-
             </Formik>
-        </div>
     )
 
 }

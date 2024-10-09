@@ -169,6 +169,7 @@ const ExerciseList = (): React.JSX.Element => {
                     <p>filter placeholder</p>
                 </div>
             <div className="exerciselistsection">
+                <div className="test">
                     <div id="ExerciseListHead">
                     <div>
                         <a onClick={toggleExerciseView}>
@@ -200,17 +201,17 @@ const ExerciseList = (): React.JSX.Element => {
                 ?   <div className="exerciseListBody">
                     {userExerciseComponents}
                 </div>
-            :  <div>
-                <div>
-
+            :  <div id="wgerexercisesdiv">
+                <div className="exerciseListBody">
                       {wgerExerciseComponents}
                  </div>
                  <div>
-                    <FontAwesomeIcon type="button" icon={faArrowLeft} onClick={getPreviousExercises}/>
-                    <FontAwesomeIcon type="button" icon={faArrowRight} onClick={getNextExercises}/>
+                    <FontAwesomeIcon className="arrow" type="button" icon={faArrowLeft} onClick={getPreviousExercises}/>
+                    <FontAwesomeIcon className="arrow" type="button" icon={faArrowRight} onClick={getNextExercises}/>
                  </div>
             </div> 
             }
+            </div>
             </div>
             </div>
             </div>

@@ -1,0 +1,12 @@
+#UpdateCircuitForm{
+    position: relative;
+    width: 20rem;
+    z-index: 9999;
+    background-color: var(--primary-color);
+    margin-top: 0;
+}
+
+.FormContentInputDiv{
+    display: flex;
+    justify-content: space-between;
+}

@@ -33,9 +33,11 @@ const NavBar = (): React.JSX.Element => {
                         <span className="toggleContent"/>
                         <span className="toggleContent"/>
                     </div>
-                    <Link className="NavBarLink" to="/">
-                        <h4>Fitly</h4>
-                    </Link>
+                    <div className="NavBarLinkContainer">
+                        <Link className="NavBarMainLink" to="/">
+                            <h4 >Fitly</h4>
+                        </Link>
+                    </div>
                 </div>
                     <div className="NavBarBody offScreen">
                         <Link className="NavBarLink"  to="/account" onClick={handleToggle}>Account</Link>    
@@ -47,15 +49,22 @@ const NavBar = (): React.JSX.Element => {
 
     : <div>
             <div className="NavBarContainer">
-                <div className="NavBarHeader">
-                    <Link className="NavBarLink" to="/">
-                        <h4>Fitly</h4>
-                    </Link>
-                    <div className="NavBarBody hidden">
+            <div className="NavBarHeader">
+                    <div id="NavIcon" onClick={handleToggle}>
+                        <span className="toggleContent"/>
+                        <span className="toggleContent"/>
+                        <span className="toggleContent"/>
+                    </div>
+                    <div className="NavBarLinkContainer">
+                        <Link className="NavBarMainLink" to="/">
+                            <h4 >Fitly</h4>
+                        </Link>
+                    </div>
+                </div>
+                    <div className="NavBarBody offScreen">
                         <Link className="NavBarLink"  to="/" onClick={handleToggle}>Login</Link>    
                         <Link className="NavBarLink"  to="/register" onClick={handleToggle}>Signup</Link> 
                     </div>
-                </div>
             </div>
         </div>
 
