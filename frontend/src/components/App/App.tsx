@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useCallback} from "react";
-import { Routes, Route, useNavigate } from "react-router"
+import React, { useState } from "react";
+import { Routes, Route } from "react-router"
+import { useAppSelector } from '../../hooks/reduxHooks'
 import FitlyApi from "../../Api/FitlyApi";
-
 import NavBar from "../NavBar/NavBar";
 import WorkoutList from "../WorkoutList/WorkoutList"
 import ExerciseList from "../ExerciseList/ExerciseList"
@@ -13,20 +13,22 @@ import Account from "../Account/Account";
 import NewWorkoutForm from "../Forms/NewWorkoutForm/NewWorkoutForm";
 import WorkoutDetail from "../WorkoutDetail/WorkoutDetail";
 import NotFound from "../NotFound/NotFound";
-import "./App.css"
 import { 
   selectToken,
   selectAuthenticated,
-  selectCurrentUser
 } from '../../slices/usersSlice';
 
-import { useAppSelector } from '../../hooks/reduxHooks'
+import "./App.css"
+import "../../fonts/fonts.css"
+import { current } from "@reduxjs/toolkit";
 
 function App(): React.JSX.Element {  
   const [isLoading, setIsLoading] = useState(false);
   const token = useAppSelector(selectToken);
-  if(token) FitlyApi.token = token
   const isAuthenticated = useAppSelector(selectAuthenticated);
+
+  if(token) FitlyApi.token = token
+
     
   if(isLoading){
     return <LoadingComponent/>

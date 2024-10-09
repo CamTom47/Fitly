@@ -1,0 +1,84 @@
+#WorkoutDetailContainer{
+    background-color: var(--primary-color);
+    width: 90%;
+    margin: 5rem auto;
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.WorkoutDetailContainerInner{
+    background: var(--primary-gradient);
+    padding: 2rem;
+    border-radius: 2rem;
+}
+
+.WorkoutDetailContainerHead{
+    display: flex;
+    justify-content: space-between;
+}
+
+.LinkElement{
+    text-decoration: none;
+    color: black;
+}
+.WorkoutDetailDivider{
+    background: var(--primary-gradient-light);
+    border-radius: 20px;  
+    padding: 1rem;
+    margin: .3rem;
+
+}
+
+.dividerSection1{
+    margin: 1rem 0 1rem 0;
+    display: flex;
+    column-gap: 1rem;
+    align-items: center;
+    color: white;
+}
+
+.dividerSection1 h3{
+    color: var(--primary-color-text);
+    padding: 0;
+    margin: 1rem;
+}
+
+.dividerSection2{
+    display: flex;
+    column-gap: 1rem;
+    font-size: 1.5rem;
+    color: var(--primary-color-text);
+
+}
+
+.dividerSection2 span{
+    text-decoration: none;
+}
+
+.circuitSection{
+    background: var(--primary-gradient-light);
+    border-radius: 20px;
+    padding: 1rem;
+    margin: .3rem;
+}
+
+.faIcon{
+    padding: 0;
+    margin: 0;
+}
+
+.circuitSection h3 {
+    color: var(--primary-color-text);
+}
+
+.CircuitList{
+    display: grid;
+    grid-template-columns: [start] 20rem [line1] 20rem [line2] 20rem [end];
+    column-gap: 5rem;
+    row-gap: 2rem;
+    width: 100%;
+    justify-content: center;
+
+}
+
+
