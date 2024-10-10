@@ -1,14 +1,26 @@
 :root{
-  --primary-color-text: white;
-  --app-background-primary: hsl(0, 0%, 10%);
-  --primary-color: hsl(0, 0%, 60%);
-  --primary-color-light: hsl(0, 0%, 65%);
-  --primary-color-dark: hsl(0, 0%, 50%);
-  --primary-gradient: radial-gradient(circle, hsl(212, 20%, 50%), hsl(212, 11%, 40%));
-  --primary-gradient-light: radial-gradient(circle, hsl(212, 11%, 60%), hsl(212, 11%, 50%));
-  --secondary-color: hsl(212, 11%, 30%);
-  --secondary-color-light: hsl(212, 11%, 50%);
-  --secondary-gradient: radial-gradient(circle, hsl(212, 11%, 50%), hsl(212, 11%, 30%));
+  /* Main Colors - Used for links, button background color, etc. */
+  --color-primary: hsl(0, 0%,5%);
+
+  /* Accent color - Used to highlight something important on a page, not a variant of primary color, but complimentary */
+  --color-secondary: hsl(209, 100%, 15%);
+
+  /* Shades - Neutral colors used for text elemnts, subtle elemtns, borders, etc. */
+  --black: black
+  --gray-10: hsl(0, 0%, 5%);
+  --gray-9: hsl(0, 0%, 10%);
+  --gray-8: hsl(0, 0%, 20%);
+  --gray-6: hsl(0, 0%, 40%);
+  --gray-4: hsl(0, 0%, 60%);
+  --gray-2: hsl(0, 0%, 80%);
+  --gray-1: hsl(0, 0%, 90%);
+  --white: white;
+
+  /* Feedback Colors - Success, Error, Warning */
+  --color-success: hsl(94, 72%, 30%);
+  --color-error: hsl(8, 71%, 47%);
+  --color-warning: hsl(190, 73%, 46%);
+
 }
 
 .App{
@@ -16,5 +28,5 @@
 }
 
 body{
-  background-color: var(--app-background-primary);
+  background-color: var(--color-primary);
 }

@@ -1,5 +1,6 @@
-#NavBarContainer{
-    background-image: linear-gradient(45deg,hsla(212, 11%, 50%), hsla(212, 11%, 55%));
+.NavBarContainer{
+    background: var(--color-primary);
+    position: sticky;
 }
 
 .toggleContent{
@@ -12,7 +13,7 @@
 
 .NavBarHeader{
     text-align: center;
-    background-image: linear-gradient(45deg,hsla(212, 11%, 50%), hsla(212, 11%, 55%));
+    background: var(--color-primary);
 }
 
 .NavBarHeader h4{
@@ -28,12 +29,10 @@
     flex-direction: column;
     width: 25%;
     height: 100%;
-    background-color: white;
     z-index: 999;
     text-align: center;
-    background-color: hsla(212, 11%, 50%);
     transition: 1s;
-    border: 1px solid hsla(212, 11%, 40%)
+    border-top: 1px solid white;
 }
 
 .offScreen {
@@ -58,8 +57,9 @@
     text-decoration: none;
     font-size: 1.5rem;
     color: white;
-    background-color: hsla(212, 11%, 50%);
-    border-bottom: 1px solid white;
+    background: var(--gray-8);
+    opacity: 95%;
+    border-bottom: 1px solid var(--color-primary);
     padding: 1rem 0;
 }
 

@@ -77,12 +77,4 @@ const Account = () : React.JSX.Element => {
     )
 }
 
-/**
- * AccountContainer{ 
- *      display: flex;
- *      flex: column;
- *      align-items: center;
- * }
- */
-
 export default Account

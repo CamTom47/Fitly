@@ -1,5 +1,5 @@
 .CircuitContainer{
-    background: var(--primary-color);
+    background: var(--gray-4);
     display: flex;
     flex-direction: column;
     margin: 0 auto;

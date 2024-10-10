@@ -14,7 +14,7 @@ import {
     findAllExercises
 } from '../../slices/exercisesSlice'
 
-import { findAllMuscleGroups } from '../../slices/muscleGroupsSlice';
+import { findAllMuscleGroups, selectMuscleGroups } from '../../slices/muscleGroupsSlice';
 import { findAllEquipments } from '../../slices/equipmentsSlice';
 import useToggle from "../../hooks/useToggle/useToggle";
 import './ExerciseList.css';
@@ -47,6 +47,7 @@ const ExerciseList = (): React.JSX.Element => {
     const [nextWgerCall, setNextWgerCall] = useState<string | undefined>(undefined);
     const [previousWgerCall, setPreviousWgerCall] = useState<string | undefined>(undefined);
     const [currentWgerCall, setCurrentWgerCall] = useState<string | null>(null);
+    const muscleGroups = useAppSelector(selectMuscleGroups);
     
     const getExerciseListInfo = useCallback( async () => { 
         dispatch(findAllMuscleGroups());
@@ -153,6 +154,14 @@ const ExerciseList = (): React.JSX.Element => {
         }
     }
 
+    // Filter Components
+    const muscleGroupFilters = muscleGroups.map( muscleGroup => {
+        <div>
+            <label htmlFor=""></label>
+            <input type="text" />
+        </div>
+    })
+
     if(exerciseFormToggle) return <NewExerciseForm toggle={toggleExerciseFormVisibility}/>
 
     return (
@@ -166,7 +175,7 @@ const ExerciseList = (): React.JSX.Element => {
             <div id="filterExerciseDivider">
                 <div id="filterExerciseDividerInner">
                 <div id="filtersection">
-                    <p>filter placeholder</p>
+                    <p>Filters</p>
                 </div>
             <div className="exerciselistsection">
                 <div className="test">

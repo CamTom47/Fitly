@@ -1,5 +1,5 @@
 #WorkoutDetailContainer{
-    background-color: var(--primary-color);
+    background-color: var(--gray-4);
     width: 90%;
     margin: 5rem auto;
     border-radius: 20px;
@@ -7,7 +7,7 @@
 }
 
 .WorkoutDetailContainerInner{
-    background: var(--primary-gradient);
+    background: var(--color-primary);
     padding: 2rem;
     border-radius: 2rem;
 }
@@ -22,7 +22,7 @@
     color: black;
 }
 .WorkoutDetailDivider{
-    background: var(--primary-gradient-light);
+    background: var(--color-primary-light);
     border-radius: 20px;  
     padding: 1rem;
     margin: .3rem;
@@ -38,7 +38,7 @@
 }
 
 .dividerSection1 h3{
-    color: var(--primary-color-text);
+    color: var(--white);
     padding: 0;
     margin: 1rem;
 }
@@ -47,7 +47,7 @@
     display: flex;
     column-gap: 1rem;
     font-size: 1.5rem;
-    color: var(--primary-color-text);
+    color: var(--white);
 
 }
 
@@ -56,7 +56,7 @@
 }
 
 .circuitSection{
-    background: var(--primary-gradient-light);
+    background: var(--color-primary-light);
     border-radius: 20px;
     padding: 1rem;
     margin: .3rem;
@@ -68,7 +68,7 @@
 }
 
 .circuitSection h3 {
-    color: var(--primary-color-text);
+    color: var(--white);
 }
 
 .CircuitList{

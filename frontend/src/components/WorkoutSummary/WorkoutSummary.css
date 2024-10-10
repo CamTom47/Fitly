@@ -5,14 +5,14 @@
         align-items: center;
         margin: 1rem .5rem 0rem .5rem;
         padding: 1rem;
-        background: var(--primary-gradient);
+        background: var(--color-primary);
         border-radius: 20px;
     }
 
     #WorkoutSummaryContainer:hover {
-        background-color: var(--secondary-color);
+        background-color: var(--gray-6);
         box-shadow: 0px 3px 10px hsla(212, 11%, 80%);
-        background: var(--primary-gradient-light);
+        background: var(--color-primary-light);
         border: 2px solid hsla(212, 11%, 75%);;
         transition: all .35s;
     }
