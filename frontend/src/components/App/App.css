@@ -3,7 +3,7 @@
   --color-primary: hsl(0, 0%,5%);
 
   /* Accent color - Used to highlight something important on a page, not a variant of primary color, but complimentary */
-  --color-secondary: hsl(209, 100%, 15%);
+  --color-secondary: hsl(209, 100%, 50%);
 
   /* Shades - Neutral colors used for text elemnts, subtle elemtns, borders, etc. */
   --black: black

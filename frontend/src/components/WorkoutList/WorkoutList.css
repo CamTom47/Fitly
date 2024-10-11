@@ -1,114 +1,103 @@
-@media screen and (min-width: 1300px){
-    #WorkoutListContainer {
-        background: hsl(0, 0%, 10%);
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-    }
+@media screen and (min-width: 1300px) {
+  #WorkoutListContainer {
+    background: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 100%;
+  }
+  .filterWorkoutDivider {
+    display: flex;
+    justify-content: center;
+  }
+  .filterWorkoutDividerInner {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 90%;
+  }
 
-    #WorkoutListContainer button:hover{
-        background-color: hsla(212, 11%, 75%);
-        box-shadow: 0px 3px 10px hsla(212, 11%, 80%);
-        background-image: linear-gradient(45deg,hsla(212, 11%, 60%), hsla(212, 11%, 70%));
-        border: 2px solid hsla(212, 11%, 75%);
-        transition: all .35s;
-    }
+  .filtersection {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    width: 90%;
+    margin: 8rem 0 1rem 0;
+    width: 20%;
+    color: white;
+  }
+  .filtersection p {
+    margin-top: 1rem;
+  }
+  .FilterForm {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    width: 100%;
+    overflow-y: scroll;
+    height: 15rem;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .workouthead {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-6);
+  }
 
-    .WorkoutListTitle{
-        margin-top: .5rem;
-        margin-left: 2rem;
-        display: static;
-        text-align: left;
-        width: 100%;
-        color: white;
-    }
+  .workoutbody {
+    display: grid;
+    width: 100%;
+    grid-template-columns: [start] 15rem [line2] 15rem [line3] 15rem [line4] 15rem [end];
+    column-gap: 1rem;
+    row-gap: 2rem;
+  }
 
-    .filterworkoutdivider{
-        background: var(--color-primary);
-        display: flex;
-        flex-direction: row;
-        justify-content: left;
-        width: 100%;
-    }
+  .workoutsection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 0 20px 20px 0;
+    border: none;
+    width: 90%;
+    padding: 1rem;
+    color: white;
+  }
 
-    .filterworkoutdividerinner{
-        background: black;
-        display: flex;
-        flex-direction: row;
-        justify-content: left;
-        width: 100%;
-        margin: 1rem;
-        border-radius: 20px;
-    }
+  .searchbar input {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 0 0.5rem 0 0.5rem;
+    text-align: center;
+    margin-right: 1rem;
+  }
+  .WorkoutFilterDiv{
+    border-top: 1px solid white;
+    width: 75%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+  }
 
-    .filtersection{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: var(--color-primary-light);
-        width: 90%;
-        border-radius: 20px 0 0 20px;   
-        padding: 1rem;
-        margin-left: 0;
-        width: 25%;
-    }
+  #wgerexercisesdiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    .workouthead{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        width: 100%;
-        background-color: hsl(0, 0%, 50%);
-        border-bottom: 1px solid hsl(0, 0%, 40%);
-        border-radius: 20px 20px 0 0 ;
-        padding: 1rem;
-    }
-
-    .workouthead2{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        width: 100%;
-        background-color: hsl(0, 0%, 50%);
-        padding: 1rem;
-    }
-
-    .workoutbody{
-        display: grid;
-        background-color: hsl(0, 0%, 50%);
-        width: 100%;
-        grid-template-columns: [line1] 20rem [line2] 20rem [line3] 20rem [line4] 20rem;
-        grid-template-rows: [row1] 12rem [row2] 12rem [row3] 12rem ;
-        column-gap: 1rem;
-    }
-
-    .workoutsection{
-       display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: var(--color-primary-light);
-        border-radius: 0 20px 20px 0;
-        border: none;
-        width: 90%;
-        padding: 1rem;
-    }
-
-    .searchbar input{
-        border: 1px solid black;
-        border-radius: 5px;
-        padding: 0 .5rem 0 .5rem;
-        text-align: center;
-        margin-left: .5rem;
-    }    
-
-    #wgerexercisesdiv{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .arrow{
-        margin: .5rem;
-    }
-
+  .arrow {
+    margin: 0.5rem;
+  }
+  #addWorkoutButton {
+    background-color: var(--color-primary);
+    color: var(--gray-2);
+    font-size: 40px;
+    border: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
 }
