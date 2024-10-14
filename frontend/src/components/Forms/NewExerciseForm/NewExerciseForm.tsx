@@ -6,7 +6,7 @@ import { selectCurrentUser } from '../../../slices/usersSlice';
 import { addExercise } from '../../../slices/exercisesSlice';
 import { selectMuscleGroups } from '../../../slices/muscleGroupsSlice';
 
-import '../Forms.css'
+import './NewExerciseForm.css'
 
 
 interface FormProps{
@@ -34,7 +34,7 @@ const NewExerciseForm = ({toggle} : FormProps): React.JSX.Element => {
     ))
     
     return (
-        <div className="FormContainer">
+        <div className="NewExerciseFormContainer">
                 <h3>New Exercise Form</h3>
                 <Formik
                     initialValues={{name: "", 
@@ -66,29 +66,29 @@ const NewExerciseForm = ({toggle} : FormProps): React.JSX.Element => {
                         }, 400)}}
                     >
                         {({isSubmitting}) => (
-                            <div className="FormContainerInner">
-                                <div className="FormContent">                          
-                                    <Form className="FormContentInput">
-                                        <div className="FormContentInputDiv">
-                                                    <label className="FormInput" htmlFor="name">Exercise Name:</label>
-                                                    <Field className="FormInput" type='name' name='name'/>
+                            <div className="NewExerciseFormContainerInner">
+                                <div className="NewExerciseFormContent">                          
+                                    <Form className="NewExerciseFormContentInput">
+                                        <div className="NewExerciseFormContentInputDiv">
+                                                    <label className="NewExerciseFormInput" htmlFor="name">Exercise Name:</label>
+                                                    <Field className="NewExerciseFormInput" type='name' name='name'/>
                                             
                                         </div>
-                                        <div className="FormContentInputDiv">
-                                                    <label className="FormInput" htmlFor="muscleGroup">Muscle Group:</label>
-                                                    <Field className="FormInput" as='select' name='muscleGroup'>
+                                        <div className="NewExerciseFormContentInputDiv">
+                                                    <label className="NewExerciseFormInput" htmlFor="muscleGroup">Muscle Group:</label>
+                                                    <Field className="NewExerciseFormInput" as='select' name='muscleGroup'>
                                                         {muscleGroupComponents}
                                                     </Field>
 
                                         </div>
-                                        <div className="FormContentInputDiv">
-                                                    <label className="FormInput" htmlFor="equipment">Equipment:</label>
-                                                    <Field className="FormInput" type='equipment' name='equipment'/>
+                                        <div className="NewExerciseFormContentInputDiv">
+                                                    <label className="NewExerciseFormInput" htmlFor="equipment">Equipment:</label>
+                                                    <Field className="NewExerciseFormInput" type='equipment' name='equipment'/>
 
                                         </div>
-                                        <div className="FormContentInputDiv">
-                                                    <button className="FormButton" onClick={toggle}>Cancel</button>
-                                                    <button className="FormButton" type='submit' disabled={isSubmitting}>Create Exercise</button>
+                                        <div className="NewExerciseFormContentInputDiv">
+                                                    <button className="NewExerciseFormButton" onClick={toggle}>Cancel</button>
+                                                    <button className="NewExerciseFormButton" type='submit' disabled={isSubmitting}>Create Exercise</button>
                                         </div>
                                     </Form>
                                 </div>

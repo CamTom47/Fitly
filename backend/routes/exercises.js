@@ -20,7 +20,8 @@ const { exerciseMapper } = require('../helpers/exerciseMapper');
 
 router.get('/', ensureLoggedIn, async function( req, res, next) {
     try{ 
-        const exercises = await Exercise.findAll(res.locals.user.id);
+        const queryData = exerciseMapper(req.query)
+        const exercises = await Exercise.findAll(res.locals.user.id, queryData);
         return res.json({exercises})
 
     } catch(err){
@@ -80,8 +81,6 @@ router.post('/', ensureLoggedIn, async function(req, res, next){
 
 router.patch('/:exercise_id', ensureLoggedIn, async function(req, res, next) {
     try{
-        const data = exerciseMapper(req.body)
-
         const validator = jsonschema.validate(data, updatedExerciseSchema);
         if(!validator.valid){
             const errs = validator.errors.map(e => e.stack)

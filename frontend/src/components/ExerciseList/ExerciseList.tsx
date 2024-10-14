@@ -1,25 +1,28 @@
+//Hook Imports
 import React, { useEffect, useState, useCallback } from 'react';
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import useToggle from '../../hooks/useToggle/useToggle';
+import { selectExercises, findAllExercises } from '../../slices/exercisesSlice';
+import { findAllMuscleGroups, selectMuscleGroups } from '../../slices/muscleGroupsSlice';
+import { findAllEquipments, selectEquipments } from '../../slices/equipmentsSlice';
+
+//Module Imports
+import { v4 as uuid } from 'uuid';
+
+//Component Imports
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import WgerApi from '../../Api/WgerApi';
 import ExerciseDetails from '../ExerciseDetails/ExerciseDetails';
 import WgerExercise from '../WgerExercise/WgerExercise';
 import NewExerciseForm from '../Forms/NewExerciseForm/NewExerciseForm';
 import LoadingComponent from '../LoadingComponent/LoadingComponent';
-import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { v4 as uuid } from 'uuid';
-import { selectExercises, findAllExercises } from '../../slices/exercisesSlice';
 
-import {
-  findAllMuscleGroups,
-  selectMuscleGroups,
-} from '../../slices/muscleGroupsSlice';
-import {
-  findAllEquipments,
-  selectEquipments,
-} from '../../slices/equipmentsSlice';
-import useToggle from '../../hooks/useToggle/useToggle';
+// Styling Imports
 import './ExerciseList.css';
+
+//Helper Imports
+import {exerciseFilter} from '../../helpers/filters';
 
 interface WgerExercises {
   request: {
@@ -38,23 +41,41 @@ interface WgerExerciseObject {
   previous: string;
 }
 
+interface ExerciseQuery {
+  equipmentId?: string;
+  muscleGroup?: string;
+}
+
+/**
+ * ExerciseList Component
+ * 
+ * State: wgerExercises
+    showUserExercises
+    showWgerExercises
+    exerciseFormToggle
+    isLoading
+    nextWgerCall
+    previousWgerCall
+    currentWgerCall
+
+    Props: none
+ */
+
 const ExerciseList = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const userExercises = useAppSelector(selectExercises);
+  const muscleGroups = useAppSelector(selectMuscleGroups);
+  const equipments = useAppSelector(selectEquipments);
+
   const [wgerExercises, setWgerExercises] = useState<WgerExerciseObject[]>([]);
   const [showUserExercises, toggleShowUserExercises] = useToggle(true);
   const [showWgerExercises, toggleShowWgerExercises] = useToggle(false);
   const [exerciseFormToggle, toggleExerciseFormToggle] = useToggle(false);
   const [isLoading, toggleIsLoading] = useToggle(false);
-  const [nextWgerCall, setNextWgerCall] = useState<string | undefined>(
-    undefined
-  );
-  const [previousWgerCall, setPreviousWgerCall] = useState<string | undefined>(
-    undefined
-  );
+  const [nextWgerCall, setNextWgerCall] = useState<string | undefined>(undefined);
+  const [previousWgerCall, setPreviousWgerCall] = useState<string | undefined>(undefined);
   const [currentWgerCall, setCurrentWgerCall] = useState<string | null>(null);
-  const muscleGroups = useAppSelector(selectMuscleGroups);
-  const equipments = useAppSelector(selectEquipments);
+  const [queryTerms, setQueryTerms] = useState<ExerciseQuery>({});
 
   const getExerciseListInfo = useCallback(async () => {
     dispatch(findAllMuscleGroups());
@@ -65,11 +86,15 @@ const ExerciseList = (): React.JSX.Element => {
     getExerciseListInfo();
   }, [getExerciseListInfo]);
 
+  const filterExercises = (e) => {
+    setQueryTerms(exerciseFilter(queryTerms, e));
+  }
+
   const getExercises = useCallback(async () => {
     toggleIsLoading();
     if (showUserExercises === true) {
       try {
-        dispatch(findAllExercises());
+        dispatch(findAllExercises(queryTerms));
         setWgerExercises([]);
       } catch (err) {
         return err;
@@ -95,7 +120,7 @@ const ExerciseList = (): React.JSX.Element => {
       }
     }
     toggleIsLoading();
-  }, [showUserExercises, showWgerExercises]);
+  }, [showUserExercises, showWgerExercises, queryTerms]);
 
   // cache the getExercsies function so that it is the same reference when used in the useEffect hook.
   // Upon component mounting, get userExercises state from FitlyApi and display on page.
@@ -158,102 +183,80 @@ const ExerciseList = (): React.JSX.Element => {
 
   // Filter Components
   const muscleGroupFilters = muscleGroups.map((muscleGroup) => (
-    <div className="ExerciseFilterDiv">
-      <label htmlFor="muscleGroupFilter">{muscleGroup.name}</label>
+    <div className='ExerciseFilterDiv'>
+      <label htmlFor='muscleGroupFilter'>{muscleGroup.name}</label>
       <input
-        className="filterButton"
-        type="checkbox"
-        name="muscleGroupFilter"
+        id={muscleGroup.id}
+        onClick={filterExercises}
+        className='filterButton'
+        type='checkbox'
+        name='muscleGroupFilter'
         value={muscleGroup.name}
       />
     </div>
   ));
   const equipmentFilters = equipments.map((equipment) => (
-    <div className="ExerciseFilterDiv">
-      <label htmlFor="equipmentFilter">{equipment.name}</label>
+    <div className='ExerciseFilterDiv'>
+      <label htmlFor='equipmentFilter'>{equipment.name}</label>
       <input
-        className="filterButton"
-        type="checkbox"
-        name="equipmentFilter"
+        id={equipment.id}
+        onClick={filterExercises}
+        className='filterButton'
+        type='checkbox'
+        name='equipmentFilter'
         value={equipment.name}
       />
     </div>
   ));
 
-  if (exerciseFormToggle)
-    return <NewExerciseForm toggle={toggleExerciseFormVisibility} />;
+  if (exerciseFormToggle) return <NewExerciseForm toggle={toggleExerciseFormVisibility} />;
 
   return isLoading ? (
     <LoadingComponent />
   ) : (
-    <div id="ExerciseListContainer">
-      <div id="filterExerciseDivider">
-        <div id="filterExerciseDividerInner">
-          <div id="filtersection">
+    <div id='ExerciseListContainer'>
+      <div id='filterExerciseDivider'>
+        <div id='filterExerciseDividerInner'>
+          <div id='filtersection'>
             <p>Muscle Group</p>
-            <form className="FilterForm">{muscleGroupFilters}</form>
+            <form className='FilterForm'>{muscleGroupFilters}</form>
             <p>Equipment</p>
-            <form className="FilterForm">{equipmentFilters}</form>
+            <form className='FilterForm'>{equipmentFilters}</form>
           </div>
-          <div className="exerciselistsection">
-            <div id="ExerciseListHead">
+          <div className='exerciselistsection'>
+            <div id='ExerciseListHead'>
               <div>
                 <a onClick={toggleExerciseView}>
-                  <button
-                    className={
-                      showUserExercises
-                        ? 'exercisebutton active'
-                        : 'exercisebutton'
-                    }
-                  >
+                  <button className={showUserExercises ? 'exercisebutton active' : 'exercisebutton'}>
                     Personal Exercises
                   </button>
                 </a>
                 <a onClick={toggleExerciseView}>
-                  <button
-                    className={
-                      showWgerExercises
-                        ? 'exercisebutton active'
-                        : 'exercisebutton'
-                    }
-                  >
+                  <button className={showWgerExercises ? 'exercisebutton active' : 'exercisebutton'}>
                     Find New Exercise
                   </button>
                 </a>
               </div>
             </div>
-            <div id="ExerciseListHead2">
-              <div className="searchbar">
+            <div id='ExerciseListHead2'>
+              <div className='searchbar'>
                 <form>
-                  <label htmlFor="">Search:</label>
-                  <input type="text" placeholder="Exercise..."></input>
+                  <label htmlFor=''>Search:</label>
+                  <input type='text' placeholder='Exercise...'></input>
                 </form>
               </div>
-              <button
-                id="addexercisebutton"
-                onClick={toggleExerciseFormVisibility}
-              >
+              <button id='addexercisebutton' onClick={toggleExerciseFormVisibility}>
                 +
               </button>
             </div>
             {showUserExercises ? (
-              <div className="exerciseListBody">{userExerciseComponents}</div>
+              <div className='exerciseListBody'>{userExerciseComponents}</div>
             ) : (
-              <div id="wgerexercisesdiv">
-                <div className="exerciseListBody">{wgerExerciseComponents}</div>
+              <div id='wgerexercisesdiv'>
+                <div className='exerciseListBody'>{wgerExerciseComponents}</div>
                 <div>
-                  <FontAwesomeIcon
-                    className="arrow"
-                    type="button"
-                    icon={faArrowLeft}
-                    onClick={getPreviousExercises}
-                  />
-                  <FontAwesomeIcon
-                    className="arrow"
-                    type="button"
-                    icon={faArrowRight}
-                    onClick={getNextExercises}
-                  />
+                  <FontAwesomeIcon className='arrow' type='button' icon={faArrowLeft} onClick={getPreviousExercises} />
+                  <FontAwesomeIcon className='arrow' type='button' icon={faArrowRight} onClick={getNextExercises} />
                 </div>
               </div>
             )}

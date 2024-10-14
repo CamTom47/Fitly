@@ -45,11 +45,16 @@ interface Exercise {
     equipmentId?: number
 };
 
+interface ExerciseQuery {
+    muscleGroup?: string,
+    equipmentId?: string
+}
+
 export const findAllExercises = createAsyncThunk(
     "exercises/findAllExercises",
-    async () => {
+    async (data: ExerciseQuery | undefined) => {
         try{
-            const exercises = await FitlyApi.findAllExercises();
+            const exercises = await FitlyApi.findAllExercises({...data});
             return exercises
         }
         catch (err){

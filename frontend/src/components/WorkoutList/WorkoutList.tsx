@@ -14,19 +14,34 @@ import { findAllCircuits } from '../../slices/circuitsSlice';
 
 import './WorkoutList.css';
 
+import { workoutFilter } from '../../helpers/filters'
+
+interface WorkoutQuery {
+  category?: string,
+  favorited?: boolean
+}
+
 const WorkoutList = (): React.JSX.Element => {
   const dispatch = useAppDispatch();
   const workouts = useAppSelector(selectWorkouts);
   const categories = useAppSelector(selectCategories);
   const [showCreateWorkoutForm, setShowCreateWorkoutForm] = useToggle();
   const [isLoading, setIsLoading] = useState(true);
+  const [queryTerms, setQueryTerms] = useState<WorkoutQuery>({});
+  
+  useEffect(()=> {
+      dispatch(findAllCategories());
+      dispatch(findAllCircuits());
+  }, [])
 
   const getWorkoutInfo = useCallback(() => {
-    dispatch(findAllWorkouts());
-    dispatch(findAllCategories());
-    dispatch(findAllCircuits());
+    dispatch(findAllWorkouts(queryTerms));
     setIsLoading(false);
-  }, [showCreateWorkoutForm]);
+  }, [showCreateWorkoutForm, queryTerms]);
+
+  const filterWorkouts = (e) => {
+    setQueryTerms(workoutFilter(queryTerms, e));
+  }
 
   useEffect(() => {
     getWorkoutInfo();
@@ -42,11 +57,13 @@ const WorkoutList = (): React.JSX.Element => {
 
   const categoryFilterComponents = categories.map((category) => (
     <div className="WorkoutFilterDiv">
-      <label htmlFor="CategoryFilter">{category.name}</label>
+      <label htmlFor="categoryFilter">{category.name}</label>
       <input
+      id={category.id}
         className="filterButton"
+        onClick={filterWorkouts}
         type="checkbox"
-        name="CategoryFilter"
+        name="categoryFilter"
         value={category.name}
       />
     </div>
