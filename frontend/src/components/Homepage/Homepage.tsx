@@ -10,11 +10,7 @@ const Homepage = (): React.JSX.Element  => {
 
     return !currentUser ? 
         (
-            <div className="d-flex justify-content-center m-5 ">
-            <Card className="d-flex flex-column align-items-center p-5">
                 <LoginForm></LoginForm>
-            </Card>
-        </div>
         ) 
     :
         (

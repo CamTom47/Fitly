@@ -90,30 +90,42 @@ const WgerExercise = ({exercise, key}): React.JSX.Element => {
         //then add new equipment id to newExerciseObject
         
 
-    const equipmentComponents = exercise.equipment.map ( (equipment: Equipment) => (
-        <CardText>Equipment: {equipment.name}</CardText>
+    const equipmentComponents = exercise.equipment.map ( (equipment: Equipment) => (            
+            <p>{equipment.name}</p>
     ))
 
     const imageComponents = exercise.images.map( (image:{image: string}) => (
-        <Col xs="6">
-            <img className="exerciseImage d-flexbox" src={image.image}></img>
-        </Col>
+        <div>
+            <img className="exerciseImage" src={image.image}></img>
+        </div>
     ))
 
     return (
-        <Card key={key} className="d-flex flex-column align-items-center pb-3">
-            <CardTitle>Name: {englishExercise.name}</CardTitle>
-            <Row>
-                {imageComponents}
-            </Row>
-            <CardBody>
-                <CardText className="d-flex justify-content-center">
-                    Type: {exercise.category.name}
-                </CardText>
-                {equipmentComponents}
-            </CardBody>
-            <button className="btn btn-success" onClick={handleClick}>Add To Saved Exercises</button>
-        </Card>
+        <div id="wgerexercisecontainer" key={key}>
+            <div className="wgerexercisecontent">
+                <div className="wgerexercisecontenthead">
+                    <h5>{englishExercise.name}</h5>
+                </div>
+                <div className="wgerexercisecontentbody">
+
+                    {/* Images hidden for now. Reformat to show photo upon click. This will keep the cards the same */}
+                    {/* <div>
+                        {imageComponents}
+                    </div> */}
+                    <div>
+                        <div>
+                          <span>Type:</span>
+                          <p>{exercise.category.name}</p>
+                        </div>
+                        <div>
+                        <span>Equipment:</span> 
+                        {equipmentComponents}
+                        </div>
+                    </div>
+                    <button className="saveButton" onClick={handleClick}>Save Exercise</button>
+                </div>
+            </div>
+        </div>
     )
 }
 

@@ -1,14 +1,11 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React from "react";
 import UpdateCircuitForm from "../Forms/UpdateCircuitForm/UpdateCircuitForm";
 import useToggle from "../../hooks/useToggle/useToggle";
 import { v4 as uuid } from 'uuid';
-import { Col, Row } from "reactstrap";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { 
-    selectCircuits,
-    deleteCircuit,
-} from '../../slices/circuitsSlice';
+import { selectCircuits, deleteCircuit } from '../../slices/circuitsSlice';
 import {selectExercises} from '../../slices/exercisesSlice';
+import './Circuit.css'
 
 interface Circuit {
     id: number,
@@ -48,42 +45,46 @@ const Circuit = ({circuitId}): React.JSX.Element => {
     return (showUpdateCircuitForm)
     ? <UpdateCircuitForm key={uuid()} circuit={circuit} exercise={exercise} toggleShowUpdateCircuitForm={toggleShowUpdateCircuitForm}/>
     :   (
-        <div className="d-flex flex-column align-items-between py-3">
-            <div className="d-flex flex-column align-items-between">
-            <Row xs="3">
-                <Col className="d-flex flex-row justify-content-center column-gap-2">
-                    <span>Sets:</span><p>{circuit.sets}</p>
-                </Col>
-                <Col className="d-flex flex-row justify-content-center column-gap-2">
-                    <span>Reps: </span><p>{circuit.reps}</p>
-                </Col>
-                <Col className="d-flex flex-row justify-content-center column-gap-2">
+        <div className="CircuitContainer">
+            <div className="InformationSection">
+                <div className="InformationDiv">
+                    <span>Sets:</span>
+                    <p>{circuit.sets}</p>
+                </div>
+                <div className="InformationDiv">
+                    <span>Reps: </span>
+                    <p>{circuit.reps}</p>
+                </div>
+            </div>
+            <div className="InformationSection">
+                <div className="InformationDiv">
                     <span>Weight (lbs): </span>
                     <p>{circuit.weight}</p>
-                </Col>
-            </Row>
-            <Row xs="3">
-                <div className="d-flex flex-row justify-content-center column-gap-2">
-                    <span>Rest (Seconds): </span>
-                    <p>{circuit.rest_period}</p>
                 </div>
-                <div className="d-flex flex-row justify-content-center column-gap-2">
+                <div className="InformationDiv">
+                    <span>Rest (Seconds): </span>
+                    <p>{circuit.restPeriod}</p>
+                </div>
+            </div>
+            <div className="InformationSection">
+                <div className="InformationDiv">
                     <span>Intensity: </span>
                     <p>{circuit.intensity}</p>
                 </div>
-                <div className="d-flex flex-row justify-content-center">
-                    <div className="d-flex flex-row column-gap-2">
-                        <span>Exercise:</span>
-                        <p>{exercise.name}</p>
-                    </div>
+                <div className="InformationDiv">
+                    <span>Exercise:</span>
+                    <p>{exercise.name}</p>
                 </div>
-            </Row>
-            <div className="d-flex justify-content-center column-gap-5">
-                <button className="btn btn-danger" onClick={handleDelete}>Delete Circuit</button>
-                <button className="btn btn-secondary" onClick={toggleShowUpdateCircuitForm}>Update Circuit</button>
             </div>
+            
+            
+            
+            <div className="buttonDiv">
+                <button className="FormButton" onClick={handleDelete}>Delete Circuit</button>
+                <button className="FormButton" onClick={toggleShowUpdateCircuitForm}>Update Circuit</button>
             </div>
         </div>
+                    
     )
 
 }

@@ -1,0 +1,82 @@
+.AccountContainer{ 
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     background-color: var(--primary-color);
+     width: 40%;
+     margin: 5rem auto;
+     border-radius: 20px;
+}
+
+.AccountContainer h3{
+    color: var(--primary-color-text);
+    margin-top: 3rem;
+}
+
+.AccountContainerInner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary-color);
+    height: 100%;
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+    margin-bottom: 5rem;
+}
+.AccountContent{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem;
+}
+.AccountContentInputDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 20rem;
+    margin-bottom: .7rem;
+    background-color: var(--secondary-color);
+}
+.AccountContentInputDiv span{
+    border-right: 1px solid var(--primary-color-dark);
+    border-radius: 5px 0 0 5px;
+    background-color: var(--secondary-color-light);
+    padding: .3rem;
+    text-decoration: none;
+    flex-grow: 1;
+}
+
+.AccountContentInputDiv label{
+    border-right: 1px solid var(--primary-color-dark);
+    border-radius: 5px 0 0 5px;
+    background-color: var(--secondary-color-light);
+    padding: .3rem;
+    text-decoration: none;
+    flex-grow: 1;
+}
+
+.AccountInput{
+    background-color: var(--secondary-color-light);
+    text-align: center;
+    border-radius: 0 5px 5px 0;
+    padding: 0;
+    margin: 0;
+    border: 0px;
+    width: 70%;
+}
+
+.AccountButton{
+    border-radius: 10px;
+    padding: .5rem;
+    margin-right: 1rem; 
+    border: none;
+}
+
+.AccountButton:hover{
+    background: var(--primary-color);
+    transition: all .35s;
+}
+

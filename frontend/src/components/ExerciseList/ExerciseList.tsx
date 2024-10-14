@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useContext, useCallback, useMemo} from "react";
-
-import { Container, Row, Col, Nav, NavItem, NavLink } from "reactstrap";
 import WgerApi from "../../Api/WgerApi"
 import ExerciseDetails from "../ExerciseDetails/ExerciseDetails";
 import WgerExercise from "../WgerExercise/WgerExercise";
@@ -9,7 +7,6 @@ import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-
 import { v4 as uuid } from "uuid";
 
 import {
@@ -20,6 +17,8 @@ import {
 import { findAllMuscleGroups } from '../../slices/muscleGroupsSlice';
 import { findAllEquipments } from '../../slices/equipmentsSlice';
 import useToggle from "../../hooks/useToggle/useToggle";
+import './ExerciseList.css';
+
 
 interface WgerExercises {
     request: {
@@ -102,27 +101,24 @@ const ExerciseList = (): React.JSX.Element => {
 
     //Map through userExercises state and create an exercise component from each item
     const userExerciseComponents = userExercises.map(e => (
-        <Col xs="4" className="my-3">
+        <div>
             <ExerciseDetails exerciseId={e.id} key={uuid()}/>
-        </Col>
+        </div>
     ))
 
     //Map through the wgerExercise state and creat an exercise component from each item
     const wgerExerciseComponents = wgerExercises.map( e => (
-        <Col xs="4" className="my-3">
+        <div>
             <WgerExercise exercise={e} key={uuid()}/>
-        </Col>
+        </div>
     ))
 
     //toggle state that show's user's workouts and wger API workouts
-    const toggleUserExercises = () => {
-        toggleShowWgerExercises();
-        toggleShowUserExercises();
-    }
-
-    const toggleWgerExercises = () => {
-        toggleShowUserExercises();
-        toggleShowWgerExercises();
+    const toggleExerciseView = (e) => {
+        if(!(e.target.className.includes('active'))){
+            toggleShowWgerExercises();
+            toggleShowUserExercises();
+        }        
     }
 
     //toggle state that shows exercise update form
@@ -163,48 +159,63 @@ const ExerciseList = (): React.JSX.Element => {
         (isLoading) 
     ? <LoadingComponent/>
     :
-        <Container className="d-flex flex-column">
-            <Nav>
-                <div className="d-flex flex-row justify-content-between align-items-end flex-grow-1">
-                    <h1 className="flex-shrink-1">Exercises</h1>
-                    <NavItem>
-                        <NavLink className="flex-shrink-1" onClick={toggleUserExercises}>
-                            Saved Exercises
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink className="flex-shrink-sm-0" onClick={toggleWgerExercises}>
-                            Find An Exercise
-                        </NavLink>
-                    </NavItem>
-        
+        <div id="ExerciseListContainer">
+            <div id="exercisesectiontitle">
+                <h1>Exercises</h1>
+            </div>
+            <div id="filterExerciseDivider">
+                <div id="filterExerciseDividerInner">
+                <div id="filtersection">
+                    <p>filter placeholder</p>
                 </div>
-            </Nav>
+            <div className="exerciselistsection">
+                <div className="test">
+                    <div id="ExerciseListHead">
+                    <div>
+                        <a onClick={toggleExerciseView}>
+                            <button className={showUserExercises ? "exercisebutton active" : "exercisebutton"}>
+                                Personal Exercises
+                            </button>
+                        </a>
+                        <a onClick={toggleExerciseView}>
+                            <button className={showWgerExercises ? "exercisebutton active" : "exercisebutton"}>
+                                Find New Exercise
+                            </button>
+                        </a>  
+                        </div>
+                        <div className="searchbar">
+                            <form>
+                                <label htmlFor="">Search:</label>
+                                <input type="text" placeholder="Search For Exercise"></input>
+                            </form>
+                        </div>
 
-            <hr className="mt-0"></hr>
-            <Row className="d-flex flex-shrink-1 justify-content-center">
-                <button className="w-25 btn btn-secondary mx-0" onClick={toggleExerciseFormVisibility}>
-                     Create Custom Exercise
-                    </button>
-            </Row>
-
+            </div>
+            <div id="ExerciseListHead2">
+                <button id="addexercisebutton" onClick={toggleExerciseFormVisibility}>
+                            Create New Exercise
+                </button>
+            </div>
             {
                 (showUserExercises)
-            ?   <Row >
+                ?   <div className="exerciseListBody">
                     {userExerciseComponents}
-                </Row>
-            :  <div>
-                <Row>
-
+                </div>
+            :  <div id="wgerexercisesdiv">
+                <div className="exerciseListBody">
                       {wgerExerciseComponents}
-                 </Row>
-                 <div className="d-flex justify-content-center column-gap-5">
-                    <FontAwesomeIcon type="button" icon={faArrowLeft} onClick={getPreviousExercises}/>
-                    <FontAwesomeIcon type="button" icon={faArrowRight} onClick={getNextExercises}/>
+                 </div>
+                 <div>
+                    <FontAwesomeIcon className="arrow" type="button" icon={faArrowLeft} onClick={getPreviousExercises}/>
+                    <FontAwesomeIcon className="arrow" type="button" icon={faArrowRight} onClick={getNextExercises}/>
                  </div>
             </div> 
             }
-        </Container>)
+            </div>
+            </div>
+            </div>
+            </div>
+        </div>)
 }
 
 export default ExerciseList;

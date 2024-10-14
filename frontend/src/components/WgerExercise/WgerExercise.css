@@ -1,3 +1,67 @@
 .exerciseImage {
     max-width: 150px;
 }
+
+#wgerexercisecontainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+    background-image: linear-gradient(45deg,hsla(212, 11%, 40%), hsla(212, 11%, 70%));
+    border-radius: 20px;
+}
+
+#wgerexercisecontainer:hover {
+    background-color: hsla(212, 11%, 75%);
+    box-shadow: 0px 3px 10px hsla(212, 11%, 80%);
+    background-image: linear-gradient(45deg,hsla(212, 11%, 50%), hsla(212, 11%, 80%));
+    border: 2px solid hsla(212, 11%, 75%);;
+    transition: all .35s;
+}
+    .wgerexercisecontent{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .wgerexercisecontenthead{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        align-items: start;
+    }
+
+    .wgerexercisecontentbody{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .wgerexercisecontentbody div{
+        display: flex;
+        flex-direction: column;
+    }
+
+    h5{
+        padding: 0;
+        margin: 0;
+    }
+
+    p{
+        margin: 0px;
+    }
+
+    .saveButton{
+        background-image: linear-gradient(45deg,hsla(212, 11%, 80%), hsla(212, 11%, 70%));
+        width: 50%;
+        border-radius: 20px;
+    }
+
+    div span{
+        text-decoration: underline;
+    }
+

@@ -16,26 +16,23 @@ interface Equipment {
     systemDefault: boolean
 };
 
-export const equipmentCheckForExerciseUpdate = async (equipmentNameCompare : string , user_id : number) => {
+export const equipmentCheckForExerciseUpdate = async (equipmentNameCompare : string , userId : number) => {
     try{
-
         let allEquipment : Equipment[] = await FitlyApi.findAllEquipments();
-        for( let equipment of allEquipment){
-            if(equipment.name === equipmentNameCompare){
-                return equipment.id
-            } else{
-                let newEquipment : Equipment = await FitlyApi.createEquipment({
-                    "user_id": user_id,
-                    "name": equipmentNameCompare
-                })
-                return newEquipment.id
-            }}
-        } catch (err){
+        let match = allEquipment.find( equipment => equipment.name === equipmentNameCompare)
+        if (match) return match.id
+        else{
+            let newEquipment : Equipment = await FitlyApi.createEquipment({
+                "userId": userId,
+                "name": equipmentNameCompare
+            })
+            return newEquipment.id
+        }
+        }
+         catch (err){
             return err
         }
-             
-        
-}
+    }
 
 export const equipmentMatch = async (equipmentId : number) => {
     try{

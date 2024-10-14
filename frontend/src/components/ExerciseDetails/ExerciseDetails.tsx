@@ -1,5 +1,4 @@
-import React, {useCallback, useContext, useEffect, useState} from "react";
-import { Card, CardBody, CardText, CardTitle, Col, Row, Button} from "reactstrap"
+import React, {useEffect, useState} from "react";
 import UpdateExerciseForm from "../Forms/UpdateExerciseForm/UpdateExerciseForm";
 import {equipmentMatch} from "../../helpers/helpers";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
@@ -8,6 +7,10 @@ import {
     deleteExercise,
     selectExercises
 } from '../../slices/exercisesSlice';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faPencil } from "@fortawesome/free-solid-svg-icons";
+
+import './ExerciseDetails.css'
 
 /**
  * Exercise component
@@ -73,28 +76,42 @@ const ExerciseDetails = ({exerciseId}: ExerciseDetailProps) : React.JSX.Element 
     }
 
     return (
-        <Card className="my-2 d-flex flex-column align-items-center pb-3">
+        <div id="ExerciseDetailsContainer">
             {(toggleExerciseUpdateForm)
                 ?  <UpdateExerciseForm exercise={exercise} toggle={handleEditClick} equipment={equipment}/>
                 : (
-                    <div className="d-flex flex-column align-items-center">
-                        <CardTitle className="fs-3 d-flex">{exercise.name}</CardTitle>
-                        <CardBody className="d-flex flex-column align-content-center">
-                            <CardText className="d-flex justify content-center">
-                                Muscle Group: {muscleGroup.name}
-                            </CardText >
-                            <CardText className="d-flex justify content-center">
-                                Equipment Needed: {equipment.name}
-                            </CardText>
-                        </CardBody>
-                        <div className="d-flex flex-row column-gap-5">
-                            <Button className="btn btn-danger" onClick={handleDeleteClick}>Delete Exercise</Button>
-                            <Button className="btn btn-secondary" onClick={handleEditClick}>Edit Exercise</Button>
+                    <div className="exerciseDetailsContent">
+                        <div className="ExerciseDetailsContentHead">
+                        <h5>{exercise.name}</h5>
+                        <div>
+                            <FontAwesomeIcon icon={faPencil} id="editButton" className="ExerciseDetailIcons" onClick={handleEditClick}/>
+                            <FontAwesomeIcon icon={faTrash} id="deleteButton"  className="ExerciseDetailIcons" onClick={handleDeleteClick}/>
                         </div>
+                        </div>
+                        <div className="exerciseDetailsContentBody">
+                            <div>
+                                <span>
+                                Muscle Group: 
+                                </span>
+                                <p>
+                                    {muscleGroup.name}
+                                </p>
+                            </div>
+                            <div>
+                            <span>
+                            Equipment Needed: 
+                            </span>
+                            <p>
+                                {equipment.name}
+                            </p>
+
+                            </div>
+                        </div>
+                        
                     </div>
                     )
             }
-        </Card>
+        </div>
         )
 }
 

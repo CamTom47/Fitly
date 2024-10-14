@@ -1,17 +1,12 @@
 import React from "react";
 import { Formik, Field, ErrorMessage, Form, FormikHelpers, FormikErrors} from "formik";
 import { equipmentCheckForExerciseUpdate } from "../../../helpers/helpers"
-import { Card } from "reactstrap";
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
-import {
-    selectCurrentUser,
-} from '../../../slices/usersSlice';
-import {
-    addExercise,
-} from '../../../slices/exercisesSlice';
-import { 
-    selectMuscleGroups
-} from '../../../slices/muscleGroupsSlice';
+import { selectCurrentUser } from '../../../slices/usersSlice';
+import { addExercise } from '../../../slices/exercisesSlice';
+import { selectMuscleGroups } from '../../../slices/muscleGroupsSlice';
+
+import '../Forms.css'
 
 
 interface FormProps{
@@ -39,8 +34,7 @@ const NewExerciseForm = ({toggle} : FormProps): React.JSX.Element => {
     ))
     
     return (
-        <div className="d-flex flex-column align-items-center pt-5">
-            <Card className="d-flex flex-column align-items-center py-3">
+        <div className="FormContainer">
                 <h3>New Exercise Form</h3>
                 <Formik
                     initialValues={{name: "", 
@@ -72,44 +66,37 @@ const NewExerciseForm = ({toggle} : FormProps): React.JSX.Element => {
                         }, 400)}}
                     >
                         {({isSubmitting}) => (
-                            <Form className="d-flex flex-column align-items-center">
-                                <div className="d-flex flex-column align-items-center">
-                                    <div className="d-flex flex-column justify-content-center p-3 row-gap-4">
-                                        <div className="d-flex justify-content-between column-gap-3">
-                                            <label htmlFor="name">Exercise Name:</label>
-                                            <Field type='name' name='name'/>
+                            <div className="FormContainerInner">
+                                <div className="FormContent">                          
+                                    <Form className="FormContentInput">
+                                        <div className="FormContentInputDiv">
+                                                    <label className="FormInput" htmlFor="name">Exercise Name:</label>
+                                                    <Field className="FormInput" type='name' name='name'/>
+                                            
                                         </div>
-                                        <div style={{color: "red"}}>
-                                            <ErrorMessage name='name' component='div'/>
-                                </div>
-                                        <div className="d-flex justify-content-between column-gap-3">
-                                            <label htmlFor="muscleGroup">Muscle Group:</label>
-                                            <Field as='select' name='muscleGroup'>
-                                                {muscleGroupComponents}
-                                            </Field>
+                                        <div className="FormContentInputDiv">
+                                                    <label className="FormInput" htmlFor="muscleGroup">Muscle Group:</label>
+                                                    <Field className="FormInput" as='select' name='muscleGroup'>
+                                                        {muscleGroupComponents}
+                                                    </Field>
+
                                         </div>
-                                        <div style={{color: "red"}}>
-                                            <ErrorMessage name='muscleGroup' component='div'/>
-                                </div>
-                                        <div className="d-flex justify-content-between column-gap-3">
-                                            <label htmlFor="equipment">Equipment:</label>
-                                            <Field type='equipment' name='equipment'/>
+                                        <div className="FormContentInputDiv">
+                                                    <label className="FormInput" htmlFor="equipment">Equipment:</label>
+                                                    <Field className="FormInput" type='equipment' name='equipment'/>
+
                                         </div>
-                                        <div style={{color: "red"}}>
-                                            <ErrorMessage name='equipment' component='div'/>
-                                </div>
-                                        <div className="d-flex justify-content-center column-gap-3">
-                                            <button className="btn btn-danger" onClick={toggle}>Cancel</button>
-                                            <button className="btn btn-success" type='submit' disabled={isSubmitting}>Create Exercise</button>
+                                        <div className="FormContentInputDiv">
+                                                    <button className="FormButton" onClick={toggle}>Cancel</button>
+                                                    <button className="FormButton" type='submit' disabled={isSubmitting}>Create Exercise</button>
                                         </div>
-                                    </div>
+                                    </Form>
                                 </div>
-                            </Form>
+                            </div>
                         )}
 
                 </Formik>
-            </Card>
-        </div>
+            </div>
     )
 }
 

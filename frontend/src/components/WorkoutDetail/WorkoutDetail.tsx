@@ -4,10 +4,10 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import { v4 as uuid } from 'uuid'
 
 //styling imports
-import { Card, CardBody, CardText, CardTitle, ListGroup, ListGroupItem, Button, Container} from "reactstrap"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faTrash, faSquarePlus } from '@fortawesome/free-solid-svg-icons'
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import './WorkoutDetail.css'
 
 //component imports
 import NewCircuitForm from "../Forms/NewCircuitForm/NewCircuitForm";
@@ -16,18 +16,10 @@ import Circuit from "../Circuit/Circuit";
 import FitlyApi from "../../Api/FitlyApi";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-
-import { 
-    deleteWorkout,
-    selectWorkouts,
-} from '../../slices/workoutsSlice';
-
-import {
-    selectCircuits,
-    findAllCircuits
-
-} from '../../slices/circuitsSlice';
+import { deleteWorkout, selectWorkouts } from '../../slices/workoutsSlice';
+import { selectCircuits, findAllCircuits } from '../../slices/circuitsSlice';
 import { selectCategories } from '../../slices/categoriesSlice';
+
 
 interface Workout{
     id: number,
@@ -94,9 +86,7 @@ const WorkoutDetail = (): React.JSX.Element => {
     }
 
     const circuitComponents = circuits.map( circuit => (
-        <div>
             <Circuit key={uuid()} circuitId={circuit.id}/>
-        </div>
     ))
 
     return (isLoading)
@@ -105,58 +95,48 @@ const WorkoutDetail = (): React.JSX.Element => {
     (showWorkoutUpdateForm) 
     ? <UpdateWorkoutForm key={uuid()} workout={workout} handleToggle={toggleShowWorkoutUpdateForm}/>
     :(
-        <Container className="w-75 pt-3">
-        <div>
-            <div className="d-flex column-gap-3">
-                <Button color='danger'>
-                    <Link to={`/workouts`} style={{textDecoration: "none", color: "white"}}>
-                        Back to Workouts
-                    </Link>
-                </Button>
-                <Button onClick={toggleShowWorkoutUpdateForm}>
-                    Edit Workout Information
-                </Button>
-            </div>
+        <div  id="WorkoutDetailContainer">
+            <div className="WorkoutDetailContainerInner">
+                <div className="WorkoutDetailContainerHead">
+                    <button>
+                        <Link className="LinkElement" to={`/workouts`}>Back to Workouts</Link>
+                    </button>
+                    <div>
+                        <button onClick={toggleShowWorkoutUpdateForm}>Edit Workout Information</button>
+                        <button onClick={(removeWorkout)}>Delete Workout</button>
+                    </div>
+                </div>
+                <div className="WorkoutDetailDivider">
+                    <div className="dividerSection1">
+                        { (workout.favorited)
+                            ? <FontAwesomeIcon type="button" onClick={handleFavorite} icon={faStar} size="lg" style={{color: "#FFD43B"}}/>
+                            : <FontAwesomeIcon type="button" onClick={handleFavorite} icon={faStar} size="lg"/>
+                        }
+                        <h3>{workout.name}</h3>  
+                        <div className="dividerSection2">
+                            <span>Type of Workout:</span>
+                            <p>{category.name}</p>          
+                        </div>
+                    </div>
 
-        <div>        
-        <Card className="my-2 p-2 w-25">
-            <div className="d-flex flex-row">
-                <button className="btn btn-danger" onClick={(removeWorkout)}>Delete Workout</button>
-                {
-                    (workout.favorited)
-                    ? <FontAwesomeIcon type="button" onClick={handleFavorite} icon={faStar} size="lg" style={{color: "#FFD43B"}}/>
-                    : <FontAwesomeIcon type="button" onClick={handleFavorite} icon={faStar} size="lg"/>
-                }
-            </div>   
-        <CardTitle className="fs-3" >{workout.name}</CardTitle>  
-        <CardBody>
-            <CardText>
-                Type of Workout:{category.name}
-            </CardText>          
-        </CardBody>
-    </Card>
-    </div>
-    <Card>
-        <CardBody className="d-flex flex-grow-1 flex-column align-item-center row-gap-3">
-
-            <CardText className="d-flex flex-column align-items-center fs-4">
-                    Circuits
-            </CardText>
-            {circuitComponents}
-            <div className="d-flex flex-row justify-content-center align-items-center column-gap-3">
-                <span>Add A Circuit</span>
-                <FontAwesomeIcon type="button" icon={faSquarePlus} onClick={toggleShowNewCircuitForm}></FontAwesomeIcon>
-            </div>
-            { 
-                (showNewCircuitForm)
-                ? <NewCircuitForm workout={workout} toggleShowNewCircuitForm={toggleShowNewCircuitForm}/>
-                : null
-                }
-            
-        </CardBody>
-    </Card>
+                </div>
+                <div className="circuitSection">
+                    <div className="dividerSection1">
+                        <h3>Circuits</h3>
+                        <FontAwesomeIcon className="faIcon" size="xl" type="button" icon={faSquarePlus} onClick={toggleShowNewCircuitForm}></FontAwesomeIcon>
+                    </div>
+                    { (showNewCircuitForm)
+                    ? <NewCircuitForm workout={workout} toggleShowNewCircuitForm={toggleShowNewCircuitForm}/>
+                    : null
+                    }
+                    <div className="CircuitList">
+                        {circuitComponents}
+                    </div>
+                
+                </div>
+                
         </div>
-    </Container>
+    </div >
     )
 )
 
