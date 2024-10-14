@@ -1,72 +1,76 @@
-#NavBarContainer{
-    background-image: linear-gradient(45deg,hsla(212, 11%, 50%), hsla(212, 11%, 55%));
+.NavBarContainer {
+  background: var(--color-primary);
+  position: sticky;
+  top: 0;
 }
 
-.toggleContent{
-    background-color: white;
-    margin: 3px 0;
-    height: 3px;
-    width: 20px;
-    opacity: 100;
+.toggleContent {
+  background-color: white;
+  margin: 3px 0;
+  height: 3px;
+  width: 20px;
+  opacity: 100;
 }
 
-.NavBarHeader{
-    text-align: center;
-    background-image: linear-gradient(45deg,hsla(212, 11%, 50%), hsla(212, 11%, 55%));
+.NavBarHeader {
+  text-align: center;
+  background: var(--color-primary);
 }
 
-.NavBarHeader h4{
-    color: white;
-    font-size: 3rem;
-    padding: 0;
-    margin: 0;
+.NavBarHeader h4 {
+  color: white;
+  font-size: 3rem;
+  padding: 0;
+  margin: 0;
 }
 
-.NavBarBody{
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    width: 25%;
-    height: 100%;
-    background-color: white;
-    z-index: 999;
-    text-align: center;
-    background-color: hsla(212, 11%, 50%);
-    transition: 1s;
-    border: 1px solid hsla(212, 11%, 40%)
+.NavBarBody {
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  width: 25%;
+  height: 100%;
+  z-index: 999;
+  text-align: center;
+  transition: 1s;
+  top: 1rem;
 }
 
 .offScreen {
-    left: -25%;
+  left: -20%;
+  opacity: 0%;
 }
 
-.visible{
-    left: 0;
+.visible {
+  left: 5%;
+  opacity: 100%;
 }
 
-.NavBarLinkContainer{
-    display: flex;
-    justify-content: center;
+.NavBarLinkContainer {
+  display: flex;
+  justify-content: center;
 }
-.NavBarMainLink{
-    text-decoration: none;
-    font-size: 1.5rem;
-    color: white;
-}
-
-.NavBarLink{
-    text-decoration: none;
-    font-size: 1.5rem;
-    color: white;
-    background-color: hsla(212, 11%, 50%);
-    border-bottom: 1px solid white;
-    padding: 1rem 0;
+.NavBarMainLink {
+  text-decoration: none;
+  font-size: 1.5rem;
+  color: white;
 }
 
-.NavBarLink:hover{
-    text-decoration: none;
-    font-size: 1.5rem;
-    color: hsla(212, 11%, 50%);
-    background-color: white;
-    transition: .35s;
+.NavBarLink {
+  text-decoration: none;
+  font-size: 1rem;
+  color: white;
+  opacity: 95%;
+  padding: 1rem 0.75rem;
+}
+
+.NavBarLink:hover {
+  text-decoration: none;
+  font-size: 1.2rem;
+  color: hsla(212, 11%, 50%);
+  transition: 0.5s;
+  text-decoration: underline;
+  text-decoration-color: var(--gray-4);
+  text-decoration-thickness: 0.2rem;
+  text-underline-offset: 0.3rem;
 }

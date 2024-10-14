@@ -16,7 +16,7 @@ class FitlyApi {
         console.debug("API Call:", endpoint, data, method)
 
         const url: string =  `${BASE_URL}/${endpoint}`
-        const params: {} = (method === "get")
+        const params = (method === "get")
         ? data
         : {}
         const headers : {} | undefined = (FitlyApi.token !== "") ? { Authorization: `Bearer ${FitlyApi.token}` } : undefined;
@@ -104,7 +104,7 @@ class FitlyApi {
          * 
          */
 
-        static async findAllWorkouts<Promise>(data? : {}) : Promise{
+        static async findAllWorkouts<Promise>(data? : {category?: string}) : Promise{
             let res = await this.request(`workouts/`, data, 'get');
             return res.workouts;
 
@@ -176,7 +176,7 @@ class FitlyApi {
          * @returns {exercises}
          */
 
-        static async findAllExercises<Promise>(data?: {}) : Promise{
+        static async findAllExercises<Promise>(data?: {muscleGroup?: string, equipmentId?: string}) : Promise{
             let res = await this.request(`exercises/`, data, 'get');
             return res.exercises
         }

@@ -19,7 +19,7 @@ class Exercise {
      * @returns {name, muscle_group, equipment_id}
      */
 
-    static async findAll(user_id) {
+    static async findAll(user_id, {muscle_group = undefined, equipment_id = undefined}) {
         let query = `
             SELECT  exercises.id,
                     exercises.name,
@@ -38,12 +38,20 @@ class Exercise {
             queryValues.push(user_id)
             whereExpressions.push(`users_exercises.user_id = $${queryValues.length}`)
         }
+        if(muscle_group !== undefined){
+            queryValues.push(muscle_group);
+            whereExpressions.push(`exercises.muscle_group = $${queryValues.length}`)
+        }
+        if(equipment_id !== undefined){
+            queryValues.push(equipment_id);
+            whereExpressions.push(`exercises_equipments.equipment_id = $${queryValues.length}`);
+        }
 
         if(whereExpressions.length){
-            (whereExpressions.length === 1 ) ? query += "\n WHERE " + whereExpressions : query += " WHERE " + whereExpressions.join(" AND ");
+            (whereExpressions.length === 1 ) ? query += "\n WHERE " + whereExpressions : query += "\n WHERE " + whereExpressions.join(" AND ");
         };
-
-        let result = await db.query(query, queryValues)
+        
+        let result = await db.query(query, queryValues);
 
         let exercises = result.rows;
         return exercises;

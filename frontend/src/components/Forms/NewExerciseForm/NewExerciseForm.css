@@ -1,0 +1,85 @@
+.NewExerciseFormContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--gray-4);
+    width: 100%;
+    margin: 5rem auto;
+  }
+  
+  .NewExerciseFormContainer h4 {
+    color: var(--white);
+    margin-top: 3rem;
+  }
+  
+  .NewExerciseFormContainerInner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--gray-6);
+    height: 100%;
+    border-radius: 10px;
+    margin-top: 2rem;
+    margin-bottom: 5rem;
+    width: 40%;
+  }
+  .NewExerciseFormContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    width: 100%;
+  }
+  
+  .NewExerciseFormContentInput {
+    width: 90%;
+  }
+  .NewExerciseFormContentInputDiv {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 0.7rem;
+  }
+  .NewExerciseFormContentInputDiv span {
+    border-right: 1px solid var(--gray-4);
+    border-radius: 5px 0 0 5px;
+    background-color: var(--gray-6);
+    padding: 0.3rem;
+    text-decoration: none;
+  }
+  .NewExerciseFormContentInputDiv label {
+    border-right: 1px solid var(--gray-4);
+    border-radius: 5px 0 0 5px;
+    background-color: var(--white);
+    padding: 0.3rem;
+    text-decoration: none;
+    width: 25%;
+    font-size: 14px;
+  }
+  .NewExerciseFormInput {
+    background-color: var(--white);
+    text-align: center;
+    border-radius: 0 5px 5px 0;
+    padding: 0;
+    margin: 0;
+    border: 0px;
+    width: 75%;
+    font-size: 14px;
+  }
+  
+  .NewExerciseFormButton {
+    border-radius: 10px;
+    padding: 0.5rem;
+    margin-right: 1rem;
+    border: none;
+    font-size: 12px;
+  
+  }
+  
+  .NewExerciseFormButton:hover {
+    background: var(--gray-4);
+    transition: all 0.35s;
+  }
+  

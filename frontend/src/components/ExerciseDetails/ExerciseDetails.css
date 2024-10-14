@@ -1,11 +1,11 @@
-@media screen and (min-width: 400px){
+/* @media screen and (min-width: 400px){
     #ExerciseDetailsContainer{
         display: flex;
         flex-direction: column;
         align-items: center;
         margin-top: 1rem;
         padding: rem;
-        background: var(--primary-gradient);
+        background: var(--color-primary);
         border-radius: 20px;
     }
     
@@ -20,26 +20,12 @@
         margin: 0;
     }
 
-    p{
-        margin: 0px;
-    }
-
     .exerciseDetailsTextBody{
         display: flex;
     }
     
-    .ExerciseDetailIcons{
-        height: 1.5rem;
-        width: 1.5rem;
-        margin: 1.5rem;
-        margin: 0 .5rem;
-    }
     
-    .ExerciseDetailIcons:hover{
-        transition: all .15s;
-        color: white;
-    }
-}
+} */
 
 
 /* @media screen and (min-width: 900px){ */
@@ -55,16 +41,18 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin: 1rem .5rem 0rem .5rem;
+        margin: 0 1rem 1rem 5rem;
         padding: 1rem;
-        background-color: var(--primary-color);
+        background-color: var(--gray-6);
         border-radius: 20px;
+        height: 10rem;
+        width: 12rem;
     }
 
     #ExerciseDetailsContainer:hover {
-        background-color: var(--secondary-color);
+        background-color: var(--gray-6);
         box-shadow: 0px 3px 10px hsla(212, 11%, 80%);
-        background: var(--primary-gradient-light);
+        background: var(--color-primary-light);
         border: 2px solid hsla(212, 11%, 75%);
         transition: all .35s;
     }
@@ -86,6 +74,10 @@
 
     .exerciseDetailsContentBody span{
         text-decoration: underline;
+        font-size: 12px;
+    }
+    .exerciseDetailsContentBody p{
+        font-size: 12px;
     }
 
     .ExerciseDetailsContentHead{
@@ -99,5 +91,14 @@
     .ExerciseDetailsContentBody div{
         display: flex;
         flex-direction: column;
+    }
+    .ExerciseDetailIcons{
+        height: 1rem;
+        width: 1rem;
+        margin: 0 .2rem;
+    }
+    .ExerciseDetailIcons:hover{
+        transition: all .15s;
+        color: white;
     }
 }

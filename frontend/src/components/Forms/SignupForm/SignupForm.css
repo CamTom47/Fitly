@@ -1,0 +1,58 @@
+#SignupFormContainer {
+  width: 100%;
+  height: 30rem;
+  margin-top: 10rem;
+  background: var(--gray-9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#SignupFormContainer h3 {
+  margin-top: 3rem;
+  color: white;
+}
+.SignupForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  width: 50%;
+  margin-top: 3rem;
+}
+
+.FormContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.InputSection {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-bottom: 0.7rem;
+  width: 75%;
+}
+.InputSection label {
+  border-right: 1px solid var(--gray-4);
+  border-radius: 5px 0 0 5px;
+  background-color: var(--white);
+  padding: 0.3rem;
+  text-decoration: none;
+  flex-grow: 1;
+  width: 25%;
+}
+.SignupFormInput {
+  background-color: var(--white);
+  text-align: center;
+  border-radius: 0 5px 5px 0;
+  padding: 0;
+  margin: 0;
+  border: 0px;
+  width: 100%;
+  display: inline-box;
+}
+.SignupFormError {
+  color: var(--color-error);
+}

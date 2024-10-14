@@ -1,83 +1,84 @@
-.FormContainer{
-    display: flex;
-     flex-direction: column;
-     align-items: center;
-     justify-content: center;
-     background-color: var(--primary-color);
-     width: 50%;
-     margin: 5rem auto;
-     border-radius: 20px;
+.FormContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray-4);
+  width: 50%;
+  margin: 5rem auto;
+  border-radius: 20px;
 }
 
-.FormContainer h4{
-    color: var(--primary-color-text);
-    margin-top: 3rem;
+.FormContainer h4 {
+  color: var(--white);
+  margin-top: 3rem;
 }
 
-.FormContainerInner{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--secondary-color);
-    height: 100%;
-    border-radius: 10px;
-    margin-top: 2rem;
-    margin-bottom: 5rem;
-    width: 80%;
+.FormContainerInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray-6);
+  height: 100%;
+  border-radius: 10px;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+  width: 80%;
 }
-.FormContent{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-    width: 100%;
-}
-
-.FormContentInput{
-    width: 90%;
-}
-.FormContentInputDiv{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    margin-bottom: .7rem;
-}
-.FormContentInputDiv span{
-    border-right: 1px solid var(--primary-color-dark);
-    border-radius: 5px 0 0 5px;
-    background-color: var(--secondary-color-light);
-    padding: .3rem;
-    text-decoration: none;
-    flex-grow: 1;
-}
-.FormContentInputDiv label{
-    border-right: 1px solid var(--primary-color-dark);
-    border-radius: 5px 0 0 5px;
-    background-color: var(--primary-color-text);
-    padding: .3rem;
-    text-decoration: none;
-    flex-grow: 1;
-}
-.FormInput{
-    background-color: var(--primary-color-text);
-    text-align: center;
-    border-radius: 0 5px 5px 0;
-    padding: 0;
-    margin: 0;
-    border: 0px;
-    width: 70%;
+.FormContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  width: 100%;
 }
 
-
-.FormButton{
-    border-radius: 10px;
-    padding: .5rem;
-    margin-right: 1rem; 
-    border: none;
+.FormContentInput {
+  width: 90%;
+}
+.FormContentInputDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-bottom: 0.7rem;
+}
+.FormContentInputDiv span {
+  border-right: 1px solid var(--gray-4);
+  border-radius: 5px 0 0 5px;
+  background-color: var(--gray-6);
+  padding: 0.3rem;
+  text-decoration: none;
+  flex-grow: 1;
+}
+.FormContentInputDiv label {
+  border-right: 1px solid var(--gray-4);
+  border-radius: 5px 0 0 5px;
+  background-color: var(--white);
+  padding: 0.3rem;
+  text-decoration: none;
+  flex-grow: 1;
+}
+.FormInput {
+  background-color: var(--white);
+  text-align: center;
+  border-radius: 0 5px 5px 0;
+  padding: 0;
+  margin: 0;
+  border: 0px;
+  width: 70%;
 }
 
-.FormButton:hover{
-    background: var(--primary-color-light);
-    transition: all .35s;
+.FormButton {
+  border-radius: 10px;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  border: none;
+  font-size: 12px;
+
+}
+
+.FormButton:hover {
+  background: var(--gray-4);
+  transition: all 0.35s;
 }

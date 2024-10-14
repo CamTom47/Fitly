@@ -52,11 +52,17 @@ export default workoutsSlice.reducer
 export const selectWorkouts = state => state.workouts.workouts;
 export const selectWorkout = state => state.workouts.selected;
 
+interface WorkoutQuery {
+    category?: string,
+    favorited?: boolean
+  }
+
 export const findAllWorkouts = createAsyncThunk(
     "workouts/findAllWorkouts",
-    async () => {
+    async (data: WorkoutQuery | undefined) => {
         try{
-            const workouts = await FitlyApi.findAllWorkouts();
+            console.log('data is ', data)
+            const workouts = await FitlyApi.findAllWorkouts({...data});
             return workouts
         } catch (err){
             return err

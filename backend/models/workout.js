@@ -6,6 +6,7 @@ const {
     BadRequestError,
     UnauthorizedError
 } = require('../ExpressError');
+const { query } = require('express');
 
 // Common functions for Workout class
 class Workout { 
@@ -15,17 +16,36 @@ class Workout {
      * @returns {name, category, completed_count, favorited}
      */
 
-    static async findAll(user_id) {
-        const result = await db.query(`
+    static async findAll(user_id, {category = undefined}) {
+        console.log(category)
+        let query = `
             SELECT id,
                     name,
                     category,
                     favorited
-            FROM workouts
-            WHERE user_id = $1`,
-             [user_id] )
+            FROM workouts`
 
-        let workouts = result.rows;
+             const whereExpressions = [];
+             const queryValues = [];
+
+        if(user_id !== undefined){
+            queryValues.push(user_id);
+            whereExpressions.push(`user_id = $${queryValues.length}`);
+        }
+
+        if(category !== undefined){
+            queryValues.push(+category);
+            whereExpressions.push(`category = $${queryValues.length}`);
+        }
+
+        if(whereExpressions.length){
+            (whereExpressions.length === 1) ? query += "\n WHERE " + whereExpressions : query += "\n WHERE " + whereExpressions.join(" AND ");
+        };
+        console.log(query, queryValues)
+
+        let result = await db.query(query, queryValues)
+
+        let workouts = result.rows
 
         return workouts;
 

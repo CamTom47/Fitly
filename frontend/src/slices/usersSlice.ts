@@ -126,9 +126,9 @@ export const signup = createAsyncThunk(
             if(token){
                 FitlyApi.token = token;
                 localStorage.setItem('token', token);
-                const username : string | null = await decodeToken(token);
-                if (username){
-                    const currentUser = await FitlyApi.findUser(username)
+                const user : {id: number, username: string, isAdmin: boolean} | null = await decodeToken(token);
+                if (user){
+                    const currentUser = await FitlyApi.findUser(user.username)
                     const results = { token , currentUser }
                     return results
                 }

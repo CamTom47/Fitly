@@ -1,0 +1,60 @@
+.LoginForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  width: 50%;
+  margin-top: 3rem;
+}
+
+.LoginFormInputDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-bottom: 0.7rem;
+  width: 75%;
+}
+.LoginFormInputDiv label {
+  border-right: 1px solid var(--gray-4);
+  border-radius: 5px 0 0 5px;
+  background-color: var(--white);
+  padding: 0.3rem;
+  text-decoration: none;
+  flex-grow: 1;
+  width: 25%;
+}
+.LoginFormInput {
+  background-color: var(--white);
+  text-align: center;
+  border-radius: 0 5px 5px 0;
+  padding: 0;
+  margin: 0;
+  border: 0px;
+  width: 100%;
+  display: inline-box;
+}
+.LoginFormErrorDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.ErrorMessage {
+  color: var(--color-error);
+  width: 100%;
+}
+.ErrorMessage::before {
+  content: '* ';
+}
+.LoginFormButton {
+  border-radius: 10px;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+  margin-right: 1rem;
+  border: none;
+  border-radius: 10px;
+}
+.LoginFormButton:hover {
+  background: var(--gray-4);
+  transition: all 0.35s;
+}

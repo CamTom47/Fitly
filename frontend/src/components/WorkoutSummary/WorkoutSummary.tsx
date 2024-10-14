@@ -34,7 +34,7 @@ const WorkoutSummary = ({workout}) => {
                     <span>Type of Workout:</span>
                     <p>{category.name}</p>
                     <Link to={`/workouts/${workout.id}`}>
-                        <button>Workout Details</button>
+                        <button id="WorkoutDetailButton">Workout Details</button>
                     </Link>
                 </div>
             </div>
