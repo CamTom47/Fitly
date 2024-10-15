@@ -22,16 +22,18 @@ Fitly is a Fitness (Web) Application with a focus on physical workouts. The appl
 ![image](https://github.com/user-attachments/assets/f7b1541e-5833-4fac-a4e1-7e02a87ea339)
 
 - A user creates/adds exercises to their saved list of exercises
-  ![image](https://github.com/user-attachments/assets/1134c2e1-e7fa-44ba-af79-7a7de3c62cbe)
-
-  ![image](https://github.com/user-attachments/assets/4d08da12-388c-478f-934e-0d1d20bc8465)
+![Screenshot 2024-10-15 at 9 45 43 AM](https://github.com/user-attachments/assets/b821eccc-8c8b-4623-bfb2-fd92169c90a8)
+![Screenshot 2024-10-15 at 9 45 26 AM](https://github.com/user-attachments/assets/c92a6ba1-dda9-455d-8c8b-730faa95a726)
 
 - A user creates a new workout and adds circuits/exercises to the workout.
-  ![image](https://github.com/user-attachments/assets/1be191dd-7279-47f7-9c60-5246b6116bd7)
-  ![image](https://github.com/user-attachments/assets/eeaa4e01-3da8-4351-a3f8-26488e657e51)
+![Screenshot 2024-10-15 at 9 46 26 AM](https://github.com/user-attachments/assets/04c7128e-afbe-46ed-8242-330a5f3975f4)
+![Screenshot 2024-10-15 at 9 46 42 AM](https://github.com/user-attachments/assets/a114d3d0-8a9c-4236-b1f9-d7d9726accfb)
+![image](https://github.com/user-attachments/assets/17ccd084-d26d-430a-95e9-edd5fb42566f)
+
 
 - A user can update their account information
-  ![image](https://github.com/user-attachments/assets/3dad2f9d-3900-4131-bce4-b30b67cf6323)
+![Screenshot 2024-10-15 at 9 46 58 AM](https://github.com/user-attachments/assets/612807a1-a377-4fc3-ab41-90c870431cb0)
+
 
 
 
