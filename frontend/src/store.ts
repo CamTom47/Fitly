@@ -13,8 +13,7 @@ import muscleGroupReducer from './slices/muscleGroupsSlice';
 
 const persistConfig = {
     key: 'root',
-    storage,
-    blacklist: ['exercises', 'equipments']
+    storage
 };
 
 export const rootReducer = combineReducers({
