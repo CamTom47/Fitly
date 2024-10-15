@@ -1,5 +1,4 @@
 import React from "react";
-import UserContext from "./src/context/UserContext";
 import { MemoryRouter } from "react-router";
 
 const demoUser = {
@@ -9,11 +8,9 @@ const demoUser = {
     email: "test@test.com",
 }
 
-const UserProvider = ({children, currentUser = demoUser}) => (
+const UserProvider = ({children}) => (
     <MemoryRouter>
-        <UserContext.Provider value={{currentUser}}>
             {children}
-        </UserContext.Provider>
     </MemoryRouter>
     );
 
