@@ -13,7 +13,7 @@ const NavBar = (): React.JSX.Element => {
 
   const handleLogOut = () => {
     localStorage.clear();
-    dispatch(userLoggedOut());
+    dispatch("RESET_APP");
     persistor.purge();
   };
 
