@@ -15,15 +15,22 @@ const persistConfig = {
   storage
 };
 
-export const rootReducer = combineReducers({
-  workouts: workoutsReducer,
-  circuits: circuitsReducer,
-  exercises: exercisesReducer,
-  equipments: equipmentReducer,
-  categories: categoriesReducer,
-  users: usersReducer,
-  muscleGroups: muscleGroupReducer,
+export const appReducer = combineReducers({
+    workouts: workoutsReducer,
+    circuits: circuitsReducer,
+    exercises: exercisesReducer,
+    equipments: equipmentReducer,
+    categories: categoriesReducer,
+    users: usersReducer,
+    muscleGroups: muscleGroupReducer,
 });
+
+const rootReducer = (state, action) => {
+    if(action.type === "RESET_APP") {
+        state = undefined
+    }
+    return appReducer(state, action)
+}
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
