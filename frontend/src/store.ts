@@ -1,37 +1,39 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 
-import { persistStore, persistReducer, REHYDRATE } from 'redux-persist';
+import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import workoutsReducer from './slices/workoutsSlice';
 import circuitsReducer from './slices/circuitsSlice';
 import exercisesReducer from './slices/exercisesSlice';
-import equipmentReducer from './slices/equipmentsSlice';
+import equipmentReducer from './slices/equipmentsSlice'
 import categoriesReducer from './slices/categoriesSlice';
 import usersReducer from './slices/usersSlice';
 import muscleGroupReducer from './slices/muscleGroupsSlice';
 
+
 const persistConfig = {
-  key: 'root',
-  storage,
-  blacklist: ['workouts', 'circuits', 'categories', 'muscleGroups'],
+    key: 'root',
+    storage
 };
 
 export const rootReducer = combineReducers({
-  workouts: workoutsReducer,
-  circuits: circuitsReducer,
-  exercises: exercisesReducer,
-  equipments: equipmentReducer,
-  categories: categoriesReducer,
-  users: usersReducer,
-  muscleGroups: muscleGroupReducer,
+        workouts: workoutsReducer,
+        circuits: circuitsReducer,
+        exercises: exercisesReducer,
+        equipments: equipmentReducer,
+        categories: categoriesReducer,
+        users: usersReducer,
+        muscleGroups: muscleGroupReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
-});
+    reducer: persistedReducer
+})
 
 export const persistor = persistStore(store);
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+
+export type RootState = ReturnType<typeof store.getState>
+
+export type AppDispatch = typeof store.dispatch
