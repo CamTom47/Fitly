@@ -98,7 +98,8 @@ export const addWorkout = createAsyncThunk(
 
 interface WorkoutUpdate { 
     workoutId: number,
-    data: {}
+    data: {
+    }
 }
 export const updateWorkout = createAsyncThunk(
     "workouts/workoutUpdated",

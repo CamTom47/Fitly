@@ -136,8 +136,8 @@ class Workout {
                 name: "name",
                 category : "category", 
                 favorited: "favorited",
-                times_completed: "timesCompleted",
-                last_completed: "lastCompleted",
+                timesCompleted: "times_completed",
+                lastCompleted: "last_completed",
             }
         )
 

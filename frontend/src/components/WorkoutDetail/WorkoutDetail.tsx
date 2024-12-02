@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState, useContext } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import $ from "jquery";
+import moment from 'moment';
 
 //styling imports
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,7 +19,7 @@ import ActiveWorkout from "../ActiveWorkout/ActiveWorkout";
 import Timer from "../Timer/Timer";
 
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
-import { deleteWorkout, selectWorkouts } from "../../slices/workoutsSlice";
+import { deleteWorkout, selectWorkouts, updateWorkout } from "../../slices/workoutsSlice";
 import { selectCircuits } from "../../slices/circuitsSlice";
 import { selectCategories } from "../../slices/categoriesSlice";
 import { selectExercises } from "../../slices/exercisesSlice";
@@ -31,6 +32,8 @@ interface Workout {
 	name: string;
 	category: number;
 	favorited: boolean;
+	lastCompleted: Date;
+	timesCompleted: number;
 }
 
 interface Category {
@@ -61,9 +64,8 @@ const WorkoutDetail = (): React.JSX.Element => {
 	let navigate = useNavigate();
 	const workoutId = useParams().workout_id;
 	const workouts = useAppSelector(selectWorkouts);
-	const workout = workouts.find((workout: Workout) => workout.id === Number(workoutId));
-	const circuits = useAppSelector(selectCircuits);
-	// .filter((circuit: Circuit) => circuit.workoutId === workout.id);
+	const workout = workouts.filter((workout: Workout) => workout.id === Number(workoutId))[0];
+	const circuits = useAppSelector(selectCircuits).filter((circuit: Circuit) => circuit.workoutId === workout.id);
 	const categories = useAppSelector(selectCategories);
 	const category = categories.find((category: Category) => category.id === workout.category);
 	const exercises = useAppSelector(selectExercises);
@@ -145,18 +147,15 @@ const WorkoutDetail = (): React.JSX.Element => {
 		if (e.target.innerHTML === "Next Set") {
 			if (currentSet < circuits[currentCircuitIdx].sets) {
 				incrementSet();
-			} else {				
+			} else {
 				if (currentCircuitIdx !== circuits[currentCircuitIdx].length) {
-					console.log('oifhoifohidsaf')
 					incrementCircuit();
 					setCurrentSet(1);
-				} else {
-					toggleWorkoutCompleted();
 				}
 			}
-		} else {
-			if ((currentCircuitIdx === circuits.length - 1) && (currentSet  === circuits[currentCircuitIdx].sets))
+		} else if (currentCircuitIdx === circuits.length - 1 && currentSet === circuits[currentCircuitIdx].sets){
 				$("#NextSetButton").toggleClass("none");
+			toggleWorkoutCompleted();
 		}
 	};
 
@@ -166,6 +165,11 @@ const WorkoutDetail = (): React.JSX.Element => {
 		if (e.target.innerHTML !== "Next Set") e.target.innerHTML = "Next Set";
 		else e.target.innerHTML = "Complete Set";
 	};
+
+
+	const recordWorkout = async () => { 
+		dispatch(updateWorkout({workoutId: workout.id, data:{ lastCompleted: new Date(), timesCompleted: workout.timesCompleted + 1}}))
+		}
 
 	if (isLoading) {
 		return <LoadingComponent />;
@@ -221,7 +225,7 @@ const WorkoutDetail = (): React.JSX.Element => {
 								</div>
 								<div>
 									<span>Last Completed</span>
-									{workout.lastCompleted ? workout.lastCompleted : "-"}
+									{workout.lastCompleted ? moment(workout.lastCompleted).format( "MM-DD-YYYY") : "-"}
 								</div>
 							</div>
 						</div>
@@ -274,12 +278,12 @@ const WorkoutDetail = (): React.JSX.Element => {
 						)}
 						{workoutStarted === true && (
 							<div className='ActiveWorkout'>
-								<Timer restPeriod={circuits[currentCircuitIdx].restPeriod} />
+								<Timer workoutCompleted={workoutCompleted} restPeriod={circuits[currentCircuitIdx].restPeriod} />
 								<div className='ActiveWorkout-buttonContainer'>
 									<button id='NextSetButton' className='ActiveWorkout-button' onClick={handleNextSet}>
 										Complete Set
 									</button>
-									<button className='ActiveWorkout-button'>Finish Workout</button>
+									<button className='ActiveWorkout-button' onClick={recordWorkout}>Finish Workout</button>
 								</div>
 								{activeWorkoutWorkoutCard[currentCircuitIdx]}
 							</div>

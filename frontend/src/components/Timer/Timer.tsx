@@ -7,9 +7,10 @@ import useToggle from "../../hooks/useToggle/useToggle";
 
 interface TimerProps {
 	restPeriod: number;
+	workoutCompleted: boolean;
 }
 
-const Timer = ({ restPeriod }: TimerProps): React.JSX.Element => {
+const Timer = ({ restPeriod, workoutCompleted }: TimerProps): React.JSX.Element => {
 	const [mainTimer, setMainTime] = useState<number>(0);
 	const [mainTimerId, setMainTimerId] = useState<any>(0);
 	const [paused, togglePaused] = useToggle();
@@ -100,6 +101,7 @@ const Timer = ({ restPeriod }: TimerProps): React.JSX.Element => {
 	const hours = String(Math.floor(mainTimer / 3600)).padStart(2, "0");
 
 	return (
+		!workoutCompleted ? 
 		<div className='TimerContainer'>
 			<div className='counterCircle'>
 				<div className='overallTimer'>
@@ -132,6 +134,21 @@ const Timer = ({ restPeriod }: TimerProps): React.JSX.Element => {
 				)}
 			</div>
 		</div>
+	: 
+
+	<div className='TimerContainer'>
+			<div className='counterCircle'>
+				<div className='overallTimer'>
+					<div className='time'>
+						<p>
+							{hours}:{minutes}:{seconds}
+						</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
 	);
 };
 
