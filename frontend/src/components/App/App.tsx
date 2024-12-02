@@ -21,6 +21,8 @@ import {
 import "./App.css"
 import "../../fonts/fonts.css"
 import { current } from "@reduxjs/toolkit";
+import UserDashboard from "../UserDashboard/UserDashboard";
+import ActiveWorkout from "../ActiveWorkout/ActiveWorkout";
 
 function App(): React.JSX.Element {  
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +53,7 @@ function App(): React.JSX.Element {
       <div className="App">
         <NavBar></NavBar>
         <Routes>
+          <Route path="/dashboard" element={<UserDashboard/>}/>
           <Route path="/workouts" element={<WorkoutList/>}/>
           <Route path="/workouts/:workout_id" element={<WorkoutDetail/>}/>
           <Route path="/workouts/add" element={<NewWorkoutForm/>}/>

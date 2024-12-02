@@ -1,9 +1,9 @@
 :root{
   /* Main Colors - Used for links, button background color, etc. */
-  --color-primary: hsl(0, 0%,5%);
+  --color-primary: hsl(60, 38%, 95%);
 
   /* Accent color - Used to highlight something important on a page, not a variant of primary color, but complimentary */
-  --color-secondary: hsl(209, 100%, 50%);
+  --color-secondary: hsl(30, 93%, 57%);
 
   /* Shades - Neutral colors used for text elemnts, subtle elemtns, borders, etc. */
   --black: black
@@ -22,11 +22,8 @@
   --color-warning: hsl(190, 73%, 46%);
 
 }
-
-.App{
-  width: 100vw;
-}
-
 body{
-  background-color: var(--color-primary);
+  /* background-color: var(--color-primary); */
+  background: linear-gradient(var(--color-primary), var(--color-secondary));
+  height: 100vh;
 }

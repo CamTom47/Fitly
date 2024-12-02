@@ -97,7 +97,7 @@ class Circuit {
             INSERT INTO circuits
             (sets, reps, weight, rest_period, intensity)
             VALUES ($1, $2, $3, $4, $5)
-            RETURNING id, sets, reps, weight, rest_period, intensity`, 
+            RETURNING id, sets, reps, weight, rest_period AS "restPeriod", intensity`, 
             [sets, reps, weight, rest_period, intensity]);
 
         const circuit = result.rows[0];

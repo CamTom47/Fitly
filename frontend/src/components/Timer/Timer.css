@@ -1,0 +1,45 @@
+
+/* Circular Timer */
+
+#restTimer{
+    font-size: 20px;
+    color: var(--gray-4);
+}
+.TimerContainer{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.hidden{
+    visibility: hidden;
+}
+.counterCircle{
+    border: 2px solid var(--color-secondary);
+    height: 20rem;
+    width: 20rem;
+    left: 0;
+    border-radius: 50%;
+    position: relative;
+}
+.time{
+    position: flex;
+    justify-content: center;
+    translate: 0 100px;
+    align-items: center;
+}
+.time>p{
+    text-align: center;
+    color: var(--color-secondary);
+    font-size: 50px;
+}
+.buttonContainerRight{
+    position: absolute;
+    right: -3rem;
+    top: 0;
+}
+.buttonContainerLeft{
+    position: absolute;
+    right: -3rem;
+    bottom: 0;
+}

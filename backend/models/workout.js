@@ -17,12 +17,14 @@ class Workout {
      */
 
     static async findAll(user_id, {category = undefined}) {
-        console.log(category)
         let query = `
             SELECT id,
                     name,
                     category,
-                    favorited
+                    favorited,
+                    date_created AS "dateCreated",
+                    times_completed AS "timesCompleted",
+                    last_completed AS "lastCompleted"
             FROM workouts`
 
              const whereExpressions = [];
@@ -65,6 +67,9 @@ class Workout {
                     name,
                     category,
                     favorited
+                    date_created AS "dateCreated",
+                    times_completed AS "timesCompleted",
+                    last_completed AS "lastCompleted"
             FROM workouts
             JOIN users_workouts 
             ON workouts.id = users_workouts.workout_id
@@ -88,13 +93,13 @@ class Workout {
      * @param {*} favorited 
      * @returns {name, user_id, category, completed_count, favorited}
      */
-    static async add({name, category, favorited = false, user_id}) {
+    static async add({name, category, favorited = false, user_id}, times_completed = 0) {
         const result = await db.query(`
             INSERT INTO workouts
-            (name, user_id, category, favorited)
-            VALUES ($1, $2, $3, $4)
-            RETURNING id, name, user_id, category, favorited`, 
-            [name, user_id, category, favorited]);
+            (name, user_id, category, favorited, times_completed)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING id, name, user_id, category, favorited, times_completed AS "timesCompleted"`, 
+            [name, user_id, category, favorited, times_completed]);
 
 
         const workout = result.rows[0];
@@ -130,7 +135,9 @@ class Workout {
             {
                 name: "name",
                 category : "category", 
-                favorited: "favorited"
+                favorited: "favorited",
+                times_completed: "timesCompleted",
+                last_completed: "lastCompleted",
             }
         )
 
@@ -139,7 +146,7 @@ class Workout {
         const querySql = `UPDATE workouts
             SET ${ setCols }
             WHERE id = ${workoutIdVarIdx}
-            RETURNING name, category, favorited`;
+            RETURNING name, category, favorited, times_completed AS "timesCompleted", last_completed AS "lastCompleted"`;
 
         const result = await db.query(querySql, [...values, id]);
 
@@ -184,9 +191,6 @@ class Workout {
             
         return workoutCircuit;
     }
-
-
-
 }
 
 module.exports = {Workout};

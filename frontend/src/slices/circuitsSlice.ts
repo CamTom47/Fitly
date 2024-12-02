@@ -51,7 +51,7 @@ export const findAllCircuits = createAsyncThunk(
     "circuits/findAllCircuits",
     async () => {
         try{
-            let circuits = await FitlyApi.findAllCircuits();
+            let circuits = await FitlyApi.findAllCircuits({userId: Number(localStorage.getItem("token"))});
             return circuits;
         }
         catch (err){

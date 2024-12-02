@@ -1,0 +1,29 @@
+.ActiveWorkout-section{
+	width: 42rem;
+	height: 28rem;
+	margin: 0;
+	border: none;
+}
+.ActiveWorkout-div{
+	display: grid;
+	grid-template-columns: [start] 10rem [line1] 10rem [end];  
+	row-gap: 7rem;
+	column-gap: 2rem;
+	justify-content: space-between;
+}
+.ActiveWorkout-div div{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-self: center;
+}
+.ActiveWorkout-div div h4 {
+	color: var(--color-secondary);
+	padding: 0;
+	margin: 0;
+}
+.ActiveWorkout-div div p {
+	font-size: 20px;
+	margin-top: 0;
+	padding: 0;
+}

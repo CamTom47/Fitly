@@ -1,107 +1,234 @@
-#addCircuitButton{
-    background-color: var(--color-primary);
-    color: var(--gray-2);
-    font-size: 40px;
-    border: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}.WorkoutDetailContainerInner{
-    background: var(--color-primary);
-    padding: 2rem;
+#WorkoutDetailContainer {
+	background: var(--color-primary);
+	padding: 0.5rem 0 3rem 0;
+	border-radius: 1rem;
+	border: 1px solid var(--color-primary);
+	box-shadow: 0 1px 7px;
+	margin: 1rem 4rem 0 4rem;
+	height: 6rem;
+}
+.dividerSection1 {
+	background: var(--color-primary);
+	border-radius: 1rem;
+	padding: 0.5rem 0 0.5rem 0;
+	border: 1px solid var(--color-primary);
+	box-shadow: 0 1px 7px;
 }
 
-.WorkoutDetailContainerHead{
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--gray-4);
-    padding-bottom: 1rem;
+.dividerSection1 h3 {
+	color: var(--black);
+	padding: 0;
+	margin: 1rem;
 }
 
-.LinkElement{
-    text-decoration: none;
-    color: black;
+.dividerSection2 {
+	display: flex;
 }
-.WorkoutDetailDivider{
-    background: var(--color-primary-light);
-    padding: 1rem;
-    margin: .3rem;
-    border-bottom: 1px solid var(--gray-4);
-
+.dividerSection2 div {
+	width: 15rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
-.dividerSection1{
-    margin: 1rem 0 1rem 0;
-    display: flex;
-    column-gap: 1rem;
-    align-items: center;
-    color: white;   
+.dividerSection2 span {
+	text-decoration: underline;
+	font-size: 14px;
+	text-align: right;
+	padding-right: 0.4rem;
+}
+.dividerSection2 p {
+	text-decoration: none;
+	font-size: 14px;
 }
 
-.dividerSection1 h3{
-    color: var(--white);
-    padding: 0;
-    margin: 1rem;
-}
-
-.dividerSection2{
-    display: grid;
-    font-size: 1.5rem;
-    row-gap: 2rem;
-    column-gap: 5rem;
-    grid-template-columns: [start] 10rem [line1] 10rem [line2] 10rem [end];
-    align-items: center;
-    color: var(--white);
-    border-left: 1px solid var(--gray-4);
-    padding-left: 1rem;
-}
-.dividerSection2 div{
-    width: 20rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.dividerSection2 span{
-    text-decoration: underline;
-    font-size: 14px;
-    text-align: right;
-    padding-right: .4rem;
-}
-.dividerSection2 p{
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.circuitSection{
-    background: var(--color-primary-light);
-    border-radius: 20px;
-    padding: 1rem;
-    margin: .3rem;
-}
-
-.faIcon{
-    padding: 0;
-    margin: 0;
+.faIcon {
+	padding: 0;
+	margin: 0;
 }
 
 .circuitSection h3 {
-    color: var(--white);
+	color: var(--black);
+}
+.WorkoutDetailButton {
+	background-color: var(--color-primary);
+	color: var(--color-secondary);
+	padding: 0 10px;
+	margin-left: 1rem;
+	border: 1px solid var(--color-secondary);
+	border-radius: 12px;
+}
+.WorkoutDetailButton:hover {
+	background-color: var(--color-secondary);
+	color: var(--color-primary);
+	padding: 0 10px;
+	margin-left: 1rem;
+	border: 1px solid var(--color-pri);
+	border-radius: 12px;
+	transition: all 0.35s;
+}
+.WorkoutDetailButton > .LinkElement {
+	color: var(--color-secondary);
+	text-decoration: none;
+}
+.WorkoutDetailButton > .LinkElement:hover {
+	color: var(--color-primary);
+	text-decoration: none;
+	transition: all 0.35s;
 }
 
-.CircuitList{
-    display: grid;
-    grid-template-columns: [start] 20rem [line1] 20rem [line2] 20rem [end];
-    column-gap: 5rem;
-    row-gap: 2rem;
-    width: 100%;
-    justify-content: center;
-}
-.WorkoutDetailButton{
-    border-radius: 10px;
-    padding: 0.2rem;
-    margin: 0.5rem 0 0 0;
-    font-size: 12px;
-    margin-left: .5rem;
+/* Styling For table */
+
+.ActiveWorkout-Container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 30rem;
+	width: 50%;
+    border: 1px solid var(--color-secondary);
+	border-radius: 5px;
+	background: var(--color-primary);
+	margin-left: .5rem;
+    box-shadow: 0 0 5px black;
 }
 
+.ActiveWorkout-section {
+	margin: 1rem 1rem 0 1rem;
+	background: var(--color-primary);
+	border: 1px solid var(--gray-4);
+	padding: 2rem 0 2rem 0;
+	border-radius: 1rem;
+	border-collapse: collapse;
+}
+.ActiveWorkout-WorkoutStarter {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 0 auto;
+	background: var(--color-primary);
+	border: 1px solid var(--gray-4);
+	border-radius: 50%;
+	padding: 2rem 0 2rem 0;
+	width: 10rem;
+	height: 10rem;
+}
 
+.WorkoutTable {
+	width: 100%;
+	margin-top: 1rem;
+	background-color: var(--white);
+}
+tr:nth-child(odd) {
+	background-color: var(--color-primary);
+}
+.WorkoutTable tr:hover {
+	background: var(--color-secondary);
+	color: white;
+	transition: all 0.35s;
+}
+th,
+td {
+	border-bottom: 1px solid #ddd;
+	text-align: center;
+	padding: 0.5rem 0 0.5rem 0.5rem;
+	width: 10%;
+	font-size: 12px;
+}
+
+th {
+	background: var(--color-primary);
+	color: var(--gray-4);
+}
+h5 {
+	padding: 1rem 0 0.5rem 1rem;
+}
+.circuitSectionHeader {
+	display: flex;
+	align-items: baseline;
+	margin-top: 1rem;
+
+}
+.tableContainer {
+	height: 25rem;
+	overflow-y: scroll;
+}
+.WorkoutDetailContainerInner {
+	display: flex;
+}
+.WorkoutDetailContainerHead {
+	display: flex;
+}
+.WorkoutHeader {
+	display: flex;
+	align-items: baseline;
+}
+.star {
+	color: var(--gray-2);
+}
+.star {
+	color: var(--color-secondary);
+}
+.favoritedStar {
+	color: var(--color-secondary);
+}
+.favoritedStar:hover {
+	color: var(--gray-2);
+}
+.LowerSection {
+	display: flex;
+    justify-content: space-between;
+	margin: 1rem 4rem
+}
+.circuitSection{
+    width: 50%;
+	margin-right: .5rem;
+    border: 1px solid var(--color-secondary);
+    border-radius: 5px;
+    background: var(--white);
+    box-shadow: 0 0 5px black;
+}
+.ActiveWorkout{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.ActiveWorkout-buttonContainer{
+	position: absolute;
+	top: 88%;
+	display: flex;
+}
+.ActiveWorkout-button{
+	background: var(--color-primary);
+	color: var(--color-secondary);
+	border: 1px solid var(--color-secondary);
+	padding: .5rem;
+	border-radius: 5px;
+	
+}
+.ActiveWorkout-button:hover{
+	color: var(--color-primary);
+    background-color: var(--color-secondary);
+    text-decoration: none;
+    transition: all .35s;
+}
+.iconButton{
+	height: 25px;
+	width: 25px;
+    border: 1px solid var(--color-secondary);
+    border-radius: 50%;
+    padding: .5rem .5rem .5rem .8rem;
+    color: var(--color-secondary);
+
+}
+.iconButton:hover{
+    color: var(--color-primary);
+    background-color: var(--color-secondary);
+    text-decoration: none;
+    transition: all .35s;
+}
+.none{
+	display: none;
+}

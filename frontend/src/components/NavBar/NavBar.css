@@ -1,11 +1,10 @@
 .NavBarContainer {
-  background: var(--color-primary);
   position: sticky;
   top: 0;
+  margin-bottom: 1rem;
 }
 
 .toggleContent {
-  background-color: white;
   margin: 3px 0;
   height: 3px;
   width: 20px;
@@ -14,13 +13,13 @@
 
 .NavBarHeader {
   text-align: center;
-  background: var(--color-primary);
+  background: var(--color-secondary);
 }
 
 .NavBarHeader h4 {
-  color: white;
+  color: var(--color-primary);
   font-size: 3rem;
-  padding: 0;
+  padding: 10px 0;
   margin: 0;
 }
 

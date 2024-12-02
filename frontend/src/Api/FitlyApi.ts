@@ -355,7 +355,7 @@ class FitlyApi {
         //Circuit Methods
 
 
-        static async findAllCircuits<Promise>(data? : {}) : Promise{
+        static async findAllCircuits<Promise>(data? : {userId: number}) : Promise{
             let res = await this.request(`circuits/`, data, 'get');
             return res.circuits;
         }

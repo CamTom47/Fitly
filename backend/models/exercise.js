@@ -24,7 +24,8 @@ class Exercise {
             SELECT  exercises.id,
                     exercises.name,
                     exercises.muscle_group AS "muscleGroup",
-                    exercises_equipments.equipment_id AS "equipmentId"
+                    exercises_equipments.equipment_id AS "equipmentId",
+                    exercises.date_created AS "dateCreated"
             FROM exercises
             JOIN users_exercises
             ON exercises.id = users_exercises.exercise_id
@@ -71,7 +72,8 @@ class Exercise {
             SELECT  exercises.id,
                     exercises.name,
                     exercises.muscle_group AS "muscleGroup",
-                    exercises_equipments.equipment_id AS "equipmentId"
+                    exercises_equipments.equipment_id AS "equipmentId",
+                    exercises.date_created AS "dateCreated"
             FROM exercises
             JOIN users_exercises 
             ON exercises.id = users_exercises.exercise_id
