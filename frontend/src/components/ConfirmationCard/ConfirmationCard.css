@@ -1,0 +1,50 @@
+.ConfirmationCard-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 0;
+	width: 100vw;
+	height: 100vh;
+	backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ConfirmationCard-body {
+	width: 40%;
+	height: 40%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    background: var(--color-primary);
+    z-index: 1;
+    border: 1px solid var(--color-secondary);
+    border-radius: 1rem;
+}
+.ConfirmationCard-container p {
+	font-size: 20px;
+	color: var(--color-secondary);
+}
+.ConfirmationCard-content {
+	background: var(--color-primary-secondary);
+	width: 40%;
+	height: 40%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.ConfirmationCard-container button {
+	background: var(--color-primary);
+	color: var(--color-secondary);
+	border: 1px solid var(--color-secondary);
+	padding: 0.5rem;
+	border-radius: 5px;
+    margin: 1rem;
+}
+.ConfirmationCard-container button:hover {
+	color: var(--color-primary);
+	background-color: var(--color-secondary);
+	text-decoration: none;
+	transition: all 0.35s;
+}

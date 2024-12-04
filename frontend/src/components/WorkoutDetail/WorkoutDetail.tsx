@@ -1,30 +1,31 @@
-//functionality imports
-import React, { useCallback, useEffect, useState, useContext } from "react";
+//Hook imports
+import React, { useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { v4 as uuid } from "uuid";
-import $ from "jquery";
-import moment from 'moment';
-
-//styling imports
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faPlay } from "@fortawesome/free-solid-svg-icons";
-import LoadingComponent from "../LoadingComponent/LoadingComponent";
-import "./WorkoutDetail.css";
-
-//component imports
-import NewCircuitForm from "../Forms/NewCircuitForm/NewCircuitForm";
-import UpdateWorkoutForm from "../Forms/UpdateWorkoutForm/UpdateWorkoutForm";
-import FitlyApi from "../../Api/FitlyApi";
-import ActiveWorkout from "../ActiveWorkout/ActiveWorkout";
-import Timer from "../Timer/Timer";
-
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { deleteWorkout, selectWorkouts, updateWorkout } from "../../slices/workoutsSlice";
 import { selectCircuits } from "../../slices/circuitsSlice";
 import { selectCategories } from "../../slices/categoriesSlice";
 import { selectExercises } from "../../slices/exercisesSlice";
 import useToggle from "../../hooks/useToggle/useToggle";
+
+//Functional Imports
+import $ from "jquery";
+import moment from "moment";
+import { v4 as uuid } from "uuid";
+
+//Component imports
+import NewCircuitForm from "../Forms/NewCircuitForm/NewCircuitForm";
+import UpdateWorkoutForm from "../Forms/UpdateWorkoutForm/UpdateWorkoutForm";
+import ActiveWorkout from "../ActiveWorkout/ActiveWorkout";
+import Timer from "../Timer/Timer";
+
+//Styling imports
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar, faPlay } from "@fortawesome/free-solid-svg-icons";
+import LoadingComponent from "../LoadingComponent/LoadingComponent";
+import "./WorkoutDetail.css";
 import "..//Timer/Timer.css";
+import ConfirmationCard from "../ConfirmationCard/ConfirmationCard";
 
 interface Workout {
 	id: number;
@@ -46,7 +47,7 @@ interface Circuit {
 	sets: number;
 	reps: number;
 	weight: number;
-	rest_period: number;
+	restPeriod: number;
 	intensity: string;
 	exerciseId?: number;
 	workoutId?: number;
@@ -55,8 +56,8 @@ interface Circuit {
 interface Exercise {
 	id: number;
 	name: string;
-	muscle_group: number;
-	equipment_id: number;
+	muscleGroup: number;
+	equipmentId: number;
 }
 
 const WorkoutDetail = (): React.JSX.Element => {
@@ -70,8 +71,8 @@ const WorkoutDetail = (): React.JSX.Element => {
 	const category = categories.find((category: Category) => category.id === workout.category);
 	const exercises = useAppSelector(selectExercises);
 
-	const [showNewCircuitForm, setShowNewCircuitForm] = useState(false);
-	const [showWorkoutUpdateForm, setShowWorkoutUpdateForm] = useState(false);
+	const [showNewCircuitForm, toggleShowNewCircuitForm] = useToggle();
+	const [showWorkoutUpdateForm, toggleShowWorkoutUpdateForm] = useToggle();
 	const [workoutStarted, toggleWorkoutStarted] = useToggle(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [currentCircuitIdx, setCurrentCircuitIdx] = useState<number>(0);
@@ -87,26 +88,75 @@ const WorkoutDetail = (): React.JSX.Element => {
 	// Add/remove workout from favorites to allow for filtering
 	const handleFavorite = async () => {
 		try {
-			setIsLoading(true);
 			workout.favorited === false
-				? await FitlyApi.updateWorkout(workout.id, { favorited: true })
-				: await FitlyApi.updateWorkout(workout.id, { favorited: false });
-			setIsLoading(false);
+				? dispatch(updateWorkout({ workoutId: workout.id, data: { favorited: true } }))
+				: dispatch(updateWorkout({ workoutId: workout.id, data: { favorited: false } }));
 		} catch (err) {
 			return err;
 		}
 	};
 
-	const toggleShowWorkoutUpdateForm = (): void => {
-		setShowWorkoutUpdateForm((showWorkoutUpdateForm) => !showWorkoutUpdateForm);
+	const calculateWorkoutTime = (circuits: Circuit[]) => {
+		let time = 0;
+
+		for (let circuit of circuits) {
+			time += circuit.reps * 3 * circuit.sets + circuit.sets * circuit.restPeriod;
+		}
+		return `${Math.floor(time / 60)} Minutes`;
 	};
 
-	const toggleShowNewCircuitForm = (): void => {
-		setShowNewCircuitForm((showNewCircuitForm) => !showNewCircuitForm);
+	//Logic for circuit control
+
+	const incrementSet = () => setCurrentSet((currentSet) => currentSet + 1);
+	const incrementCircuit = () => setCurrentCircuitIdx((currentCircuitIdx) => currentCircuitIdx + 1);
+
+	const checkCurrentSet = (e) => {
+		//If #NextSetButton's text is Next Set, increment the current set if it is less than circuit set, else  increment circuit and set sets to 1
+		if (e.target.innerHTML === "Next Set") {
+			if (currentSet < circuits[currentCircuitIdx].sets) incrementSet();
+			else {
+				if (currentCircuitIdx !== circuits[currentCircuitIdx].length) {
+					incrementCircuit();
+					setCurrentSet(1);
+				}
+			}
+
+
+
+			//if the user is on the last set of the last circuit hide the #NextSetButton and toggle workout completed state, adjusting the Timer UI.
+		} else if (currentCircuitIdx === circuits.length - 1 && currentSet === circuits[currentCircuitIdx].sets) {
+			$("#NextSetButton").toggleClass("none");
+			toggleWorkoutCompleted();
+		}
 	};
 
-	let circuitComponents = circuits.map((circuit, idx) => {
-		let exercise = exercises.find((exercise: Exercise) => exercise.id === circuit.exerciseId);
+	//Increment the set of the current circuit and change the innerHTML of the #NextSetButton, triggering the restTimer to start
+	const handleNextSet = (e) => {
+		checkCurrentSet(e);
+		if (e.target.innerHTML !== "Next Set") e.target.innerHTML = "Next Set";
+		else e.target.innerHTML = "Complete Set";
+	};
+
+	//When a user is completed with a workout, increment the number of times they've completed it and set a new lastCompleted date
+	const recordWorkout = async () => {
+		dispatch(
+			updateWorkout({
+				workoutId: workout.id,
+				data: { lastCompleted: new Date(), timesCompleted: workout.timesCompleted + 1 },
+			})
+		);
+		toggleWorkoutStarted();
+	};
+
+	//JSX Components
+
+	const activeWorkoutWorkoutCard = circuits.map((circuit: Circuit) => {
+		const exercise = exercises.find((exercise: Exercise) => exercise.id === circuit.exerciseId);
+		return <ActiveWorkout key={uuid()} circuit={circuit} exercise={exercise} currentSet={currentSet} />;
+	});
+
+	const circuitComponents = circuits.map((circuit: Circuit, idx: number) => {
+		const exercise: Exercise = exercises.find((exercise: Exercise) => exercise.id === circuit.exerciseId);
 		return (
 			<tr>
 				<td>{idx + 1}</td>
@@ -118,58 +168,6 @@ const WorkoutDetail = (): React.JSX.Element => {
 			</tr>
 		);
 	});
-
-	const activeWorkoutWorkoutCard = circuits.map((circuit) => {
-		let exercise = exercises.find((exercise: Exercise) => exercise.id === circuit.exerciseId);
-		return <ActiveWorkout circuit={circuit} exercise={exercise} currentSet={currentSet} />;
-	});
-
-	const calculateWorkoutTime = () => {
-		let time = 0;
-
-		for (let circuit of circuits) {
-			time += circuit.reps * 3 * circuit.sets + circuit.sets * circuit.restPeriod;
-		}
-		return `~ ${Math.floor(time / 60)} Minutes`;
-	};
-
-	//Logic for circuit control
-
-	const incrementSet = () => {
-		setCurrentSet((currentSet) => currentSet + 1);
-	};
-
-	const incrementCircuit = () => {
-		setCurrentCircuitIdx((currentCircuitIdx) => currentCircuitIdx + 1);
-	};
-
-	const checkCurrentSet = (e) => {
-		if (e.target.innerHTML === "Next Set") {
-			if (currentSet < circuits[currentCircuitIdx].sets) {
-				incrementSet();
-			} else {
-				if (currentCircuitIdx !== circuits[currentCircuitIdx].length) {
-					incrementCircuit();
-					setCurrentSet(1);
-				}
-			}
-		} else if (currentCircuitIdx === circuits.length - 1 && currentSet === circuits[currentCircuitIdx].sets){
-				$("#NextSetButton").toggleClass("none");
-			toggleWorkoutCompleted();
-		}
-	};
-
-	const handleNextSet = (e) => {
-		checkCurrentSet(e);
-
-		if (e.target.innerHTML !== "Next Set") e.target.innerHTML = "Next Set";
-		else e.target.innerHTML = "Complete Set";
-	};
-
-
-	const recordWorkout = async () => { 
-		dispatch(updateWorkout({workoutId: workout.id, data:{ lastCompleted: new Date(), timesCompleted: workout.timesCompleted + 1}}))
-		}
 
 	if (isLoading) {
 		return <LoadingComponent />;
@@ -187,13 +185,19 @@ const WorkoutDetail = (): React.JSX.Element => {
 					Delete Workout
 				</button>
 				<div id='WorkoutDetailContainer'>
-					<div className='WorkoutDetailContainerInner'>
-						<div className='WorkoutDetailContainerHead'>
-							<div className='WorkoutHeader'>
+							<div className='WorkoutHeader-1'>
 								{workout.favorited ? (
-									<FontAwesomeIcon className='star' type='button' onClick={handleFavorite} icon={faStar} size='lg' />
+									<FontAwesomeIcon
+										key={uuid()}
+										className='star'
+										type='button'
+										onClick={handleFavorite}
+										icon={faStar}
+										size='lg'
+									/>
 								) : (
 									<FontAwesomeIcon
+										key={uuid()}
 										className='favoritedStar'
 										type='button'
 										onClick={handleFavorite}
@@ -206,7 +210,7 @@ const WorkoutDetail = (): React.JSX.Element => {
 									Edit
 								</button>
 							</div>
-							<div className='dividerSection2'>
+							<div className='WorkoutHeader-2'>
 								<div>
 									<span>Type of Workout</span>
 									<p>{category.name}</p>
@@ -217,7 +221,7 @@ const WorkoutDetail = (): React.JSX.Element => {
 								</div>
 								<div>
 									<span>Estimated Workout Time</span>
-									<p>{calculateWorkoutTime()}</p>
+									<p>{calculateWorkoutTime(circuits)}</p>
 								</div>
 								<div>
 									<span>Number of times Completed</span>
@@ -225,18 +229,16 @@ const WorkoutDetail = (): React.JSX.Element => {
 								</div>
 								<div>
 									<span>Last Completed</span>
-									{workout.lastCompleted ? moment(workout.lastCompleted).format( "MM-DD-YYYY") : "-"}
+									{workout.lastCompleted ? moment(workout.lastCompleted).format("MM-DD-YYYY") : "-"}
 								</div>
-							</div>
 						</div>
-					</div>
 				</div>
 
 				<div className='LowerSection'>
 					<div className='circuitSection'>
 						<div className='circuitSectionHeader'>
 							<h5>Circuits</h5>
-							<button className=' WorkoutDetailButton faIcon' onClick={toggleShowNewCircuitForm}>
+							<button className=' WorkoutDetailButton' onClick={toggleShowNewCircuitForm}>
 								Add New +
 							</button>
 						</div>
@@ -252,29 +254,18 @@ const WorkoutDetail = (): React.JSX.Element => {
 										<th>Rest(s)</th>
 									</tr>
 								</thead>
-							</table>
-						</div>
-						<div className='tableContainer'>
-							<table className='WorkoutTable'>
 								<tbody>{circuitComponents}</tbody>
 							</table>
 						</div>
 						{showNewCircuitForm === true && (
-							<NewCircuitForm workout={workout} toggleShowNewCircuitForm={toggleShowNewCircuitForm} />
+							<NewCircuitForm key={uuid()} workout={workout} toggleShowNewCircuitForm={toggleShowNewCircuitForm} />
 						)}
 					</div>
 					<div className='ActiveWorkout-Container'>
 						{workoutStarted === false && (
-							<div className='ActiveWorkout-WorkoutStarter'>
-								<p>Start Workout</p>
-								<FontAwesomeIcon
-									className='playButton'
-									type='button'
-									onClick={toggleWorkoutStarted}
-									icon={faPlay}
-									size='xl'
-								/>
-							</div>
+							<button className='ActiveWorkout-button' onClick={toggleWorkoutStarted}>
+								Start Workout
+							</button>
 						)}
 						{workoutStarted === true && (
 							<div className='ActiveWorkout'>
@@ -283,10 +274,15 @@ const WorkoutDetail = (): React.JSX.Element => {
 									<button id='NextSetButton' className='ActiveWorkout-button' onClick={handleNextSet}>
 										Complete Set
 									</button>
-									<button className='ActiveWorkout-button' onClick={recordWorkout}>Finish Workout</button>
+									<button className='ActiveWorkout-button' onClick={toggleWorkoutCompleted}>
+										Finish Workout
+									</button>
 								</div>
 								{activeWorkoutWorkoutCard[currentCircuitIdx]}
 							</div>
+						)}
+						{workoutCompleted === true && (
+							<ConfirmationCard toggle={toggleWorkoutCompleted} confirm={recordWorkout} message={"Complete Workout?"} />
 						)}
 					</div>
 				</div>

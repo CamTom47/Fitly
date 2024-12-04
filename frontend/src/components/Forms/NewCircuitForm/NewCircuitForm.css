@@ -1,3 +1,7 @@
+#NewCircuitForm-confirmationButton{
+border: none;
+background: var(--gray2);
+}
 .NewCircuitForm {
 	display: table;
 	empty-cells: show;

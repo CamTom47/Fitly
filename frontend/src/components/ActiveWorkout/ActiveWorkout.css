@@ -6,7 +6,7 @@
 }
 .ActiveWorkout-div{
 	display: grid;
-	grid-template-columns: [start] 10rem [line1] 10rem [end];  
+	grid-template-columns: [start] 8rem [line1] 8rem [end];  
 	row-gap: 7rem;
 	column-gap: 2rem;
 	justify-content: space-between;
@@ -16,6 +16,7 @@
 	flex-direction: column;
 	align-items: center;
 	justify-self: center;
+	text-align: center;
 }
 .ActiveWorkout-div div h4 {
 	color: var(--color-secondary);

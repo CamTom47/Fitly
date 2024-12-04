@@ -35,11 +35,17 @@
 }
 .buttonContainerRight{
     position: absolute;
-    right: -3rem;
+    right: -1rem;
     top: 0;
 }
 .buttonContainerLeft{
     position: absolute;
     right: -3rem;
     bottom: 0;
+}
+.pauseButton{
+    color: var(--color-secondary);
+}
+.pauseButton:hover{
+    color: var(--color-primary);
 }

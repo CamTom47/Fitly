@@ -1,9 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faPause, faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
-import $ from 'jquery';
-import "./Timer.css";
+//Hook Imports
+import React, { useCallback, useEffect, useState, useRef, MutableRefObject} from "react";
 import useToggle from "../../hooks/useToggle/useToggle";
+
+//Functional Imports
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import $ from "jquery";
+
+//Component Imports
+import { faPlay, faPause, faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
+
+//Styling Imports
+import "./Timer.css";
 
 interface TimerProps {
 	restPeriod: number;
@@ -11,47 +18,37 @@ interface TimerProps {
 }
 
 const Timer = ({ restPeriod, workoutCompleted }: TimerProps): React.JSX.Element => {
-	const [mainTimer, setMainTime] = useState<number>(0);
+	const [mainTime, setMainTime] = useState<number>(0);
+	const [restTime, setRestTime] = useState<number>(restPeriod);
 	const [mainTimerId, setMainTimerId] = useState<any>(0);
 	const [paused, togglePaused] = useToggle();
 	const [resting, setResting] = useState(false);
-	const [restTime, setRestTime] = useState<number>(restPeriod);
-	const [RestTimerId, setRestTimerId] = useState<any>(0);
+	const [restTimerId, setRestTimerId] = useState<any>(0);
 
-	const getRestTime = useCallback( () => { 
-		setRestTime(restPeriod)
-	}, [restPeriod])
-
-	$('#NextSetButton').on('click', () => {
-		(resting) ? setResting(resting => false) : setResting(resting => true)
-		handleRestTimer()
-	}) 
+	const seconds = String(Math.floor(mainTime % 60)).padStart(2, "0");
+	const minutes = String(Math.floor((mainTime / 60) % 60)).padStart(2, "0");
+	const hours = String(Math.floor(mainTime / 3600)).padStart(2, "0");
 
 	// Logic for Rest Timer
-	const startRestTimer = () => {
-		let intervalId;
-		intervalId = setInterval(() => {
-			setRestTime((restTime) => restTime - 1);
-		}, 1000);
-		setRestTimerId(intervalId);
-	};
-
-	const resetRestTimer = () => {
+	const getRestTime = useCallback(() => {
 		setRestTime(restPeriod);
-	};
+	}, [restPeriod]);
 
-	const handleRestTimer = () => {
-		if (resting === false) {
-			
-		} else {
-			resetRestTimer();
-		}
-	};
+	const $nextSetButton = $("#NextSetButton");
+
+	//On #NextSetButton click toggle resting state to trigger resting dependency and start rest timer
+	$nextSetButton.on("click", () => {
+		if (resting) {
+			setResting((resting) => false);
+			setRestTime(restPeriod);			
+		} else setResting((resting) => true);
+	});
 
 	useEffect(() => {
-		getRestTime()
+		getRestTime();
 		let intervalId;
-		if (resting === true) {
+		if (resting && !paused) {
+			clearInterval(restTimerId)
 			intervalId = setInterval(() => {
 				setRestTime((restTime) => restTime - 1);
 			}, 1000);
@@ -63,45 +60,42 @@ const Timer = ({ restPeriod, workoutCompleted }: TimerProps): React.JSX.Element 
 
 	//Logic for main timer //
 	
-	const startMainTimer = () => {
-		let intervalId;
-		intervalId = setInterval(() => {
-			setMainTime((mainTimer) => mainTimer + 1);
+	//Start/Unpause both timers
+	const startTimers = () => {
+		$nextSetButton.removeClass('disabled')
+		
+		let mainIntervalId =setInterval(() => {
+			setMainTime((mainTime) => mainTime + 1);
 		}, 1000);
-		setMainTimerId(intervalId);
+		setMainTimerId(mainIntervalId);
+
+		let restIntervalId = setInterval(() => {
+			setRestTime((restTime) => restTime - 1);
+		}, 1000);
+		setRestTimerId(restIntervalId);
+		
 		togglePaused();
 	};
-	
-	const resetMainTimer = () => {
-		setMainTime(0);
-	};
-	
+
 	const pauseTimer = () => {
-		clearInterval(mainTimerId);
 		togglePaused();
+		clearInterval(mainTimerId);
+		clearInterval(restTimerId);
+		$nextSetButton.addClass('disabled')
 	};
 
 	useEffect(() => {
 		let intervalId;
-		if (mainTimer === 0) {
+		if (mainTime === 0) {
 			intervalId = setInterval(() => {
-				setMainTime((mainTimer) => mainTimer + 1);
+				setMainTime((mainTime) => mainTime + 1);
 			}, 1000);
-
 			setMainTimerId(intervalId);
 		}
-
 		return () => clearInterval(intervalId);
 	}, []);
 
-	//logic for paused timer
-
-	const seconds = String(Math.floor(mainTimer % 60)).padStart(2, "0");
-	const minutes = String(Math.floor((mainTimer / 60) % 60)).padStart(2, "0");
-	const hours = String(Math.floor(mainTimer / 3600)).padStart(2, "0");
-
-	return (
-		!workoutCompleted ? 
+	return !workoutCompleted ? (
 		<div className='TimerContainer'>
 			<div className='counterCircle'>
 				<div className='overallTimer'>
@@ -115,28 +109,22 @@ const Timer = ({ restPeriod, workoutCompleted }: TimerProps): React.JSX.Element 
 				{paused ? (
 					<div>
 						<div className='buttonContainerRight'>
-							<FontAwesomeIcon className='iconButton' type='button' onClick={startMainTimer} icon={faPlay} size='xl' />
-						</div>
-						<div className='buttonContainerLeft'>
-							<FontAwesomeIcon
-								className='iconButton'
-								type='button'
-								onClick={resetMainTimer}
-								icon={faArrowRotateLeft}
-								size='xl'
-							/>
+							<div className='iconButtonOuterRing' onClick={startTimers}>
+								<FontAwesomeIcon className='playButton' type='button' icon={faPlay} size='xl' />
+							</div>
 						</div>
 					</div>
 				) : (
 					<div className='buttonContainerRight'>
-						<FontAwesomeIcon className='iconButton' type='button' onClick={pauseTimer} icon={faPause} size='xl' />
+						<div className='iconButtonOuterRing' onClick={pauseTimer}>
+							<FontAwesomeIcon className='pauseButton' type='button' icon={faPause} size='xl' />
+						</div>
 					</div>
 				)}
 			</div>
 		</div>
-	: 
-
-	<div className='TimerContainer'>
+	) : (
+		<div className='TimerContainer'>
 			<div className='counterCircle'>
 				<div className='overallTimer'>
 					<div className='time'>
@@ -145,10 +133,8 @@ const Timer = ({ restPeriod, workoutCompleted }: TimerProps): React.JSX.Element 
 						</p>
 					</div>
 				</div>
-
 			</div>
 		</div>
-
 	);
 };
 

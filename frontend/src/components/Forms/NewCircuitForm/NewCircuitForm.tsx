@@ -4,6 +4,10 @@ import { Formik, Field, ErrorMessage, Form, FormikErrors, FormikHelpers, FormikP
 import { useAppDispatch, useAppSelector } from "../../../hooks/reduxHooks";
 import { addCircuit } from "../../../slices/circuitsSlice";
 import { selectExercises } from "../../../slices/exercisesSlice";
+
+//Styling imports
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faX, faCheck } from "@fortawesome/free-solid-svg-icons";
 import "./NewCircuitForm.css";
 
 interface FormValues {
@@ -76,11 +80,9 @@ const NewCircuitForm = ({ workout, toggleShowNewCircuitForm }: FormProps): React
 			{({ isSubmitting, values }) => (
 				<Form className='NewCircuitForm'>
 					<div className='NewCircuitFormInputDiv'>
-						<button className='NewCircuitFormButton' onClick={toggleShowNewCircuitForm}>
-							Cancel
-						</button>
-						<button className='NewCircuitFormButton' type='submit' disabled={isSubmitting}>
-							Add Circuit
+						<FontAwesomeIcon className='NewCircuitFormButton' icon={faX} onClick={toggleShowNewCircuitForm} />
+						<button id="NewCircuitForm-confirmationButton">
+							<FontAwesomeIcon className='NewCircuitFormButton' icon={faCheck} type='submit' />
 						</button>
 					</div>
 					<div className='NewCircuitFormInputDiv'>
