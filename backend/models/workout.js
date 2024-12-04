@@ -16,7 +16,7 @@ class Workout {
      * @returns {name, category, completed_count, favorited}
      */
 
-    static async findAll(user_id, {category = undefined}) {
+    static async findAll(user_id, {category = undefined, favorited = undefined}) {
         let query = `
             SELECT id,
                     name,
@@ -38,6 +38,11 @@ class Workout {
         if(category !== undefined){
             queryValues.push(+category);
             whereExpressions.push(`category = $${queryValues.length}`);
+        }
+        
+        if(favorited !== undefined){
+            queryValues.push(true);
+            whereExpressions.push(`favorited = $${queryValues.length}`);
         }
 
         if(whereExpressions.length){
