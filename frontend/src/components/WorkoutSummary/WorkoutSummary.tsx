@@ -41,7 +41,7 @@ const WorkoutSummary = ({workout, workoutNumber}) => {
                     <td>{workout.name}</td>
                     <td>{category.name}</td>
                     <td>{workout.timesCompleted}</td>
-                    <td>{moment(workout.lastCompleted).format("MM-DD-YYYY")}</td>
+                    <td>{(workout.lastCompleted) ? moment(workout.lastCompleted).format("MM-DD-YYYY") : "-"}</td>
         </tr>
     )
 }

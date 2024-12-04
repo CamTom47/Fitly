@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import $ from 'jquery';
+import $ from "jquery";
 import WorkoutSummary from "../WorkoutSummary/WorkoutSummary";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import { v4 as uuid } from "uuid";
@@ -18,15 +18,31 @@ interface WorkoutQuery {
 	category?: string;
 	favorited?: boolean;
 }
+interface WorkoutSortBy {
+	nameAscending?: String;
+	nameDescending?: String;
+	categoryAscending?: String;
+	categoryDescending?: String;
+	timeCompletedAscending?: String;
+	lastCompletedDescending?: String;
+}
 
 const WorkoutList = (): React.JSX.Element => {
 	const initialQueryState = {};
+	const initialSortByState = {};
 	const dispatch = useAppDispatch();
-	const workouts = useAppSelector(selectWorkouts);
+	const workoutList = useAppSelector(selectWorkouts);
 	const categories = useAppSelector(selectCategories);
 	const [showCreateWorkoutForm, setShowCreateWorkoutForm] = useToggle();
 	const [isLoading, setIsLoading] = useState(true);
 	const [queryTerms, setQueryTerms] = useState<WorkoutQuery>(initialQueryState);
+	const [searchTerm, setSearchTerm] = useState<String | null>(null);
+	const [sortBy, setSortBy] = useState<{}>(initialSortByState);
+
+	let workouts = workoutList.filter((workout) => {
+		if (searchTerm) return workout.name.includes(searchTerm);
+		else return workoutList;
+	});
 
 	useEffect(() => {
 		dispatch(findAllCategories());
@@ -34,12 +50,12 @@ const WorkoutList = (): React.JSX.Element => {
 	}, []);
 
 	const getWorkoutInfo = useCallback(() => {
-		dispatch(findAllWorkouts(queryTerms));
+		dispatch(findAllWorkouts({queries: queryTerms, sortBy: sortBy}));
 		setIsLoading(false);
-	}, [showCreateWorkoutForm, queryTerms]);
+	}, [showCreateWorkoutForm, queryTerms, sortBy]);
 
 	const handleFilter = (e) => {
-		$('input[name="categoryFilter"').not(`input[value="${e.target.value}"]`).prop('checked', false);
+		$('input[name="categoryFilter"').not(`input[value="${e.target.value}"]`).prop("checked", false);
 		setQueryTerms(workoutFilter(queryTerms, e));
 	};
 
@@ -77,9 +93,16 @@ const WorkoutList = (): React.JSX.Element => {
 	);
 
 	const resetFilter = () => {
-		setQueryTerms(initialQueryState)
-		$('.filterButton').prop('checked', false)
+		setQueryTerms(initialQueryState);
+		$(".filterButton").prop("checked", false);
+	};
 
+	const handleSearch = (e) => {
+		setSearchTerm(e.target.value);
+	};
+
+	const handleSort = (e) => {
+		console.log(e.target.value)
 	}
 
 	return isLoading ? (
@@ -100,7 +123,20 @@ const WorkoutList = (): React.JSX.Element => {
 						<div className='workouthead'>
 							<div className='searchbar'>
 								<form>
-									<input type='text' placeholder='Find Exercise'></input>
+									<input type='text' placeholder='Find Workout' onChange={handleSearch}></input>
+								</form>
+							</div>
+							<div>
+								<form>
+									<select onChange={handleSort} name='sort'>
+										<option value=''>Sort By</option>
+										<option value='nameAscending'>Workout Name A-Z</option>
+										<option value='nameDescending'>Workout Name Z-A</option>
+										<option value='categoryAscending'>Type Of Workout A-Z</option>
+										<option value='categoryDescending'>Type Of Workout Z-A</option>
+										<option value='timeCompletedAscending'>Times Completed A-Z</option>
+										<option value='lastCompletedDescending'>Last Completed Z-A</option>
+									</select>
 								</form>
 							</div>
 							{Object.keys(queryTerms).length !== 0 && <button onClick={resetFilter}>Clear Filter</button>}
@@ -112,7 +148,7 @@ const WorkoutList = (): React.JSX.Element => {
 							<tr>
 								<th></th>
 								<th>#</th>
-								<th>Exercise Name</th>
+								<th>Workout Name</th>
 								<th>Type Of Workout</th>
 								<th>Times Completed</th>
 								<th>Last Completed</th>
