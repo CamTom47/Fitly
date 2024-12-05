@@ -1,4 +1,6 @@
-import React from "react";
+import React, {useEffect, useCallback}from "react";
+import { useAppDispatch, useAppSelector } from '../../hooks/reduxHooks';
+import { findAllExercises } from "../../slices/exercisesSlice";
 
 //Styling
 import './UserDashboard.css';

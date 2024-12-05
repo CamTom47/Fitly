@@ -53,20 +53,19 @@ export const selectWorkouts = state => state.workouts.workouts;
 export const selectWorkout = state => state.workouts.selected;
 
 interface WorkoutRequest {
-    queries?: {
+    filterBy?: {
         category?: String,
         favorited?: Boolean
     };
     sortBy?: {
         name?: String;
-    }
+    };
   }
 
 export const findAllWorkouts = createAsyncThunk(
     "workouts/findAllWorkouts",
     async (data: WorkoutRequest | undefined) => {
         try{
-            console.log('data is ', data)
             const workouts = await FitlyApi.findAllWorkouts({...data});
             return workouts
         } catch (err){

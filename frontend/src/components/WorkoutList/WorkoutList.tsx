@@ -13,34 +13,34 @@ import { findAllCircuits } from "../../slices/circuitsSlice";
 import "./WorkoutList.css";
 
 import { workoutFilter } from "../../helpers/filters";
+import { findAllExercises } from "../../slices/exercisesSlice";
 
 interface WorkoutQuery {
-	category?: string;
-	favorited?: boolean;
+	category?: String;
+	favorited?: Boolean;
 }
 interface WorkoutSortBy {
-	nameAscending?: String;
-	nameDescending?: String;
-	categoryAscending?: String;
-	categoryDescending?: String;
-	timeCompletedAscending?: String;
-	lastCompletedDescending?: String;
+	name?: String;
+	category?: String;
+	timesCompleted?: Number;
+	lastCompleted?: Date;
 }
 
 const WorkoutList = (): React.JSX.Element => {
 	const initialQueryState = {};
 	const initialSortByState = {};
 	const dispatch = useAppDispatch();
+	dispatch(findAllExercises);
 	const workoutList = useAppSelector(selectWorkouts);
 	const categories = useAppSelector(selectCategories);
 	const [showCreateWorkoutForm, setShowCreateWorkoutForm] = useToggle();
 	const [isLoading, setIsLoading] = useState(true);
-	const [queryTerms, setQueryTerms] = useState<WorkoutQuery>(initialQueryState);
+	const [filterTerms, setFilterTerms] = useState<WorkoutQuery>(initialQueryState);
 	const [searchTerm, setSearchTerm] = useState<String | null>(null);
 	const [sortBy, setSortBy] = useState<{}>(initialSortByState);
 
 	let workouts = workoutList.filter((workout) => {
-		if (searchTerm) return workout.name.includes(searchTerm);
+		if (searchTerm) return workout.name.toLowerCase().includes(searchTerm.toLowerCase());
 		else return workoutList;
 	});
 
@@ -50,13 +50,13 @@ const WorkoutList = (): React.JSX.Element => {
 	}, []);
 
 	const getWorkoutInfo = useCallback(() => {
-		dispatch(findAllWorkouts({queries: queryTerms, sortBy: sortBy}));
+		dispatch(findAllWorkouts({ filterBy: filterTerms, sortBy }));
 		setIsLoading(false);
-	}, [showCreateWorkoutForm, queryTerms, sortBy]);
+	}, [showCreateWorkoutForm, filterTerms, sortBy]);
 
 	const handleFilter = (e) => {
-		$('input[name="categoryFilter"').not(`input[value="${e.target.value}"]`).prop("checked", false);
-		setQueryTerms(workoutFilter(queryTerms, e));
+		$(`input[name=${e.target.name}`).not(`input[value="${e.target.value}"]`).prop("checked", false);
+		setFilterTerms(workoutFilter(filterTerms, e));
 	};
 
 	useEffect(() => {
@@ -87,13 +87,13 @@ const WorkoutList = (): React.JSX.Element => {
 
 	const favoriteFilterComponent = (
 		<div className='WorkoutFilterDiv'>
-			<label htmlFor='categoryFilter'>Favorited</label>
+			<label htmlFor='favoriteFilter'>Favorited</label>
 			<input className='filterButton' onClick={handleFilter} type='checkbox' name='favoritedFilter' value='favorited' />
 		</div>
 	);
 
 	const resetFilter = () => {
-		setQueryTerms(initialQueryState);
+		setFilterTerms(initialQueryState);
 		$(".filterButton").prop("checked", false);
 	};
 
@@ -102,8 +102,11 @@ const WorkoutList = (): React.JSX.Element => {
 	};
 
 	const handleSort = (e) => {
-		console.log(e.target.value)
-	}
+		let sortType = e.target.selectedOptions[0].dataset["type"];
+		let sortObj = {}
+		sortObj[sortType] = e.target.value
+		setSortBy(sortObj);
+	};
 
 	return isLoading ? (
 		<LoadingComponent />
@@ -130,16 +133,18 @@ const WorkoutList = (): React.JSX.Element => {
 								<form>
 									<select onChange={handleSort} name='sort'>
 										<option value=''>Sort By</option>
-										<option value='nameAscending'>Workout Name A-Z</option>
-										<option value='nameDescending'>Workout Name Z-A</option>
-										<option value='categoryAscending'>Type Of Workout A-Z</option>
-										<option value='categoryDescending'>Type Of Workout Z-A</option>
-										<option value='timeCompletedAscending'>Times Completed A-Z</option>
-										<option value='lastCompletedDescending'>Last Completed Z-A</option>
+										<option data-type="name" value='nameAsc'>Workout Name A-Z</option>
+										<option data-type="name" value='nameDesc'>Workout Name Z-A</option>
+										<option data-type="category" value='categoryAsc'>Type Of Workout A-Z</option>
+										<option data-type="category" value='categoryDesc'>Type Of Workout Z-A</option>
+										<option data-type="timesCompleted" value='timeCompletedAsc'>Times Completed 0-9</option>
+										<option data-type="timesCompleted" value='timeCompleteDesc'>Times Completed 9-0</option>
+										<option data-type="lastCompleted" value='lastCompletedAsc'>Last Completed 0-9</option>
+										<option data-type="lastCompleted" value='lastCompletedDesc'>Last Completed 9-0</option>
 									</select>
 								</form>
 							</div>
-							{Object.keys(queryTerms).length !== 0 && <button onClick={resetFilter}>Clear Filter</button>}
+							{Object.keys(filterTerms).length !== 0 && <button onClick={resetFilter}>Clear Filter</button>}
 							<button id='addWorkoutButton' onClick={toggleCreateForm}>
 								+
 							</button>

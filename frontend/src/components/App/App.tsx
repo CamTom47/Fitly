@@ -24,7 +24,7 @@ import { current } from "@reduxjs/toolkit";
 import UserDashboard from "../UserDashboard/UserDashboard";
 import ActiveWorkout from "../ActiveWorkout/ActiveWorkout";
 
-function App(): React.JSX.Element {  
+const App = (): React.JSX.Element => {  
   const [isLoading, setIsLoading] = useState(false);
   const token = useAppSelector(selectToken);
   const isAuthenticated = useAppSelector(selectAuthenticated);

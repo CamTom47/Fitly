@@ -1,12 +1,49 @@
-#UpdateCircuitForm{
-    position: relative;
-    width: 20rem;
-    z-index: 9999;
-    background-color: var(--gray-4);
-    margin-top: 0;
-}
-
-.FormContentInputDiv{
+.UpdateCircuitForm-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 0;
+	width: 100vw;
+	height: 100vh;
+	backdrop-filter: blur(8px);
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+}
+.UpdateCircuitForm-body {
+	width: 40%;
+	height: 40%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    background: var(--color-primary);
+    z-index: 1;
+    border: 1px solid var(--color-secondary);
+    border-radius: 1rem;
+}
+.UpdateCircuitForm-container p {
+	font-size: 20px;
+	color: var(--color-secondary);
+}
+.UpdateCircuitForm-content {
+	background: var(--color-primary-secondary);
+	width: 90%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+.UpdateCircuitForm-container button {
+	background: var(--color-primary);
+	color: var(--color-secondary);
+	border: 1px solid var(--color-secondary);
+	padding: 0.5rem;
+	border-radius: 5px;
+    margin: 1rem;
+}
+.UpdateCircuitForm-container button:hover {
+	color: var(--color-primary);
+	background-color: var(--color-secondary);
+	text-decoration: none;
+	transition: all 0.35s;
 }

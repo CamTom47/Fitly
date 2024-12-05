@@ -32,11 +32,11 @@ class Circuit {
                     cw.workout_id AS "workoutId",
                     ce.exercise_id AS "exerciseId"
                     FROM circuits AS c
-                    JOIN circuits_workouts AS cw
+                    LEFT JOIN circuits_workouts AS cw
                     ON c.id= cw.circuit_id
-                    JOIN workouts AS w
+                    LEFT JOIN workouts AS w
                     ON cw.workout_id = w.id
-                    JOIN circuits_exercises AS ce
+                    LEFT JOIN circuits_exercises AS ce
                     ON c.id = ce.circuit_id
                     WHERE w.user_id = $1`,
                     [user_id])
@@ -57,6 +57,9 @@ class Circuit {
      */
 
     static async find(user_id, circuit_id) {
+        console.log(user_id)
+        console.log(circuit_id)
+
         const result = await db.query(`
             SELECT  circuits.id,
                     circuits.sets,
@@ -64,7 +67,7 @@ class Circuit {
                     circuits.weight,
                     circuits.rest_period AS "restPeriod",
                     circuits.intensity,
-                    exercises.id AS "exerciseId",
+                    exercises.id AS "exerciseId"
             FROM circuits
             RIGHT JOIN circuits_exercises 
             ON circuits.id = circuits_exercises.circuit_id

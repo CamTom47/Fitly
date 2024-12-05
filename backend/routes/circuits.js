@@ -35,7 +35,7 @@ router.get('/', ensureLoggedIn, async function( req, res, next) {
 router.get('/:circuit_id', ensureLoggedIn, async function(req, res, next){
     try{ 
         const circuit_id = req.params.circuit_id;
-        const circuit = await Circuit.find(res.locals.user.id, circuit_id);
+        const circuit = await Circuit.find(res.locals.user.id, +circuit_id);
 
         return res.json({circuit})
 

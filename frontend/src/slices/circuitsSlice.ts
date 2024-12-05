@@ -8,25 +8,29 @@ type CircuitState = {
 
 const initialState : CircuitState = {
     circuits: [],
-    selectedCircuit: {},
+    selectedCircuit: {}
 };
 
 type Circuit = {
-    id?: number,
-    sets: number,
-    reps: number,
+    id?: number;
+    sets: number;
+    reps: number;
     weight: number
-    restPeriod: number,
-    intensity: string,
-    exerciseId? : number,
-    workoutId? : number
+    restPeriod: number;
+    intensity: string;
+    exerciseId? : number;
+    workoutId? : number;
 }
 
 
 export const circuitsSlice = createSlice({
     name: "circuits",
     initialState,
-    reducers: {},
+    reducers: {
+        unselectCircuit(state) {
+            state.selectedCircuit = {}
+        }
+    },
     extraReducers: builder => {
         builder
         .addCase(findAllCircuits.fulfilled, (state, action) => {
@@ -47,6 +51,9 @@ export const circuitsSlice = createSlice({
     }
 });
 
+export const { unselectCircuit } = circuitsSlice.actions;
+
+
 export const findAllCircuits = createAsyncThunk(
     "circuits/findAllCircuits",
     async () => {
@@ -62,9 +69,9 @@ export const findAllCircuits = createAsyncThunk(
 
 export const findACircuit = createAsyncThunk(
     "circuits/findACircuit",
-    async (circuitId) => {
+    async (data:{circuitId: number}) => {
         try{
-            let circuit = await FitlyApi.findCircuit({circuitId})
+            let circuit = await FitlyApi.findCircuit(data)
             return circuit
         }
         catch (err){
@@ -161,6 +168,6 @@ export const deleteCircuit = createAsyncThunk(
 )
 
 export const selectCircuits = state => state.circuits.circuits;
-export const selectCircuit = state => state.circuits.selectedCircuit;
+export const selectACircuit = state => state.circuits.selectedCircuit;
 
 export default circuitsSlice.reducer;

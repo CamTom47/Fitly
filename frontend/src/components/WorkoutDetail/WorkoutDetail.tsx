@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { deleteWorkout, selectWorkouts, updateWorkout } from "../../slices/workoutsSlice";
-import { selectCircuits } from "../../slices/circuitsSlice";
+import { selectCircuits, selectACircuit, unselectCircuit, findACircuit } from "../../slices/circuitsSlice";
 import { selectCategories } from "../../slices/categoriesSlice";
 import { selectExercises } from "../../slices/exercisesSlice";
 import useToggle from "../../hooks/useToggle/useToggle";
@@ -26,6 +26,7 @@ import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import "./WorkoutDetail.css";
 import "..//Timer/Timer.css";
 import ConfirmationCard from "../ConfirmationCard/ConfirmationCard";
+import UpdateCircuitForm from "../Forms/UpdateCircuitForm/UpdateCircuitForm";
 
 interface Workout {
 	id: number;
@@ -70,9 +71,11 @@ const WorkoutDetail = (): React.JSX.Element => {
 	const categories = useAppSelector(selectCategories);
 	const category = categories.find((category: Category) => category.id === workout.category);
 	const exercises = useAppSelector(selectExercises);
+	const selectedCircuit = useAppSelector(selectACircuit);
 
 	const [showNewCircuitForm, toggleShowNewCircuitForm] = useToggle();
 	const [showWorkoutUpdateForm, toggleShowWorkoutUpdateForm] = useToggle();
+	const [showUpdateCircuitForm, toggleShowUpdateCircuitForm] = useToggle();
 	const [workoutStarted, toggleWorkoutStarted] = useToggle(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [currentCircuitIdx, setCurrentCircuitIdx] = useState<number>(0);
@@ -121,8 +124,6 @@ const WorkoutDetail = (): React.JSX.Element => {
 				}
 			}
 
-
-
 			//if the user is on the last set of the last circuit hide the #NextSetButton and toggle workout completed state, adjusting the Timer UI.
 		} else if (currentCircuitIdx === circuits.length - 1 && currentSet === circuits[currentCircuitIdx].sets) {
 			$("#NextSetButton").toggleClass("none");
@@ -148,6 +149,12 @@ const WorkoutDetail = (): React.JSX.Element => {
 		toggleWorkoutStarted();
 	};
 
+	const handleShowCircuitUpdateForm = (e) => {
+		if(!selectedCircuit) dispatch(findACircuit({circuitId: e.target.parentElement.dataset["circuitid"]}))
+		else dispatch(unselectCircuit())
+		toggleShowUpdateCircuitForm()
+	}
+
 	//JSX Components
 
 	const activeWorkoutWorkoutCard = circuits.map((circuit: Circuit) => {
@@ -158,7 +165,7 @@ const WorkoutDetail = (): React.JSX.Element => {
 	const circuitComponents = circuits.map((circuit: Circuit, idx: number) => {
 		const exercise: Exercise = exercises.find((exercise: Exercise) => exercise.id === circuit.exerciseId);
 		return (
-			<tr>
+			<tr data-circuitId={circuit.id} onClick={handleShowCircuitUpdateForm}>
 				<td>{idx + 1}</td>
 				<td>{exercise.name}</td>
 				<td>{circuit.sets}</td>
@@ -185,53 +192,53 @@ const WorkoutDetail = (): React.JSX.Element => {
 					Delete Workout
 				</button>
 				<div id='WorkoutDetailContainer'>
-							<div className='WorkoutHeader-1'>
-								{workout.favorited ? (
-									<FontAwesomeIcon
-										key={uuid()}
-										className='star'
-										type='button'
-										onClick={handleFavorite}
-										icon={faStar}
-										size='lg'
-									/>
-								) : (
-									<FontAwesomeIcon
-										key={uuid()}
-										className='favoritedStar'
-										type='button'
-										onClick={handleFavorite}
-										icon={faStar}
-										size='lg'
-									/>
-								)}
-								<h5>{workout.name}</h5>
-								<button className='WorkoutDetailButton' onClick={toggleShowWorkoutUpdateForm}>
-									Edit
-								</button>
-							</div>
-							<div className='WorkoutHeader-2'>
-								<div>
-									<span>Type of Workout</span>
-									<p>{category.name}</p>
-								</div>
-								<div>
-									<span>Number of Circuits</span>
-									<p>{circuits.length}</p>
-								</div>
-								<div>
-									<span>Estimated Workout Time</span>
-									<p>{calculateWorkoutTime(circuits)}</p>
-								</div>
-								<div>
-									<span>Number of times Completed</span>
-									<p>{workout.timesCompleted}</p>
-								</div>
-								<div>
-									<span>Last Completed</span>
-									{workout.lastCompleted ? moment(workout.lastCompleted).format("MM-DD-YYYY") : "-"}
-								</div>
+					<div className='WorkoutHeader-1'>
+						{workout.favorited ? (
+							<FontAwesomeIcon
+								key={uuid()}
+								className='star'
+								type='button'
+								onClick={handleFavorite}
+								icon={faStar}
+								size='lg'
+							/>
+						) : (
+							<FontAwesomeIcon
+								key={uuid()}
+								className='favoritedStar'
+								type='button'
+								onClick={handleFavorite}
+								icon={faStar}
+								size='lg'
+							/>
+						)}
+						<h5>{workout.name}</h5>
+						<button className='WorkoutDetailButton' onClick={toggleShowWorkoutUpdateForm}>
+							Edit
+						</button>
+					</div>
+					<div className='WorkoutHeader-2'>
+						<div>
+							<span>Type of Workout</span>
+							<p>{category.name}</p>
 						</div>
+						<div>
+							<span>Number of Circuits</span>
+							<p>{circuits.length}</p>
+						</div>
+						<div>
+							<span>Estimated Workout Time</span>
+							<p>{calculateWorkoutTime(circuits)}</p>
+						</div>
+						<div>
+							<span>Number of times Completed</span>
+							<p>{workout.timesCompleted}</p>
+						</div>
+						<div>
+							<span>Last Completed</span>
+							{workout.lastCompleted ? moment(workout.lastCompleted).format("MM-DD-YYYY") : "-"}
+						</div>
+					</div>
 				</div>
 
 				<div className='LowerSection'>
@@ -286,6 +293,9 @@ const WorkoutDetail = (): React.JSX.Element => {
 						)}
 					</div>
 				</div>
+						{showUpdateCircuitForm === true && (
+							<UpdateCircuitForm key={uuid()} circuit={selectedCircuit} toggle={toggleShowUpdateCircuitForm} />
+						)}
 			</div>
 		);
 	}

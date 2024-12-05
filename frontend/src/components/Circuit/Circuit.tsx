@@ -47,8 +47,7 @@ const Circuit = ({ circuitId }): React.JSX.Element => {
     <UpdateCircuitForm
       key={uuid()}
       circuit={circuit}
-      exercise={exercise}
-      toggleShowUpdateCircuitForm={toggleShowUpdateCircuitForm}
+      toggle={toggleShowUpdateCircuitForm}
     />
   ) : (
     <div className="CircuitContainer">
