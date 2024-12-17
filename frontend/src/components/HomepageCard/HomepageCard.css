@@ -24,7 +24,7 @@
 }
 
 .HomepageCardText {
-color: white;
+color: var(--color-secondary);
 font-size: 40px;
 padding: 50px 0;
 text-align: center;
