@@ -1,0 +1,20 @@
+.UpdateExerciseRow-table td{
+  font-size: 16px;
+  text-align: center;
+}
+.UpdateExerciseRow-error{
+  text-align: center;
+  color: red
+}
+.submitButton{
+  display: none;
+}
+.selected{
+  box-shadow: 0 0 5px;
+  background: var(--color-primary);
+}
+.selected input, .selected td, .selected select{
+  background: var(--color-secondary);
+	color: white;
+	transition: all 0.35s;
+}

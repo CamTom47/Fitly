@@ -20,9 +20,7 @@ import {
 
 import "./App.css"
 import "../../fonts/fonts.css"
-import { current } from "@reduxjs/toolkit";
 import UserDashboard from "../UserDashboard/UserDashboard";
-import ActiveWorkout from "../ActiveWorkout/ActiveWorkout";
 
 const App = (): React.JSX.Element => {  
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +57,6 @@ const App = (): React.JSX.Element => {
           <Route path="/workouts/add" element={<NewWorkoutForm/>}/>
           <Route path="/register" element={<SignupForm/>}/>
           <Route path="/exercises" element={<ExerciseList/>}/>
-          <Route path="/exercises/add" element={<NewExerciseForm/>}/>
           <Route path="/account" element={<Account/>}/>
           <Route path="/" element={<Homepage/>}/>
           <Route path="*" element={<NotFound/>}/>

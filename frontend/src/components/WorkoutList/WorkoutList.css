@@ -94,4 +94,9 @@
     padding-bottom: 0;
     margin-bottom: 0;
   }
+  .sortForm{
+		border: 1px solid var(--color-secondary);
+		border-radius: 5px;
+		color: var(--color-secondary);
+	}
 }

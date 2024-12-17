@@ -99,7 +99,7 @@
 	width: 100%;
 	margin-top: 1rem;
 }
-tr:hover {
+.WorkoutTable tr:hover {
 	background: var(--color-secondary);
 	color: white;
 	transition: all 0.35s;

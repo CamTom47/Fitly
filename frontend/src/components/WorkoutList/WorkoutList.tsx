@@ -29,15 +29,18 @@ interface WorkoutSortBy {
 const WorkoutList = (): React.JSX.Element => {
 	const initialQueryState = {};
 	const initialSortByState = {};
+
 	const dispatch = useAppDispatch();
-	dispatch(findAllExercises);
 	const workoutList = useAppSelector(selectWorkouts);
 	const categories = useAppSelector(selectCategories);
+	
 	const [showCreateWorkoutForm, setShowCreateWorkoutForm] = useToggle();
 	const [isLoading, setIsLoading] = useState(true);
 	const [filterTerms, setFilterTerms] = useState<WorkoutQuery>(initialQueryState);
 	const [searchTerm, setSearchTerm] = useState<String | null>(null);
 	const [sortBy, setSortBy] = useState<{}>(initialSortByState);
+
+	dispatch(findAllExercises);
 
 	let workouts = workoutList.filter((workout) => {
 		if (searchTerm) return workout.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -49,7 +52,7 @@ const WorkoutList = (): React.JSX.Element => {
 		dispatch(findAllCircuits());
 	}, []);
 
-	const getWorkoutInfo = useCallback(() => {
+	const getWorkoutInfo = useCallback( async () => {
 		dispatch(findAllWorkouts({ filterBy: filterTerms, sortBy }));
 		setIsLoading(false);
 	}, [showCreateWorkoutForm, filterTerms, sortBy]);
@@ -117,6 +120,8 @@ const WorkoutList = (): React.JSX.Element => {
 			<div className='filterWorkoutDivider'>
 				<div className='filterWorkoutDividerInner'>
 					<div className='filtersection'>
+					{Object.keys(filterTerms).length !== 0 && <button onClick={resetFilter}>Clear Filter</button>}
+
 						<p>Category</p>
 						<form className='FilterForm'>{categoryFilterComponents}</form>
 						<p>Favorites</p>
@@ -131,7 +136,7 @@ const WorkoutList = (): React.JSX.Element => {
 							</div>
 							<div>
 								<form>
-									<select onChange={handleSort} name='sort'>
+									<select className="sortForm" onChange={handleSort} name='sort'>
 										<option value=''>Sort By</option>
 										<option data-type="name" value='nameAsc'>Workout Name A-Z</option>
 										<option data-type="name" value='nameDesc'>Workout Name Z-A</option>
@@ -144,7 +149,6 @@ const WorkoutList = (): React.JSX.Element => {
 									</select>
 								</form>
 							</div>
-							{Object.keys(filterTerms).length !== 0 && <button onClick={resetFilter}>Clear Filter</button>}
 							<button id='addWorkoutButton' onClick={toggleCreateForm}>
 								+
 							</button>

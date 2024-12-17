@@ -20,6 +20,10 @@ interface WorkoutData {
 	sortBy?: {};
 }
 
+interface ExerciseData { 
+	filterBy?: {};
+	sortBy?: {};
+}
 class FitlyApi {
 	//the token for interaction with API will be stored here.
 	static token: string;
@@ -187,7 +191,7 @@ class FitlyApi {
 	 * @returns {exercises}
 	 */
 
-	static async findAllExercises<Promise>(data?: { muscleGroup?: string; equipmentId?: string }): Promise {
+	static async findAllExercises<Promise>(data: ExerciseData): Promise {
 		let res = await this.request(`exercises/`, data, "get");
 		return res.exercises;
 	}
@@ -223,6 +227,7 @@ class FitlyApi {
 	 * @returns {exercise}
 	 */
 	static async updateExercise<Promise>(exerciseId: number, data: {}): Promise {
+		console.log(data)
 		let res = await this.request(`exercises/${exerciseId}`, data, "patch");
 		return res.updatedExercise;
 	}

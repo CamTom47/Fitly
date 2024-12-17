@@ -1,26 +1,21 @@
-const db = require('../db');
-const { sqlForPartialUpdate } = require('../helpers/sql');
-const {
-    ExpressError,
-    NotFoundError,
-    BadRequestError,
-    UnauthorizedError
-} = require('../ExpressError');
+const db = require("../db");
+const { sqlForPartialUpdate } = require("../helpers/sql");
+const { ExpressError, NotFoundError, BadRequestError, UnauthorizedError } = require("../ExpressError");
 
-const { BCRYPT_WORK_FACTOR } = require('../config.js');
-
+const { BCRYPT_WORK_FACTOR } = require("../config.js");
 
 //Common functions for Exercise class
 
-class Exercise { 
+class Exercise {
+	/**
+	 * Find all exercises
+	 * @returns {name, muscle_group, equipment_id}
+	 */
 
-    /**
-     * Find all exercises
-     * @returns {name, muscle_group, equipment_id}
-     */
+	static async findAll(user_id, filterBy = {}, sortBy = {}) {
+        console.log(sortBy)
 
-    static async findAll(user_id, {muscle_group = undefined, equipment_id = undefined}) {
-        let query = `
+		let query = `
             SELECT  exercises.id,
                     exercises.name,
                     exercises.muscle_group AS "muscleGroup",
@@ -30,45 +25,57 @@ class Exercise {
             JOIN users_exercises
             ON exercises.id = users_exercises.exercise_id
             JOIN exercises_equipments
-            ON exercises.id = exercises_equipments.exercise_id`
+            ON exercises.id = exercises_equipments.exercise_id`;
 
-        const whereExpressions = [];
-        const queryValues = [];
+		const whereExpressions = [];
+		const queryValues = [];
+		let orderExpression = null;
 
-        if(user_id !== undefined){
-            queryValues.push(user_id)
-            whereExpressions.push(`users_exercises.user_id = $${queryValues.length}`)
-        }
-        if(muscle_group !== undefined){
-            queryValues.push(muscle_group);
-            whereExpressions.push(`exercises.muscle_group = $${queryValues.length}`)
-        }
-        if(equipment_id !== undefined){
-            queryValues.push(equipment_id);
-            whereExpressions.push(`exercises_equipments.equipment_id = $${queryValues.length}`);
-        }
+		if (user_id !== undefined) {
+			queryValues.push(user_id);
+			whereExpressions.push(`users_exercises.user_id = $${queryValues.length}`);
+		}
+		if (filterBy.muscleGroup !== undefined) {
+			queryValues.push(+filterBy.muscleGroup);
+			whereExpressions.push(`exercises.muscle_group = $${queryValues.length}`);
+		}
+		if (filterBy.equipmentId !== undefined) {
+			queryValues.push(+filterBy.equipmentId);
+			whereExpressions.push(`exercises_equipments.equipment_id = $${queryValues.length}`);
+		}
 
-        if(whereExpressions.length){
-            (whereExpressions.length === 1 ) ? query += "\n WHERE " + whereExpressions : query += "\n WHERE " + whereExpressions.join(" AND ");
-        };
-        
-        let result = await db.query(query, queryValues);
+		if (sortBy.name !== null) {
+			if (sortBy.name == "nameAsc") orderExpression = "ORDER BY name ASC"
+			else if (sortBy.name == "nameDesc") orderExpression = "ORDER BY name DESC"
+		}
 
-        let exercises = result.rows;
-        return exercises;
+		if (whereExpressions.length) {
+			whereExpressions.length === 1
+				? (query += "\n WHERE " + whereExpressions)
+				: (query += "\n WHERE " + whereExpressions.join(" AND "));
+		}
 
-    }
+        console.log(orderExpression)
 
-      /**
-     * Find an exercises based on exercise_id
-     * @param {*} exercise_id 
-     * @returns {name, muscle_group, equipment_id}
-     * 
-     * Throw NotFoundError if exercise_id is invalid.
-     */
-    
-    static async find(user_id, exercise_id) {
-        const result = await db.query(`
+        if(orderExpression !== null) query += `\n ${orderExpression}`;
+
+		let result = await db.query(query, queryValues);
+
+		let exercises = result.rows;
+		return exercises;
+	}
+
+	/**
+	 * Find an exercises based on exercise_id
+	 * @param {*} exercise_id
+	 * @returns {name, muscle_group, equipment_id}
+	 *
+	 * Throw NotFoundError if exercise_id is invalid.
+	 */
+
+	static async find(user_id, exercise_id) {
+		const result = await db.query(
+			`
             SELECT  exercises.id,
                     exercises.name,
                     exercises.muscle_group AS "muscleGroup",
@@ -80,123 +87,126 @@ class Exercise {
             JOIN exercises_equipments
             ON exercises.id = exercises_equipments.exercise_id
             WHERE exercises.id = $1 AND users_exercises.user_id = $2`,
-            [exercise_id, user_id])
+			[exercise_id, user_id]
+		);
 
-        let exercise = result.rows[0];
+		let exercise = result.rows[0];
 
-        if(!exercise) throw new NotFoundError(`Exercise not found; ${exercise_id}`)
+		if (!exercise) throw new NotFoundError(`Exercise not found; ${exercise_id}`);
 
-        return exercise;
-    }
+		return exercise;
+	}
 
+	/**
+	 * Create a new exercise
+	 * @param {*} name
+	 * @param {*} muscle_group
+	 * @param {*} equipment_id
+	 * @returns {name, muscle_group, equipment_id}
+	 */
 
-    /**
-     * Create a new exercise 
-     * @param {*} name 
-     * @param {*} muscle_group 
-     * @param {*} equipment_id 
-     * @returns {name, muscle_group, equipment_id}
-     */
-
-    static async add({name, muscle_group}) {
-        const result = await db.query(`
+	static async add({ name, muscle_group }) {
+		const result = await db.query(
+			`
             INSERT INTO exercises
             (name, muscle_group)
             VALUES ($1, $2)
-            RETURNING id, name, muscle_group AS "muscleGroup"`, 
-            [name, muscle_group]);
+            RETURNING id, name, muscle_group AS "muscleGroup"`,
+			[name, muscle_group]
+		);
 
-            const exercise = result.rows[0];
-            
-        return exercise  
-    }
+		const exercise = result.rows[0];
 
-    static async addExerciseEquipment(exercise_id, equipment_id){
+		return exercise;
+	}
 
-        const result = await db.query(`
+	static async addExerciseEquipment(exercise_id, equipment_id) {
+		const result = await db.query(
+			`
             INSERT INTO exercises_equipments
             (exercise_id, equipment_id)
             VALUES($1, $2)
-            RETURNING exercise_id, equipment_id`, 
-        [exercise_id, equipment_id]);
-        
-        return result.rows[0];
-    }
+            RETURNING exercise_id, equipment_id`,
+			[exercise_id, equipment_id]
+		);
 
-    /**
-     * Adds exercise and user to users_exercises table.
-     * @param {*} user_id 
-     * @param {*} exercise_id 
-     */
+		return result.rows[0];
+	}
 
-    static async addUserExercise(user_id, exercise_id){
-        const result = await db.query(`
+	/**
+	 * Adds exercise and user to users_exercises table.
+	 * @param {*} user_id
+	 * @param {*} exercise_id
+	 */
+
+	static async addUserExercise(user_id, exercise_id) {
+		const result = await db.query(
+			`
             INSERT INTO users_exercises
             (user_id, exercise_id)
             VALUES($1, $2)`,
-        [user_id, exercise_id])
+			[user_id, exercise_id]
+		);
 
-        return result.rows[0];
-    }
+		return result.rows[0];
+	}
 
+	/**
+	 * Update an existing exercise based on id
+	 * @param {*} id
+	 * @param {*} data
+	 * @returns {name, muscle_group, exercise_id}
+	 *
+	 * Throws NotFoundError if id is invalid
+	 */
 
-    /**
-     * Update an existing exercise based on id
-     * @param {*} id 
-     * @param {*} data 
-     * @returns {name, muscle_group, exercise_id}
-     * 
-     * Throws NotFoundError if id is invalid
-     */
-    
-    static async update(id, data, equipment_id) {
-        const { setCols, values } = sqlForPartialUpdate(data, 
-            {
-                name: "name",
-                muscle_group : "muscle_group",
-            }
-        )
+	static async update(id, data, equipment_id) {
+		const { setCols, values } = sqlForPartialUpdate(data, {
+			name: "name",
+			muscle_group: "muscle_group",
+		});
 
-        const exerciseIdVarIdx = ("$" + (values.length + 1));
+		const exerciseIdVarIdx = "$" + (values.length + 1);
 
-        const querySql = `UPDATE exercises
-            SET ${ setCols }
+		const querySql = `UPDATE exercises
+            SET ${setCols}
             WHERE id = ${exerciseIdVarIdx}
             RETURNING id, name, muscle_group AS "muscleGroup"`;
 
-        const result = await db.query(querySql, [...values, id]);
+		const result = await db.query(querySql, [...values, id]);
 
-        const exercise = result.rows[0];
+		const exercise = result.rows[0];
 
-        if(!exercise) throw new NotFoundError(`Exercise not found: ${exercise_id}`)
+		if (!exercise) throw new NotFoundError(`Exercise not found: ${exercise_id}`);
 
-        //Update Many-to-many table of equipment/exercise
+		//Update Many-to-many table of equipment/exercise
 
-        await db.query(`
+		await db.query(
+			`
             UPDATE exercises_equipments
             SET equipment_id = $1
-            WHERE exercise_id = $2`, [equipment_id, id]);
+            WHERE exercise_id = $2`,
+			[equipment_id, id]
+		);
 
-        return exercise;
+		return exercise;
+	}
 
+	/**
+	 * Removes an existing exercise based on exercise_id
+	 * @param {*} exercise_id
+	 *
+	 * Throws NotFoundError if exercise_id is invalid
+	 */
 
-    }
-
-    /**
-     * Removes an existing exercise based on exercise_id
-     * @param {*} exercise_id 
-     * 
-     * Throws NotFoundError if exercise_id is invalid
-     */
-
-    static async remove(exercise_id) {
-
-        const result = await db.query(`
+	static async remove(exercise_id) {
+		const result = await db.query(
+			`
             DELETE FROM exercises
             WHERE id = $1`,
-        [exercise_id])
-    }
-
+			[exercise_id]
+		);
+	}
 }
 
-module.exports = {Exercise};
+module.exports = { Exercise };
