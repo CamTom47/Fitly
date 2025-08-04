@@ -1,4 +1,4 @@
-.UpdateCircuitForm-container {
+.ConfirmationCard-container {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -10,7 +10,7 @@
     align-items: center;
     justify-content: center;
 }
-.UpdateCircuitForm-body {
+.ConfirmationCard-body {
 	width: 40%;
 	height: 40%;
 	display: flex;
@@ -21,19 +21,20 @@
     border: 1px solid var(--color-secondary);
     border-radius: 1rem;
 }
-.UpdateCircuitForm-container p {
+.ConfirmationCard-container p {
 	font-size: 20px;
 	color: var(--color-secondary);
 }
-.UpdateCircuitForm-content {
+.ConfirmationCard-content {
 	background: var(--color-primary-secondary);
-	width: 90%;
+	width: 40%;
+	height: 40%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
 }
-.UpdateCircuitForm-container button {
+.ConfirmationCard-container button {
 	background: var(--color-primary);
 	color: var(--color-secondary);
 	border: 1px solid var(--color-secondary);
@@ -41,7 +42,7 @@
 	border-radius: 5px;
     margin: 1rem;
 }
-.UpdateCircuitForm-container button:hover {
+.ConfirmationCard-container button:hover {
 	color: var(--color-primary);
 	background-color: var(--color-secondary);
 	text-decoration: none;

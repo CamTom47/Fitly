@@ -30,7 +30,9 @@ CREATE TABLE muscleGroups (
 CREATE TABLE exercises (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    muscle_group INTEGER REFERENCES muscleGroups(id)
+    muscle_group INTEGER REFERENCES muscleGroups(id),
+    date_created TIMESTAMP default now()
+
 );
 
 CREATE TABLE workouts (
@@ -38,7 +40,10 @@ CREATE TABLE workouts (
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     category INTEGER REFERENCES categories(id) ON DELETE CASCADE,
-    favorited BOOLEAN
+    favorited BOOLEAN,
+    date_created TIMESTAMP default now(),
+    last_completed TIMESTAMP,
+    times_completed INTEGER
 );
 
 CREATE TABLE circuits (
@@ -47,7 +52,8 @@ CREATE TABLE circuits (
     reps INTEGER,
     weight INTEGER,
     rest_period INTEGER,
-    intensity TEXT
+    intensity TEXT,
+    date_created TIMESTAMP default now()
 );
 
 CREATE TABLE users_workouts (

@@ -1,58 +1,7 @@
-@media screen and (min-width: 1300px) {
-  #WorkoutSummaryContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 2rem 1rem 1rem 5rem;
-    padding: 1rem;
-    background-color: var(--gray-6);
-    border-radius: 20px;
-    height: 8rem;
-    width: 12rem;
-  }
-
-  #WorkoutSummaryContainer:hover {
-    background-color: var(--gray-6);
-    box-shadow: 0px 3px 10px hsla(212, 11%, 80%);
-    background: var(--color-primary-light);
-    border: 2px solid hsla(212, 11%, 75%);
-    transition: all 0.35s;
-  }
-
-  .WorkoutSummaryContent {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-  }
-  .WorkoutSummaryContentBody {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-  }
-  .WorkoutSummaryContentBody span {
-    text-decoration: underline;
-    font-size: 12px;
-  }
-  .WorkoutSummaryContentBody p {
-    font-size: 12px;
-  }
-  .WorkoutSummaryContentHead {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-    align-items: start;
-  }
-  .WorkoutSummaryContentBody div {
-    display: flex;
-    flex-direction: column;
-  }
-  #WorkoutDetailButton {
-    border-radius: 10px;
-    padding: 0.2rem;
-    margin: 0.5rem 0 0 0;
-    font-size: 12px;
-  }
+.WorkoutSummary-row{
+  width: 100%;
+  color: black;
+}
+.WorkoutSummary-row td,tr,th{
+  font-size: 16px;
 }

@@ -20,9 +20,9 @@ import {
 
 import "./App.css"
 import "../../fonts/fonts.css"
-import { current } from "@reduxjs/toolkit";
+import UserDashboard from "../UserDashboard/UserDashboard";
 
-function App(): React.JSX.Element {  
+const App = (): React.JSX.Element => {  
   const [isLoading, setIsLoading] = useState(false);
   const token = useAppSelector(selectToken);
   const isAuthenticated = useAppSelector(selectAuthenticated);
@@ -51,12 +51,12 @@ function App(): React.JSX.Element {
       <div className="App">
         <NavBar></NavBar>
         <Routes>
+          <Route path="/dashboard" element={<UserDashboard/>}/>
           <Route path="/workouts" element={<WorkoutList/>}/>
           <Route path="/workouts/:workout_id" element={<WorkoutDetail/>}/>
           <Route path="/workouts/add" element={<NewWorkoutForm/>}/>
           <Route path="/register" element={<SignupForm/>}/>
           <Route path="/exercises" element={<ExerciseList/>}/>
-          <Route path="/exercises/add" element={<NewExerciseForm/>}/>
           <Route path="/account" element={<Account/>}/>
           <Route path="/" element={<Homepage/>}/>
           <Route path="*" element={<NotFound/>}/>

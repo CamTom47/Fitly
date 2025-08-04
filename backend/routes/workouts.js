@@ -19,8 +19,7 @@ const { ensureLoggedIn, ensureCorrectUserOrAdmin } = require('../middleware/auth
 router.get('/', ensureLoggedIn, async function( req, res, next) {
     try{ 
         const queryData = req.query;
-        console.log(queryData)
-        const workouts = await Workout.findAll(res.locals.user.id, queryData);
+        const workouts = await Workout.findAll(res.locals.user.id, queryData.filterBy, queryData.sortBy);
         return res.json({workouts})
     } catch(err){
         return next(err);

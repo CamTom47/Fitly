@@ -45,14 +45,17 @@ interface Exercise {
     equipmentId?: number
 };
 
-interface ExerciseQuery {
-    muscleGroup?: string,
-    equipmentId?: string
+interface ExerciseRequest {
+   filterBy?: {
+       muscleGroup?: string,
+       equipmentId?: string
+   };
+   sortBy?: {};
 }
 
 export const findAllExercises = createAsyncThunk(
     "exercises/findAllExercises",
-    async (data: ExerciseQuery | undefined) => {
+    async (data: ExerciseRequest | undefined) => {
         try{
             const exercises = await FitlyApi.findAllExercises({...data});
             return exercises

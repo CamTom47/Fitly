@@ -16,34 +16,62 @@ class Workout {
      * @returns {name, category, completed_count, favorited}
      */
 
-    static async findAll(user_id, {category = undefined}) {
-        console.log(category)
+    static async findAll(user_id, filterBy = {}, sortBy = {}) {
         let query = `
-            SELECT id,
-                    name,
-                    category,
-                    favorited
-            FROM workouts`
+            SELECT w.id,
+                    w.name,
+                    w.category,
+                    w.favorited,
+                    w.date_created AS "dateCreated",
+                    w.times_completed AS "timesCompleted",
+                    w.last_completed AS "lastCompleted"
+            FROM workouts AS w
+            LEFT JOIN categories AS c
+            ON w.category = c.id`
 
              const whereExpressions = [];
-             const queryValues = [];
+             const whereValues = [];
+             let orderExpression = null;
 
         if(user_id !== undefined){
-            queryValues.push(user_id);
-            whereExpressions.push(`user_id = $${queryValues.length}`);
+            whereValues.push(user_id);
+            whereExpressions.push(`w.user_id = $${whereValues.length}`);
         }
 
-        if(category !== undefined){
-            queryValues.push(+category);
-            whereExpressions.push(`category = $${queryValues.length}`);
+        if(filterBy.category !== undefined){
+            whereValues.push(+filterBy.category);
+            whereExpressions.push(`w.category = $${whereValues.length}`);
+        }
+        
+        if(filterBy.favorited !== undefined){
+            whereValues.push(true);
+            whereExpressions.push(`w.favorited = $${whereValues.length}`);
+        }
+        if(sortBy.name !== undefined){
+            if(sortBy.name === "nameAsc") orderExpression = `ORDER BY w.name ASC`
+            else if (sortBy.name === "nameDesc") orderExpression = `ORDER BY w.name DESC`
+        }
+        if(sortBy.category !== undefined){
+            if(sortBy.category === "categoryAsc") orderExpression = `ORDER BY c.name ASC`
+            else if (sortBy.category === "categoryDesc") orderExpression = `ORDER BY c.name DESC`
+        }
+        if(sortBy.timesCompleted !== undefined){
+            if(sortBy.timesCompleted === "timesCompletedAsc") orderExpression = `ORDER BY w.times_completed ASC`
+            else if (sortBy.timesCompleted === "timesCompleteDesc") orderExpression = `ORDER BY w.times_completed DESC`
+        }
+        if(sortBy.lastCompleted !== undefined){
+            if(sortBy.lastCompleted === "lastCompletedAsc") orderExpression = `ORDER BY w.last_completed ASC`
+            else if (sortBy.lastCompleted === "lastCompletedDesc") orderExpression = `ORDER BY w.last_completed DESC`
         }
 
         if(whereExpressions.length){
             (whereExpressions.length === 1) ? query += "\n WHERE " + whereExpressions : query += "\n WHERE " + whereExpressions.join(" AND ");
         };
-        console.log(query, queryValues)
 
-        let result = await db.query(query, queryValues)
+        if(orderExpression !== null) query += `\n ${orderExpression}`
+        console.log(query, whereValues)
+
+        let result = await db.query(query, whereValues)
 
         let workouts = result.rows
 
@@ -65,6 +93,9 @@ class Workout {
                     name,
                     category,
                     favorited
+                    date_created AS "dateCreated",
+                    times_completed AS "timesCompleted",
+                    last_completed AS "lastCompleted"
             FROM workouts
             JOIN users_workouts 
             ON workouts.id = users_workouts.workout_id
@@ -88,13 +119,13 @@ class Workout {
      * @param {*} favorited 
      * @returns {name, user_id, category, completed_count, favorited}
      */
-    static async add({name, category, favorited = false, user_id}) {
+    static async add({name, category, favorited = false, user_id}, times_completed = 0) {
         const result = await db.query(`
             INSERT INTO workouts
-            (name, user_id, category, favorited)
-            VALUES ($1, $2, $3, $4)
-            RETURNING id, name, user_id, category, favorited`, 
-            [name, user_id, category, favorited]);
+            (name, user_id, category, favorited, times_completed)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING id, name, user_id, category, favorited, times_completed AS "timesCompleted"`, 
+            [name, user_id, category, favorited, times_completed]);
 
 
         const workout = result.rows[0];
@@ -130,7 +161,9 @@ class Workout {
             {
                 name: "name",
                 category : "category", 
-                favorited: "favorited"
+                favorited: "favorited",
+                timesCompleted: "times_completed",
+                lastCompleted: "last_completed",
             }
         )
 
@@ -139,7 +172,7 @@ class Workout {
         const querySql = `UPDATE workouts
             SET ${ setCols }
             WHERE id = ${workoutIdVarIdx}
-            RETURNING name, category, favorited`;
+            RETURNING name, category, favorited, times_completed AS "timesCompleted", last_completed AS "lastCompleted"`;
 
         const result = await db.query(querySql, [...values, id]);
 
@@ -184,9 +217,6 @@ class Workout {
             
         return workoutCircuit;
     }
-
-
-
 }
 
 module.exports = {Workout};
