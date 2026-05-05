@@ -33,17 +33,17 @@ const Homepage = (): React.JSX.Element => {
 				<h1>All of your workouts, all in one place</h1>
 				<p className='HomepageText'>Create, customize, and record all of your personal workouts and exercise</p>
 			</div>
-			<div className='content-card'>
-				{!currentUser ? (
+			{!currentUser ? (
+				<div className='content-card'>
 					<LoginForm />
-				) : (
-					<>
-						<HomepageCard text='User Dashboard (Future Feature)' link='/dashboard' />
-						<HomepageCard text='Workouts' link='/workouts' />
-						<HomepageCard text='Exercises' link='/exercises' />
-					</>
-				)}
-			</div>
+				</div>
+			) : (
+				<div className='card-row'>
+					<HomepageCard text='User Dashboard (Future Feature)' link='/dashboard' />
+					<HomepageCard text='Workouts' link='/workouts' />
+					<HomepageCard text='Exercises' link='/exercises' />
+				</div>
+			)}
 		</div>
 	);
 };
