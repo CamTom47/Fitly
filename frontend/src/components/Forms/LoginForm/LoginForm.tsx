@@ -69,7 +69,6 @@ const LoginForm = (): React.JSX.Element => {
             <Field className="LoginFormInput" type="password" name="password" />
           </div>
 
-          <div className="LoginFormInputDiv">
             <button
               className="LoginFormButton"
               type="submit"
@@ -77,7 +76,6 @@ const LoginForm = (): React.JSX.Element => {
             >
               Login
             </button>
-          </div>
           <div className="LoginFormErrorDiv">
             <ErrorMessage
               className="ErrorMessage"

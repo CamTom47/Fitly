@@ -1,12 +1,14 @@
 :root{
   /* Main Colors - Used for links, button background color, etc. */
-  --color-primary: hsl(60, 38%, 95%);
+  --color-primary: #EAF1C5;
 
   /* Accent color - Used to highlight something important on a page, not a variant of primary color, but complimentary */
-  --color-secondary: hsl(30, 93%, 57%);
+  --color-secondary: #EE9149;
+  --color-accent: #746FD3;
+  --color-base: #3C1310;
 
   /* Shades - Neutral colors used for text elemnts, subtle elemtns, borders, etc. */
-  --black: black
+  --black: black;
   --gray-10: hsl(0, 0%, 5%);
   --gray-9: hsl(0, 0%, 10%);
   --gray-8: hsl(0, 0%, 20%);
