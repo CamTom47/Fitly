@@ -1,5 +1,5 @@
 {
-  "name": "fitly",
+  "name": "fitly-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
